@@ -12,7 +12,7 @@ $('document').ready(function(){
     var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ q +'&key='+ APIKey + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
     // limit to known cooking channels
     // var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ q +'&key='+ APIKey + '&channelId=' + channelID + '&maxfields=25&fields=items(id,snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us';
-    // API Endping  https://www.googleapis.com/youtube/v3/search
+    // API Endpoint  https://www.googleapis.com/youtube/v3/search
 
     var videoWidth = '420';
     var videoHeight = '345';
