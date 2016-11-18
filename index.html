@@ -1,66 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>The Idiot Chef</title>
-	<!-- Bootstrap CDN-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link href="./style.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 
+<head>
+    <meta charset="UTF-8">
+    <title>The Idiot Chef</title>
+    <!-- Bootstrap CDN-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="assets/styles/style.css" rel="stylesheet">
     <!-- Firebase Reference -->
-    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
 </head>
+
 <body>
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-3">
-				Google Login
-			</div>
-			<div class="col-lg-6 text-center">
-				<header>
-					The Idiot Chef
-				</header>
-			</div>
-			<div class="col-lg-3">
-				
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-4">
-			</div>
-			<div class="col-lg-4">
-				<div class="form-group">
-					<div class="input-group">
-						<input type="text" class="form-control" id="ingredients-search">
-						<span class="input-group-btn">
-						<button class="btn btn-default" type="button">Search</button>
-						</span>
-					</div>
-				</div>	
-			</div>
-			<div class="col-lg-4">
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-4">
-				<section id="ingredients-list">
-					ingredient list
-				</section>
-			</div>
-			<div class="col-lg-4">
-				<section id="recipe-list">
-					recipe list
-				</section>
-			</div>
-			<div class="col-lg-4">
-				<section id="video-list">
-					video list
-				</section>
-			</div>
-		</div>
-	</div>
-<!-- Javascript -->
-<script src="app.js"></script>
+    <div class="container">
+        <div class="jumbotron clearfix">
+            <div id="title" class="panel col-xs-12 text-center">Idiot Chef</div>
+            <div id="explanation" class="col-xs-12 text-center">Site Explanation</div>
+        </div>
+        <div class="row text-center">
+            <div class="button-panel panel col-xs-4">
+                <button type="button" class="btn btn-secondary btn-lg" id="btn-guest">Guest</button>
+            </div>
+            <div class="button-panel panel col-xs-4" id="member-login-panel">
+                <div class="form-group">
+                    <label for="email-input">Email</label>
+                    <input type="email" class="form-control" id="email-input" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="password-input">Password</label>
+                    <input type="password" class="form-control" id="password-input" placeholder="Password">
+                </div>
+                <button type="button" class="btn btn-secondary btn-lg" id="btn-member">Member</button>
+            </div>
+            <div class="button-panel panel col-xs-4" id="registration-button-panel">
+                <button type="submit" class="btn btn-secondary btn-lg" id="btn-register">Register</button>
+            </div>
+            <div class="button-panel panel col-xs-4" id="registration-panel">
+                <div class="form-group">
+                    <label for="registration-email-input">Email</label>
+                    <input type="email" class="form-control" id="registration-email-input" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="registration-password-input">Password</label>
+                    <input type="password" class="form-control" id="registration-password-input" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-secondary btn-lg" id="btn-submit-registration">Submit</button>
+            </div>
+        </div>
+    </div>
+    <!-- Javascript -->
+    <!-- <script src="assets/javascript/app.js"></script> -->
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/login.js"></script>
 </body>
-</html>

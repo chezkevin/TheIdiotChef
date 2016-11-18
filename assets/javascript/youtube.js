@@ -47,10 +47,11 @@ btnLogin.on('click', e => {
     const auth = firebase.auth();
 
     const promise = auth.signInWithEmailAndPassword(email, pass);
+    conosole.log(promise);
     promise.catch(e => console.log(e.message));
 
 
-});
+});w
 
 btnSignUp.on('click', e => {
    
