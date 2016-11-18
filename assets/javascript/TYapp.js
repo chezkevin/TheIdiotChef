@@ -15,6 +15,8 @@ var ingredientCount = 0;
 
 function loadIngredients() {
 
+    ingredientCount = 0;
+
     $('#ingredients-list').empty();
 
 	for(var i=0; i<ingredientsArray.length; i++) {
@@ -57,6 +59,7 @@ $('#addIngredientButton').on('click', function() {
     })
 
     loadIngredients();
+
 })
 
 $(document.body).on('click', '.checkbox', function(){
@@ -72,9 +75,5 @@ $(document.body).on('click', '.checkbox', function(){
     })
 
     loadIngredients();
-
-    //i cheated and added a reload because I couldn't delete multiple ingredients in a load
-
-    location.reload();
 
 });
