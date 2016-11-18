@@ -5,7 +5,7 @@
 	<title>The Idiot Chef</title>
 	<!-- Bootstrap CDN-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link href="./style.css" rel="stylesheet">
+    <link href="assets/styles/style.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 
     <!-- Firebase Reference -->
@@ -34,7 +34,7 @@
 					<div class="input-group">
 						<input type="text" class="form-control" id="ingredients-search">
 						<span class="input-group-btn">
-						<button class="btn btn-default" type="button">Search</button>
+						<button id='addIngredientButton' class="btn btn-default" type="button">Add Ingredient</button>
 						</span>
 					</div>
 				</div>	
@@ -44,23 +44,26 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-4">
+				<h3>ingredient list</h3>
 				<section id="ingredients-list">
-					ingredient list
+					
 				</section>
 			</div>
 			<div class="col-lg-4">
+				<h3>recipe list</h3>
 				<section id="recipe-list">
-					recipe list
 				</section>
 			</div>
 			<div class="col-lg-4">
+				<h3>video list</h3>
 				<section id="video-list">
-					video list
 				</section>
 			</div>
 		</div>
 	</div>
 <!-- Javascript -->
-<script src="app.js"></script>
+<script src="assets/javascript/TYapp.js"></script>
 </body>
+
+
 </html>

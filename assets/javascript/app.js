@@ -73,3 +73,41 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
              }
             database.child('videoList').set(newVideo);
 
+
+//adding ingredients to data and display - TY
+
+var ingredientsArray = [];
+
+function loadIngredients() {
+
+	for(var i=0; i<ingredientsArray.length; i++) {
+
+		$('#ingredients-list').empty();
+
+		var ingredientDisplay = $('<p>').text(ingredientsArray[i]);
+
+    	$('#ingredients-list').append(ingredientDisplay);
+	}
+
+}
+
+database.on("value", function(snapshot) {
+
+	ingredientsArray = snapshot.val().ingredientsArray;
+
+	loadIngredients();
+
+})
+
+$('#addIngredientButton').on('click', function() {
+
+    var newIngredient = $('#ingredients-search').val().trim();
+
+    ingredientsArray.push(newIngredient);
+
+    database.set({
+      ingredientsArray: ingredientsArray
+    })
+
+    loadIngredients();
+})
