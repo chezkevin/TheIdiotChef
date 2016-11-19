@@ -111,3 +111,4 @@ $('#addIngredientButton').on('click', function() {
 
     loadIngredients();
 })
+

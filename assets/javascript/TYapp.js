@@ -105,3 +105,51 @@ $(document.body).on('click', '.checkbox', function(){
     }
 
 });
+
+$('#get-videos').on('click', function() {
+    //var youTubeQ = 'what to make with ';
+    var youTubeQ = ingredientsArray.join('+');
+    youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
+    console.log(youTubeQ);
+
+    //var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
+    var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet';
+    //var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc';
+    displayVideos(queryURL,'100%','100%','https://www.youtube.com/embed/');
+})
+
+function displayVideos(queryURL,videoWidth,videoHeight,videoSrc){
+    console.log("tried to displayVideos");
+    console.log("query: " + queryURL);
+    $.ajax({
+        url: queryURL,
+        method: 'GET'
+    })
+    .done(function(response) {
+        for(var i = 0; i < response.items.length; i++ ){
+            var b = $('<iframe>', {
+                width : videoWidth,
+                height : videoHeight,
+                src : videoSrc + response.items[i].id.videoId,
+            }) 
+            console.log("b: " + b);
+            // response.items[i].id.videoId;
+            $('#video-list').append(b);
+            var c = $('<div>'+ response.items[i].snippet.title +'</div>');
+            var d = $('<div>'+ response.items[i].snippet.description +'</div>');
+            // console.log(response.items[i].snippet.title);
+            $('#video-list').append(c);
+            $('#video-list').append(d);
+
+            // firebase.initializeApp(config);
+
+            var newVideo = {
+                id: response.items[i].id.videoId,
+                title: response.items[i].snippet.title,
+                description: response.items[i].snippet.description
+            }
+        }
+    console.log(response);
+        
+    });
+}
