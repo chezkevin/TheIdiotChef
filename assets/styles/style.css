@@ -26,3 +26,7 @@ a:hover{
     border-radius: 5px;
     border: 1px solid;
 }
+
+h1 img{
+    height: 70px;
+}
