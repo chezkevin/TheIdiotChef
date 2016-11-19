@@ -19,12 +19,11 @@ function loadIngredients() {
 
     $('#ingredients-list').empty();
 
-	for(var i=0; i<ingredientsArray.length; i++) {
+    for(var i=0; i<ingredientsArray.length; i++) {
 
-        var ingredientDisplay = $('<button>');
+        var ingredientDisplay = $('<div>');
         ingredientDisplay.attr("id", "ingredient-" + ingredientCount);
         ingredientDisplay.append(" " + ingredientsArray[i] + " ");
-        ingredientDisplay.data("checked", true);
 
         var ingredientDelete = $("<button>");
         ingredientDelete.attr("data-ingredient", ingredientCount);
@@ -34,16 +33,22 @@ function loadIngredients() {
         var ingredientCheck = $("<button>");
         ingredientCheck.attr("data-ingredient", ingredientCount);
         ingredientCheck.addClass("checkbox");
-        ingredientCheck.append("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
+
+        if (ingredientDisplay.data("checked", true)) {
+            ingredientCheck.append("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
+        }
+        else if (ingredientDisplay.data("checked", false)) {
+            ingredientCheck.append("<i class='fa fa-circle-o' aria-hidden='true'></i>");
+        }
 
         ingredientDisplay = ingredientDisplay.append(ingredientDelete);
         ingredientDisplay = ingredientDisplay.prepend(ingredientCheck);
 
-    	$('#ingredients-list').append(ingredientDisplay);
+        $('#ingredients-list').append(ingredientDisplay);
 
         ingredientCount++;
 
-	}
+    }
 
 }
 
@@ -104,6 +109,60 @@ $(document.body).on('click', '.checkbox', function(){
         $("#item-" + ingredientNumber).append("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
     }
 
+});
+
+// food requests - appears to work TY
+
+$('#submitIngredientsButton').on('click', function() {
+        $('#recipe-list').empty();
+
+        console.log(ingredientsArray);
+
+        var ingredientsURL = ingredientsArray.join("&2C");
+
+        console.log(ingredientsURL);
+        var apiKey = "ifDlpOiJZwmshbi3KF67KyFbySC4p1OjmEEjsnd0c6P7clfaPK";
+        var foodQueryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + ingredientsURL + "&limitLicense=true&number=5&ranking=1";
+        
+        $.ajax({
+            url: foodQueryURL,
+            type: 'GET',
+            data: {},
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+
+                for (var i = 0; i < data.length; i++) {
+                    var recipeDiv = $('<div class="recipe">');
+
+                    var recipeName = data[i].title;
+
+                        var recipeTitle = $('<p>').text(recipeName);
+
+                    var recipeUsedIngredients = data[i].usedIngredientCount;
+
+                        var recipeUsedIngredientsList = $('<p>').text("Number of used ingredients: " + recipeUsedIngredients);
+
+                    var recipeMissingIngredients = data[i].missedIngredientCount;
+
+                        var recipeMissingIngredientsList = $('<p>').text("Number of missing ingredients: " + recipeMissingIngredients);
+
+                    var recipeImage = $("<img class='recipeImage'>");
+                    recipeImage.attr('src', data[i].image);
+
+                    recipeDiv.append(recipeImage);
+                    recipeDiv.append(recipeTitle);
+                    recipeDiv.append(recipeUsedIngredientsList);
+                    recipeDiv.append(recipeMissingIngredientsList);
+
+                    $('#recipe-list').append(recipeDiv);
+                }
+            },
+            error: function(err) { alert(err); },
+            beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-Mashape-Authorization", apiKey); 
+            }
+        });
 });
 
 $('#get-videos').on('click', function() {
