@@ -98,7 +98,6 @@ $(document.body).on('click', '.checkbox', function(){
     var ingredientNumber = $(this).data("ingredient");
 
     if ($("#item-" + ingredientNumber).data('checked') == true){
-        console.log('blah');
         $("#item-" + ingredientNumber).data('checked', false);
         //$("#item-" + ingredientNumber).remove("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
         $("#item-" + ingredientNumber).append("<i class='fa fa-circle-o' aria-hidden='true'></i>");
@@ -116,11 +115,8 @@ $(document.body).on('click', '.checkbox', function(){
 $('#submitIngredientsButton').on('click', function() {
         $('#recipe-list').empty();
 
-        console.log(ingredientsArray);
-
         var ingredientsURL = ingredientsArray.join("&2C");
 
-        console.log(ingredientsURL);
         var apiKey = "ifDlpOiJZwmshbi3KF67KyFbySC4p1OjmEEjsnd0c6P7clfaPK";
         var foodQueryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + ingredientsURL + "&limitLicense=true&number=5&ranking=1";
         
@@ -130,14 +126,13 @@ $('#submitIngredientsButton').on('click', function() {
             data: {},
             dataType: 'json',
             success: function(data) {
-                console.log(data);
 
                 for (var i = 0; i < data.length; i++) {
                     var recipeDiv = $('<div class="recipe">');
 
                     var recipeName = data[i].title;
 
-                        var recipeTitle = $('<p>').text(recipeName);
+                        var recipeTitle = $('<a class="recipe-title">').text(recipeName);
 
                     var recipeUsedIngredients = data[i].usedIngredientCount;
 
@@ -162,6 +157,7 @@ $('#submitIngredientsButton').on('click', function() {
             beforeSend: function(xhr) {
             xhr.setRequestHeader("X-Mashape-Authorization", apiKey); 
             }
+
         });
 });
 
@@ -169,15 +165,22 @@ $('#get-videos').on('click', function() {
     //var youTubeQ = 'what to make with ';
     var youTubeQ = ingredientsArray.join('+');
     youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
-    console.log(youTubeQ);
 
     //var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
     var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet';
     displayVideos(queryURL,'100%','100%','https://www.youtube.com/embed/');
 })
 
+$(document).on("click",".recipe-title",function() {
+    var youTubeQ = $(this).text();
+    youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
+
+    //var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
+    var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&topicId=/m/02wbm&type=video';
+    displayVideos(queryURL,'100%','100%','https://www.youtube.com/embed/');
+});
+
 function displayVideos(queryURL,videoWidth,videoHeight,videoSrc){
-    console.log("query: " + queryURL);
     $('#video-list').empty();
     $.ajax({
         url: queryURL,

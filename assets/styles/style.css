@@ -6,3 +6,7 @@
 	height: 30%;
 	width: 30%;
 }
+
+a:hover{
+	cursor: pointer;
+}
