@@ -11,6 +11,8 @@ var database = firebase.database();
 
 var ingredientsArray = [];
 
+var usedIngredientsArray = [];
+
 var ingredientCount = 0;
 
 function loadIngredients() {
@@ -34,11 +36,16 @@ function loadIngredients() {
         ingredientCheck.attr("data-ingredient", ingredientCount);
         ingredientCheck.addClass("checkbox");
 
-        if (ingredientDisplay.data("checked", true)) {
+
+    // reading checked status on load, not working as intended (first item won't check!) TY
+
+        if ( $.inArray(ingredientsArray[i], usedIngredientsArray) ) {
             ingredientCheck.append("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
+            ingredientCheck.attr("data-checked", true);
         }
-        else if (ingredientDisplay.data("checked", false)) {
+        else {
             ingredientCheck.append("<i class='fa fa-circle-o' aria-hidden='true'></i>");
+            ingredientCheck.attr("data-checked", false);
         }
 
         ingredientDisplay = ingredientDisplay.append(ingredientDelete);
@@ -55,6 +62,7 @@ function loadIngredients() {
 database.ref().on("value", function(snapshot) {
 
 	ingredientsArray = snapshot.val().ingredientsArray;
+    usedIngredientsArray = snapshot.val().usedIngredientsArray;
 
 	loadIngredients();
 
@@ -65,9 +73,11 @@ $('#addIngredientButton').on('click', function() {
     var newIngredient = $('#ingredients-search').val().trim();
 
     ingredientsArray.push(newIngredient);
+    usedIngredientsArray.push(newIngredient);
 
     database.ref().set({
-      ingredientsArray: ingredientsArray
+      ingredientsArray: ingredientsArray,
+      usedIngredientsArray: usedIngredientsArray
     })
 
     loadIngredients();
@@ -80,10 +90,15 @@ $(document.body).on('click', '.deletebox', function(){
 
     $("#item-" + ingredientNumber).remove();
 
-    ingredientsArray.splice(ingredientNumber, 1); 
+    ingredientsArray.splice(ingredientNumber, 1);
+
+    if ( $.inArray(ingredientsArray[ingredientNumber], usedIngredientsArray) ) {
+        usedIngredientsArray.splice(ingredientNumber, 1); 
+    }
 
     database.ref().set({
-      ingredientsArray: ingredientsArray
+      ingredientsArray: ingredientsArray,
+      usedIngredientsArray: usedIngredientsArray
     })
 
     loadIngredients();
@@ -97,16 +112,24 @@ $(document.body).on('click', '.checkbox', function(){
 
     var ingredientNumber = $(this).data("ingredient");
 
-    if ($("#item-" + ingredientNumber).data('checked') == true){
+    if ($(this).data('checked', true)){
+        console.log('unchecking');
+        usedIngredientsArray.splice(ingredientNumber, 1); 
         $("#item-" + ingredientNumber).data('checked', false);
         //$("#item-" + ingredientNumber).remove("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
-        $("#item-" + ingredientNumber).append("<i class='fa fa-circle-o' aria-hidden='true'></i>");
+        //$("#item-" + ingredientNumber).append("<i class='fa fa-circle-o' aria-hidden='true'></i>");
     }
     else {
+        console.log('checking');
+        usedIngredientsArray.push(this); 
         $("#item-" + ingredientNumber).data('checked', true);
         //$("#item-" + ingredientNumber).remove("<i class='fa fa-circle-o' aria-hidden='true'></i>");
-        $("#item-" + ingredientNumber).append("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
+        //$("#item-" + ingredientNumber).append("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
     }
+
+    database.ref().update({
+      usedIngredientsArray: usedIngredientsArray
+    })
 
 });
 
