@@ -173,13 +173,12 @@ $('#get-videos').on('click', function() {
 
     //var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
     var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet';
-    //var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc';
     displayVideos(queryURL,'100%','100%','https://www.youtube.com/embed/');
 })
 
 function displayVideos(queryURL,videoWidth,videoHeight,videoSrc){
-    console.log("tried to displayVideos");
     console.log("query: " + queryURL);
+    $('#video-list').empty();
     $.ajax({
         url: queryURL,
         method: 'GET'
