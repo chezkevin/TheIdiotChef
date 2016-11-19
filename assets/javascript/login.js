@@ -2,6 +2,14 @@ $(document).ready(function() {
 
     //PLACHOLDER FOR CSS - WE NEED THE REGISTRATION FORM TO BE HIDDEN ON LOG
     $('#registration-panel').hide();
+    $('#navbar-logout-button').hide();
+    $('#registration-modal').hide();
+
+    if (!uid) {
+
+        //anonymously login the user upon page loading; don't call if already logged in 
+        anonymousLogIn();
+    }
 
 });
 
@@ -20,7 +28,6 @@ let database = firebase.database();
 let guestFolder = database.ref('/guestUsers/');
 let memberFolder = database.ref('/members/');
 let onlineUsers = database.ref('/onlineUsers/'); //possible enhancement
-let logInType = '';
 let uid = ''; //user id for tracking purposes
 
 
@@ -37,8 +44,21 @@ $('#btn-guest').on('click', function() {
 
 });
 
-//button even listners
-$('#btn-member').on('click', function() {
+$('#register').on('click', function() {
+
+    //remove this button by hiding
+    $(this).hide();
+
+    //show modal to register
+    $('#registration-modal').show();
+
+    //prevent page refresh
+    return false
+
+});
+
+
+$('#navbar-login-button').on('click', function() {
 
     //login anonymously
     memberLogIn();
@@ -49,27 +69,37 @@ $('#btn-member').on('click', function() {
     //prevent page refresh
     return false
 
+
+
 });
 
-$('#btn-register').on('click', function() {
+$('#navbar-logout-button').on('click', function(e) {
 
-    //remove this button by hiding
-    $(this).hide();
+    e.preventDefault();
 
-    //hide member login panel
-    $('#member-login-panel').hide();
-
-    //render the registration form
-    $('#registration-panel').show();
+    logOut();
 
     //prevent page refresh
     return false
 
 });
 
-$('#btn-submit-registration').on('click', function() {
+$('#registration-button').on('click', function() {
 
     registerUser();
+
+    //prevent page refresh
+    return false
+
+});
+
+$('#close-modal-button').on('click', function() {
+
+    $('#registration-modal').hide();
+    $('#register').show();
+
+    //prevent page refresh
+    return false
 
 });
 
@@ -112,6 +142,8 @@ function anonymousLogIn() {
                 }
             })
 
+            //intentionally don't display logout as they are anonymously logged in
+
             //handle login error
         }).catch(e => {
 
@@ -137,7 +169,7 @@ function memberLogIn() {
 
     firebase.auth().signInWithEmailAndPassword(email, pass)
         .then(user => {
-        	console.log(user);
+            console.log(user);
             //create user ID, capture it, and make a baseline profile
             uid = user.uid;
             let userFolder = database.ref('/members/' + uid);
@@ -154,10 +186,17 @@ function memberLogIn() {
 
             })
 
+            //tell user that they are logged in w email address
+            $('#userName').html('Logged in as: ' + user.email);
+
+            //hide login form upon success and display logout button
+            $('#navbar-login-form').hide();
+            renderLogOut();
+
         })
         .then(() => {
 
-        	//disconnect evente listener DRY OPPORTUNITY -IN ALL 3 login flows
+            //disconnect evente listener DRY OPPORTUNITY -IN ALL 3 login flows
             let loginStatusFolder = database.ref('/members/' + uid + '/loginStatus');
 
             loginStatusFolder.on('value', function(snapshot) {
@@ -178,12 +217,16 @@ function memberLogIn() {
 
 function registerUser() {
 
+    //update dom - hide various items upon register button click
+    $('#registration-modal').hide();
+    $('#navbar-login-form').hide();
 
     let email = $('#registration-email-input').val().trim();
     let pass = $('#registration-password-input').val().trim();
 
-    console.log('email ' + email + ' pword ' + pass);
-
+    //empty out text that was input
+    $('#registration-email-input').val('');
+    $('#registration-password-input').val('');
 
     firebase.auth().createUserWithEmailAndPassword(email, pass)
         .then(user => {
@@ -222,6 +265,7 @@ function registerUser() {
 
             //on success, render next page
             //TODO
+            renderLogOut();
 
 
         })
@@ -236,27 +280,43 @@ function registerUser() {
 
 }
 
-// add a real time listener // firebaseUser null if not logged in
+function renderLogOut() {
+
+    $('#navbar-logout-button').show();
+
+}
+
+function logOut() {
+
+    firebase.auth().signOut()
+        .then(() => {
+            console.log('Signed Out');
+        })
+        .catch(error => {
+            console.error('Sign Out Error: ', error);
+        });
+
+    //remove logged in user name in header
+    $('#userName').html('');
+
+    //add login option up top on navbar
+    renderNavBarLogIn();
+
+}
+
+
+function renderNavBarLogIn() {
+
+    //hide logout button and display login form
+    $('#navbar-logout-button').hide();
+    $('#navbar-login-form').show();
+
+}
+
 /*
-firebase.auth().onAuthStateChanged(firebaseUser => {
-	console.log(firebaseUser);
-	currentUser = firebaseUser;
-	if (firebaseUser){
-		console.log("user: "+ firebaseUser);
-		btnLogout.show();
-	}
-	else {
-		console.log ('not logged in');
-		btnLogout.hide();
-	}
-} )
-*/
+Parking Lot
 
-
-/*PARKING LOT
-
-	On firebase discconnect, is the user logged out?
-	Auth status event listener - TBD what it would do...
-	Display a logout button upon login as MEMBER or REGISTERED - as registration = auto login
+	Merge anonymous acount data accumulated upon login w/ user's profile
+	
 
 */
