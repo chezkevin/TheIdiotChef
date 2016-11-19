@@ -161,16 +161,6 @@ $('#submitIngredientsButton').on('click', function() {
         });
 });
 
-$('#get-videos').on('click', function() {
-    //var youTubeQ = 'what to make with ';
-    var youTubeQ = ingredientsArray.join('+');
-    youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
-
-    //var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
-    var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ 'AIzaSyDOkg-u9jnhP-WnzX5WPJyV1sc5QQrtuyc' + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet';
-    displayVideos(queryURL,'100%','100%','https://www.youtube.com/embed/');
-})
-
 $(document).on("click",".recipe-title",function() {
     var youTubeQ = $(this).text();
     youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
