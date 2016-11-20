@@ -30,3 +30,26 @@ a:hover{
 h1 img{
     height: 70px;
 }
+
+body {
+	background-image: url("background.jpg");
+	background-size: 100%;
+}
+
+h1 {
+	font-family: 'Pacifico', cursive;
+	font-size: 40px;
+}
+
+h2, h3, span {
+	font-family: 'Kalam', cursive;
+	color: black;
+}
+
+#ingredient-zone {
+	background-color: white;
+}
+
+#description {
+	color: white;
+}
