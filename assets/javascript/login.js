@@ -304,7 +304,6 @@ function logOut() {
 
 }
 
-
 function renderNavBarLogIn() {
 
     //hide logout button and display login form
