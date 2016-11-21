@@ -1,84 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>The Idiot Chef</title>
-	<!-- Bootstrap CDN-->
+    <meta charset="UTF-8">
+    <title>The Idiot Chef</title>
+    <!-- Bootstrap CDN-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link href="assets/styles/style.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="https://use.fontawesome.com/475b1e26ce.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Kalam|Pacifico" rel="stylesheet">
-
     <!-- Firebase Reference -->
-    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
 </head>
+
 <body>
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-2">
-				Google Login
-			</div>
-			<div class="col-lg-8 text-center">
-				<h1>
+    <div class="container">
+    <!-- navbar -->
+        <div class="row">
+            <div class="container">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#">TheIdiotChef</a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav">
+                                <li class="active" id="register"><a href="">Register</a></li>
+                                <li id="userName"></li>
+                            </ul>
+                            <form id="signin" class="navbar-form navbar-right" role="form">
+                                <div id="navbar-login-form">
+                                    <label for="email-input" id="login-form-message"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
+                                    </div>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                        <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+                <div class="modal" id="registration-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="lineModalLabel">Register!</h3>
+                            <button id="close-modal-button" class="btn btn-default">X</button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- content goes here -->
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Email address</label>
+                                    <input type="email" class="form-control" id="registration-email-input" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Password</label>
+                                    <input type="password" class="form-control" id="registration-password-input" placeholder="Password">
+                                </div>
+                                <button id="registration-button" type="submit" class="btn btn-default">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ <!-- body below navbar -->
+            <div class="col-lg-8 text-center">
+                <h1>
 					<img src="assets/images/logo.png">
 					The Idiot Chef
 				</h1>
-				<h3 id="description">
+                <h3 id="description">
 					Add ingredients to the list, and The Idiot Chef will generate recipe ideas for you! Full instructions and video tutorial links are included!
 				</h3>
-			</div>
-			<div class="col-lg-2">
-				
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-2">
-			</div>
-			<div class="col-lg-8">
-				<div class="form-group">
-					<div class="input-group">
-						<input type="text" class="form-control" id="ingredients-search">
-						<span class="input-group-btn">
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2">
+            </div>
+            <div class="col-lg-8">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="ingredients-search">
+                        <span class="input-group-btn">
 						<button id='addIngredientButton' class="btn btn-default" type="button">Add Ingredient</button>
 						<button id='submitIngredientsButton' class="btn btn-default" type="button">Submit Ingredients</button>
 						</span>
-					</div>
-				</div>	
-			</div>
-			<div class="col-lg-2">
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-3" id="ingredient-zone">
-				<h3>Your ingredients</h3>
-				<section id="ingredients-list">
-					
-				</section>
-			</div>
-			<div class="col-lg-3">
-				<h3>Recipes</h3>
-				<section id="recipe-list">
-				</section>
-			</div>
-			<div class="col-lg-6">
-				<h3>Videos</h3>
-				<section id="video-list">
-					Click on a recipe title to view videos for that recipe!
-				</section>
-			</div>
-		</div>
-	</div>
-	<footer class="footer">
-      <div class="container">
-        <a href="https://www.dominos.com/en/">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3" id="ingredient-zone">
+                <h3>Your ingredients</h3>
+                <section id="ingredients-list">
+                </section>
+            </div>
+            <div class="col-lg-3">
+                <h3>Recipes</h3>
+                <section id="recipe-list">
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <h3>Videos</h3>
+                <section id="video-list">
+                    Click on a recipe title to view videos for that recipe!
+                </section>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <a href="https://www.dominos.com/en/">
         	In case of emergency
         </a>
-      </div>
+        </div>
     </footer>
-<!-- Javascript -->
-<script src="assets/javascript/TYapp.js"></script>
+    <!-- Javascript -->
+    <script src="assets/javascript/auth.js"></script>
+    <script src="assets/javascript/TYapp.js"></script>
 </body>
-
 
 </html>

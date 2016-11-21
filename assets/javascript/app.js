@@ -12,7 +12,7 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database().ref();
 
-const txtEmail = $('#txtEmail');
+/*const txtEmail = $('#txtEmail');
 const txtPassword = $('#txtPassword');
 var btnLogin = $('#btnLogin');
 const btnSignUp = $('#btnSignUp');
@@ -111,4 +111,4 @@ $('#addIngredientButton').on('click', function() {
 
     loadIngredients();
 })
-
+*/
