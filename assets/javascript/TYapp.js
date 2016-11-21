@@ -99,6 +99,8 @@ $('#submitIngredientsButton').on('click', function() {
 
         var ingredientsURL = usedIngredientsArray.join("&2C");
 
+        console.log(ingredientsURL);
+
         var apiKey = "ifDlpOiJZwmshbi3KF67KyFbySC4p1OjmEEjsnd0c6P7clfaPK";
         var foodQueryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + ingredientsURL + "&limitLicense=true&number=5&ranking=1";
         
