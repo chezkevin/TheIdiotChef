@@ -9,136 +9,95 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-var ingredientsArray = [];
+var ref = database.ref();
+
+var ingredientZone = ref.child("ingredientZone");
 
 var usedIngredientsArray = [];
 
-var ingredientCount = 0;
+database.ref('ingredientZone').orderByChild("name").on("child_added", function(childSnapshot) {
 
-function loadIngredients() {
+    // usedIngredientsArray = snapshot.val().usedIngredientsArray;
 
-    ingredientCount = 0;
-
-    $('#ingredients-list').empty();
-
-    for(var i=0; i<ingredientsArray.length; i++) {
-
-        var ingredientDisplay = $('<div>');
-        ingredientDisplay.attr("id", "ingredient-" + ingredientCount);
-        ingredientDisplay.append(" " + ingredientsArray[i] + " ");
-
-        var ingredientDelete = $("<button>");
-        ingredientDelete.attr("data-ingredient", ingredientCount);
-        ingredientDelete.addClass("deletebox");
-        ingredientDelete.append("<i class='fa fa-trash' aria-hidden='true'></i>");
-
-        var ingredientCheck = $("<button>");
-        ingredientCheck.attr("data-ingredient", ingredientCount);
-        ingredientCheck.addClass("checkbox");
-
-
-    // reading checked status on load, not working as intended (first item won't check!) TY
-
-        if ( $.inArray(ingredientsArray[i], usedIngredientsArray) ) {
-            ingredientCheck.append("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
-            ingredientCheck.attr("data-checked", true);
-        }
-        else {
-            ingredientCheck.append("<i class='fa fa-circle-o' aria-hidden='true'></i>");
-            ingredientCheck.attr("data-checked", false);
-        }
-
-        ingredientDisplay = ingredientDisplay.append(ingredientDelete);
-        ingredientDisplay = ingredientDisplay.prepend(ingredientCheck);
-
-        $('#ingredients-list').append(ingredientDisplay);
-
-        ingredientCount++;
-
+    if (childSnapshot.val().checked === 'true') {
+        $("#ingredients-list").append("<div class='ingredient' id='" + childSnapshot.val().name + "'><button class='checkbox' id='" + childSnapshot.val().name + "'><i class='fa fa-check-circle-o' aria-hidden='true'></i></button><span id='name'> " + childSnapshot.val().name + " </span><button class='deletebox' id='" + childSnapshot.val().name + "'><i class='fa fa-trash' aria-hidden='true'></i></button></div>");
+        usedIngredientsArray.push(childSnapshot.val().name);
     }
 
-}
+    else if (childSnapshot.val().checked === 'false') {
+        $("#ingredients-list").append("<div class='ingredient' id='" + childSnapshot.val().name + "'><button class='nocheckbox' id='" + childSnapshot.val().name + "'><i class='fa fa-circle-o' aria-hidden='true'></i></button><span id='name'> " + childSnapshot.val().name + " </span><button class='deletebox' id='" + childSnapshot.val().name + "'><i class='fa fa-trash' aria-hidden='true'></i></button></div>");
+    }
 
-database.ref().on("value", function(snapshot) {
-
-	ingredientsArray = snapshot.val().ingredientsArray;
-    usedIngredientsArray = snapshot.val().usedIngredientsArray;
-
-	loadIngredients();
-
-})
+}, function(errorObject) {
+    console.log("Errors handled: " + errorObject.code);
+});
 
 $('#addIngredientButton').on('click', function() {
 
-    var newIngredient = $('#ingredients-search').val().trim();
+    usedIngredientsArray = [];
 
-    ingredientsArray.push(newIngredient);
-    usedIngredientsArray.push(newIngredient);
+    var newIngredientName = $('#ingredients-search').val().trim();
 
-    database.ref().set({
-      ingredientsArray: ingredientsArray,
-      usedIngredientsArray: usedIngredientsArray
-    })
+    var newIngredient = {
+        name: newIngredientName,
+        checked: 'true'
+    }
 
-    loadIngredients();
+    ingredientZone.child(newIngredientName).set(newIngredient);
+
+    $("#ingredients-search").val("");
+
+    return false;
 
 })
 
 $(document.body).on('click', '.deletebox', function(){
 
-    var ingredientNumber = $(this).data("ingredient");
+    var ingredientToDelete = $(this).attr("id");
 
-    $("#item-" + ingredientNumber).remove();
+    $("#" + ingredientToDelete).remove();
 
-    ingredientsArray.splice(ingredientNumber, 1);
+    var deleteLocation = ingredientZone.child(ingredientToDelete);
 
-    if ( $.inArray(ingredientsArray[ingredientNumber], usedIngredientsArray) ) {
-        usedIngredientsArray.splice(ingredientNumber, 1); 
-    }
-
-    database.ref().set({
-      ingredientsArray: ingredientsArray,
-      usedIngredientsArray: usedIngredientsArray
-    })
-
-    loadIngredients();
-
+    deleteLocation.remove();
 });
 
-
-//working on check functionality - TY
+// have checkbox functionality working with cheat (refresh) if anyone has ideas to avoid, feel free to edit TY
 
 $(document.body).on('click', '.checkbox', function(){
 
-    var ingredientNumber = $(this).data("ingredient");
+    var ingredientToCheck = $(this).attr("id");
 
-    if ($(this).data('checked', true)){
-        console.log('unchecking');
-        usedIngredientsArray.splice(ingredientNumber, 1); 
-        $("#item-" + ingredientNumber).data('checked', false);
-        //$("#item-" + ingredientNumber).remove("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
-        //$("#item-" + ingredientNumber).append("<i class='fa fa-circle-o' aria-hidden='true'></i>");
-    }
-    else {
-        console.log('checking');
-        usedIngredientsArray.push(this); 
-        $("#item-" + ingredientNumber).data('checked', true);
-        //$("#item-" + ingredientNumber).remove("<i class='fa fa-circle-o' aria-hidden='true'></i>");
-        //$("#item-" + ingredientNumber).append("<i class='fa fa-check-circle-o' aria-hidden='true'></i>");
-    }
+    var checkLocation = ingredientZone.child(ingredientToCheck);
 
-    database.ref().update({
-      usedIngredientsArray: usedIngredientsArray
-    })
+    var checkStatus = checkLocation.child('checked');
+
+    checkLocation.update({checked: 'false'});
+
+    location.reload();
 
 });
 
-// food requests - appears to work TY
+$(document.body).on('click', '.nocheckbox', function(){
+
+    var ingredientToCheck = $(this).attr("id");
+
+    var checkLocation = ingredientZone.child(ingredientToCheck);
+
+    var checkStatus = checkLocation.child('checked');
+
+    checkLocation.update({checked: 'true'});
+
+    location.reload();
+
+});
+
+// food requests - appears to work but getting back odd result, not a lot of ingredients used TY
 
 $('#submitIngredientsButton').on('click', function() {
         $('#recipe-list').empty();
 
-        var ingredientsURL = ingredientsArray.join("&2C");
+        var ingredientsURL = usedIngredientsArray.join("&2C");
 
         var apiKey = "ifDlpOiJZwmshbi3KF67KyFbySC4p1OjmEEjsnd0c6P7clfaPK";
         var foodQueryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + ingredientsURL + "&limitLicense=true&number=5&ranking=1";
