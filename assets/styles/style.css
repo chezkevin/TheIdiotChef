@@ -1,7 +1,9 @@
 .checkbox {
 	display: inline;
 }
-
+.error-modal {
+	display: none; 
+}
 .recipeImage {
 	height: 30%;
 	width: 30%;
