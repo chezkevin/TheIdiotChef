@@ -46,10 +46,29 @@ h2, h3, span {
 	color: black;
 }
 
-#ingredient-zone {
-	background-color: white;
+#ingredient-zone h3, #video-zone h3, #recipe-zone h3 {
+	background-color: #DDDDDD;
+	padding: 10px;
+	border-radius: 5px;
 }
 
-#description {
+#ingredient-zone, #video-zone, #recipe-zone{
+	min-height:100px;
+}
+
+#description, h1 {
 	color: white;
+}
+
+section#video-list,
+section#ingredients-list,
+section#recipe-list {
+    min-height: 100px;
+    background-color: #EEEEEE;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.footer{
+	padding: 10px;
 }

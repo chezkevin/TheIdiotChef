@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>The Idiot Chef</title>
+    <link rel='shortcut icon' href='favicon_tic.ico' type='image/x-icon'/ >
     <!-- Bootstrap CDN-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link href="assets/styles/style.css" rel="stylesheet">
@@ -28,7 +29,10 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" href="#">TheIdiotChef</a>
+                            <a class="navbar-brand" href="#">
+                                <span class="glyphicon glyphicon-cutlery"></span>
+                                TheIdiotChef
+                            </a>
                         </div>
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <ul class="nav navbar-nav">
@@ -77,9 +81,10 @@
                 </div>
             </div>
  <!-- body below navbar -->
+            <div class="col-lg-2">
+            </div>
             <div class="col-lg-8 text-center">
                 <h1>
-					<img src="assets/images/logo.png">
 					The Idiot Chef
 				</h1>
                 <h3 id="description">
@@ -107,18 +112,27 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3" id="ingredient-zone">
-                <h3>Your ingredients</h3>
+            <div class="col-md-3" id="ingredient-zone">
+                <h3>
+                    <span class="glyphicon glyphicon-leaf"></span>
+                    Your ingredients
+                </h3>
                 <section id="ingredients-list">
                 </section>
             </div>
-            <div class="col-lg-3">
-                <h3>Recipes</h3>
+            <div class="col-md-3" id="recipe-zone">
+                <h3>
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Recipes
+                </h3>
                 <section id="recipe-list">
                 </section>
             </div>
-            <div class="col-lg-6">
-                <h3>Videos</h3>
+            <div class="col-md-6" id="video-zone">
+                <h3>
+                    <span class="glyphicon glyphicon-film"></span>
+                    Videos
+                </h3>
                 <section id="video-list">
                     Click on a recipe title to view videos for that recipe!
                 </section>
@@ -127,7 +141,7 @@
     </div>
     <footer class="footer">
         <div class="container">
-            <a href="https://www.dominos.com/en/">
+            <a href="https://www.dominos.com/en/" target="_blank">
         	In case of emergency
         </a>
         </div>
