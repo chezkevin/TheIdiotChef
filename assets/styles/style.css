@@ -59,3 +59,16 @@ h2, h3, span {
 #description, h1 {
 	color: white;
 }
+
+section#video-list,
+section#ingredients-list,
+section#recipe-list {
+    min-height: 100px;
+    background-color: #EEEEEE;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.footer{
+	padding: 10px;
+}
