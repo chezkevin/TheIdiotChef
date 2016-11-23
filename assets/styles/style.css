@@ -5,7 +5,7 @@
 	display: none; 
 }
 .login-items {
-	float: left;
+	/*float: left;*/
 	border-width: 0.5px;
 	border-style: solid;
 	border-color: lightgrey;

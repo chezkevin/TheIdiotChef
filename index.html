@@ -54,7 +54,7 @@
                                 <li><button type="button" class="btn login-items" id="register"><a href="">Register</a></button></li>
                                 <li><button type="button" class="btn login-items" id="guest"><a href="">Guest Login</a></button></li>
                                 <li id="userName"></li>
-                                <li><button type="button" class="btn login-items hide" id="upgrade-from-guest"><a href="">Upgrade Login</a></button></li>
+                                <li><button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button></li>
                                 <li id="userName"></li>
                             </ul>
                             <form id="signin" class="navbar-form navbar-right" role="form">
@@ -75,6 +75,16 @@
                         </div>
                     </div>
                 </nav>
+
+                <button type="button" class="btn login-items" id="password-reset"><a href="">Reset Password</a></button>
+                <button type="button" class="btn login-items" id="email-reset"><a href="">Update Email</a></button>
+                <div class="input-group email-update">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
+                    <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
+                </div>
+                <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
+
+
                 <div class="modal" id="registration-modal">
                     <div class="modal-content">
                         <div class="modal-header">
