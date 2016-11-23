@@ -1,21 +1,4 @@
-$(document).ready(function() {
-
-    //PLACHOLDER FOR CSS - WE NEED THE REGISTRATION FORM TO BE HIDDEN ON LOG
-    $('#registration-panel').hide();
-    $('#navbar-logout-button').hide();
-    $('#registration-modal').hide();
-    $('#upgrade-from-guest').hide();
-
-    // if (!uid) {
-
-    //     //anonymously login the user upon page loading; don't call if already logged in 
-    //     anonymousLogIn();
-    // }
-
-});
-
-// console.log("current USer" + firebase.auth().currentUser);
-
+// global configuration details are outside the document.ready function for now
 
 var config = {
     apiKey: "AIzaSyCfGxrkb9P3oYRWrQ5XL4wxNmpyv_x9VL0",
@@ -24,161 +7,89 @@ var config = {
     storageBucket: "theidiotchef-149717.appspot.com",
     messagingSenderId: "963963795794"
 };
+
 firebase.initializeApp(config);
 
-//other variables
-let database = firebase.database();
-// let guestFolder = database.ref('/guestUsers/');
-// decided to use one main db folder
-let memberFolder = database.ref('/members/');
-// let onlineUsers = database.ref('/onlineUsers/'); //possible enhancement
+var database = firebase.database();
+// decided to use one main db folder for all members
+var memberFolder = database.ref('/members/');
+
+$(document).ready(function() {
+
 let uid = ''; //user id for tracking purposes
 var currentUser;
 var regFlag = true;
+var userProfile = {
+    userID: uid,
+    email: '',
+    loginStatus: null,
+    previousSearch: {},
+    lastLogIn: firebase.database.ServerValue.TIMESTAMP
+};
 
 
-//button even listners
-$('#guest').on('click', function() {
-    // $('#upgrade-from-guest').addClass('show');
-    //login anonymously
-    anonymousLogIn();
+function initialState() {
 
-});
-
-// capture email and password
-function upgradeLogin(){
+    $('#registration-panel').hide();
+    $('#navbar-logout-button').hide();
     $('#registration-modal').hide();
-    // $('#navbar-login-form').hide();
-    let email = $('#registration-email-input').val().trim();
-    let password = $('#registration-password-input').val().trim();
-    const credential = firebase.auth.EmailAuthProvider.credential(
-        email, 
-        password
-    );
+    $('#upgrade-from-guest').hide();
 
-    firebase.auth().currentUser.link(credential).then(function(user) {
-        console.log("Anonymous account successfully upgraded", user);
-        $('upgrade-from-guest').hide();
-    }, function(error) {
-        console.log("Error upgrading anonymous account", error);
-    });
 }
 
-$('#register').on('click', function() {
-    regFlag = true;
-    //remove this button by hiding
-    $(this).hide();
-
-    //show modal to register
-    $('#registration-modal').show();
-
-    //prevent page refresh
-    return false
-
-});
-
-
-$('#navbar-login-button').on('click', function() {
-
-    //login anonymously
-    memberLogIn();
-    console.log(firebase.auth().currentUser);
-
-
-    //call function to render next page
-    //TODO
-
-    //prevent page refresh
-    return false
-
-
-
-});
-
-$('#navbar-logout-button').on('click', function(e) {
-
-    e.preventDefault();
-
-    logOut();
-
-    //prevent page refresh
-    return false
-
-});
-
-$('#registration-button').on('click', function() {
-    if (regFlag === true){
-         registerUser();
+function captureUserData(user){
+    //create user ID, capture it, and make a baseline profile    
+    uid = user.uid;
+    //capture that actual user id, set as var accessible to other functions in the page 
+    userProfile.userID = uid;
+    userProfile.loginStatus = true;
+    userProfile.email = user.email;
+    console.log(user.email);
+    if (userProfile.email === null){
+        userProfile.email = "guest";
     }
-    else if (regFlag === false){
-        upgradeLogin();
-    }
-   
- 
+    let userFolder = database.ref('/members/' + uid);
+    // add to database
+    userFolder.set(userProfile);
+    // what to do when user closes window / disconnects
+    // Logout handled later on
+    console.log(userProfile.userID);
+    if (userProfile.email === 'guest'){
+        // let userFolder = database.ref('/members/' + uid);
+        userFolder.onDisconnect().remove();
+    } 
+    // else {
+    //     let loginStatusFolder = database.ref('/members/' + userProfile.userID + '/loginStatus');
+    //     loginStatusFolder.onDisconnect().set("false");
+    // }    
 
-    //prevent page refresh
-    return false
+        
+}
 
-});
 
-$('#close-modal-button').on('click', function() {
 
-    $('#registration-modal').hide();
-    $('#register').show();
-
-    //prevent page refresh
-    return false
-
-});
-
-//anonymously login the user
+//anonymously login the user - for Guest User option
 function anonymousLogIn() {
-
     firebase.auth().signInAnonymously()
         .then(user => {
-            console.log("in here");
-
-            //create user ID, capture it, and make a baseline profile
-            // let userFolderName = guestFolder.push().key;
-            
-            let userFolderName = user.uid;
-            console.log(userFolderName);
-            let userFolder = database.ref('/members/' + userFolderName);
+            // capture the user data as guest
+            captureUserData(user);
+            // if successful login then show upgrade button
             $('#upgrade-from-guest').addClass('show');
-            //capture that actual user id, set as var accessible to other functions in the page 
-            uid = user.uid;
-
-            // //let program know if user is anonymously logged in
-            logInType = 'anonymous';
-
-            //set profile
-            userFolder.set({
-
-                userID: uid,
-                email: '',
-                loginStatus: true,
-                previousSearch: {},
-                lastLogIn: firebase.database.ServerValue.TIMESTAMP
-
-            })
-
-            //clear the user folder upon disconnect DRY OPPORTUNITY -IN ALL 3 login flows
-            userFolder.on('value', function(snapshot) {
-                if (snapshot.val()) {
-                    userFolder.onDisconnect().remove();
-                    console.log('success');
-                }
-            })
-
-            //intentionally don't display logout as they are anonymously logged in
-
-            //handle login error
+            
         }).catch(e => {
-            console.log(e);
             let errorCode = e.code;
             let errorMessage = e.message;
-            console.log('anonymous login error: ' + errorMessage);
-            $('#upgrade-from-guest').addClass('show');
+            // try to make errors plain English
+            if (errorCode = "auth/network-request-failed") {
+                let displayMessage = 'Network error - unable to login as guest. Please try again.';
+            }
+            else {
+                let displayMessage = '<p> Guest Login Error: ' + errorCode + ' Please try again.</p>';
+            }
+
+            let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
+            displayErrorMessage(displayMessage); //modal not popping *****
 
         });
 }
@@ -195,64 +106,54 @@ function memberLogIn() {
 
     firebase.auth().signInWithEmailAndPassword(email, pass)
         .then(user => {
-            console.log(user);
+            // console.log(user);
             //create user ID, capture it, and make a baseline profile
             uid = user.uid;
             let userFolder = database.ref('/members/' + uid);
 
             //capture that actual user id, set as var accessible to other functions in the page 
             uid = user.uid;
-            logInType = 'member';
-
-            //update last login time
-            userFolder.update({
-
-                loginStatus: true,
-                lastLogIn: firebase.database.ServerValue.TIMESTAMP
-
-            })
-
-            //tell user that they are logged in w email address
-            $('#userName').show();
-            $('#userName').html('Logged in as: ' + user.email);
-
-
-            //hide login form upon success and display logout button
-            $('#navbar-login-form').hide();
-            $('#register').hide();
-            $('#guest').hide();
-            
            
 
-        })
-        .then(() => {
-
-            //disconnect evente listener DRY OPPORTUNITY -IN ALL 3 login flows
-            let loginStatusFolder = database.ref('/members/' + uid + '/loginStatus');
-
-            loginStatusFolder.on('value', function(snapshot) {
-                if (snapshot.val()) {
-                    loginStatusFolder.onDisconnect().set(false);
-                }
-            })
-
-
+            userProfile.loginStatus = true;
+            // add to database
+            userFolder.update({loginStatus: userProfile.loginStatus, 
+                    lastLogIn: userProfile.lastLogIn}
+                );
+            
+            loginDisplayElements(user.email, '#guest');
+        
         }).catch(e => {
-
+            
             let errorCode = e.code;
             let errorMessage = e.message;
-            console.log(e);
-            // modal for login messages
-            $('.error-modal').addClass('show');
-            $('.error-modal').removeClass('hide');
-            $('#error-modal-message').html('<p>Login Error: ' + errorMessage + ' Please try again.</p>');
+            console.log("in here with error");
+            let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
+            displayErrorMessage(displayMessage);  //modal not popping *****
 
-            console.log('Login Error: ' + errorMessage);
 
         });
 
 }
 
+function loginDisplayElements(email, hideId){
+            //tell user that they are logged in w email address
+            $('#userName').show();
+            $('#userName').html('Logged in as: ' + email);
+
+            //hide login form upon success and display logout button
+            $('#navbar-login-form').hide();
+            $('#register').hide();
+            $(hideId).hide();
+}
+
+function displayErrorMessage(message){
+    // modal for login messages
+    $('.error-modal').addClass('show');
+    $('.error-modal').removeClass('hide');
+    $('#error-modal-message').html(message);
+
+}
 
 function registerUser() {
 
@@ -262,34 +163,14 @@ function registerUser() {
 
     let email = $('#registration-email-input').val().trim();
     let pass = $('#registration-password-input').val().trim();
-
     //empty out text that was input
     $('#registration-email-input').val('');
     $('#registration-password-input').val('');
 
    
-         firebase.auth().createUserWithEmailAndPassword(email, pass)
+    firebase.auth().createUserWithEmailAndPassword(email, pass)
         .then(user => {
-            //note - upon success, user is logged in automatically per firebase 
-            //create user ID, capture it, and make a baseline profile
-            uid = user.uid;
-            let userFolder = database.ref('/members/' + uid);
-
-            //capture that actual user id, set as var accessible to other functions in the page 
-            uid = user.uid;
-            logInType = 'member';
-
-            //set default profile
-            userFolder.set({
-
-                userID: uid,
-                email: email,
-                loginStatus: true,
-                previousSearch: {},
-                lastLogIn: firebase.database.ServerValue.TIMESTAMP,
-                ingredients: "blah"
-
-            })
+            captureUserData(user);
              //tell user that they are logged in w email address
             $('#userName').show();
             $('#userName').html('Logged in as: ' + user.email);
@@ -369,6 +250,102 @@ function renderNavBarLogIn() {
 }
 
 
+
+
+// capture email and password
+function upgradeLogin(){
+    $('#registration-modal').hide();
+    // $('#navbar-login-form').hide();
+    let email = $('#registration-email-input').val().trim();
+    let password = $('#registration-password-input').val().trim();
+    const credential = firebase.auth.EmailAuthProvider.credential(
+        email, 
+        password
+    );
+
+    firebase.auth().currentUser.link(credential).then(function(user) {
+        console.log("Anonymous account successfully upgraded", user);
+        $('upgrade-from-guest').hide();
+    }, function(error) {
+        console.log("Error upgrading anonymous account", error);
+    });
+}
+
+$('#register').on('click', function() {
+    regFlag = true;
+    //remove this button by hiding
+    $(this).hide();
+
+    //show modal to register
+    $('#registration-modal').show();
+
+    //prevent page refresh
+    return false
+
+});
+
+//button even listners
+$('#guest').on('click', function() {
+    //login anonymously
+    anonymousLogIn();
+
+});
+
+// navbar on click function 
+$('#navbar-login-button').on('click', function() {
+
+    //login anonymously
+    memberLogIn();
+    console.log(firebase.auth().currentUser);
+
+
+    //call function to render next page
+    //TODO
+
+    //prevent page refresh
+    return false
+
+
+
+});
+
+$('#navbar-logout-button').on('click', function(e) {
+
+    e.preventDefault();
+
+    logOut();
+
+    //prevent page refresh
+    return false
+
+});
+
+$('#registration-button').on('click', function() {
+    if (regFlag === true){
+         registerUser();
+    }
+    else if (regFlag === false){
+        upgradeLogin();
+    }
+   
+ 
+
+    //prevent page refresh
+    return false
+
+});
+
+$('#close-modal-button').on('click', function() {
+
+    $('#registration-modal').hide();
+    $('#register').show();
+
+    //prevent page refresh
+    return false
+
+});
+
+
 // add a real time listener 
 // firebaseUser null if not logged in
 // this also allows user to be logged in after registering
@@ -410,6 +387,11 @@ $('#upgrade-from-guest').on('click', function(){
 
 
 })
+
+// Show and hide initial elements
+initialState();
+
+}); // end of document on ready
 /*
 Parking Lot
 	Merge anonymous acount data accumulated upon login w/ user's profile	
