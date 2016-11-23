@@ -51,7 +51,10 @@
                         </div>
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <ul class="nav navbar-nav">
-                                <li class="active" id="register"><a href="">Register</a></li>
+                                <li><button type="button" class="btn login-items" id="register"><a href="">Register</a></button></li>
+                                <li><button type="button" class="btn login-items" id="guest"><a href="">Guest Login</a></button></li>
+                                <li id="userName"></li>
+                                <li><button type="button" class="btn login-items hide" id="upgrade-from-guest"><a href="">Upgrade Login</a></button></li>
                                 <li id="userName"></li>
                             </ul>
                             <form id="signin" class="navbar-form navbar-right" role="form">
@@ -78,6 +81,7 @@
                             <h3 class="modal-title" id="lineModalLabel">Register!</h3>
                             <button id="close-modal-button" class="btn btn-default">X</button>
                         </div>
+
                         <div class="modal-body">
                             <!-- content goes here -->
                             <form>

@@ -4,6 +4,14 @@
 .error-modal {
 	display: none; 
 }
+.login-items {
+	float: left;
+	border-width: 0.5px;
+	border-style: solid;
+	border-color: lightgrey;
+	margin-top: 10px;
+	/*margin-bottom: 10px;*/
+}
 .recipeImage {
 	height: 30%;
 	width: 30%;

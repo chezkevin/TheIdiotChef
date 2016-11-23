@@ -4,12 +4,13 @@ $(document).ready(function() {
     $('#registration-panel').hide();
     $('#navbar-logout-button').hide();
     $('#registration-modal').hide();
+    $('#upgrade-from-guest').hide();
 
-    if (!uid) {
+    // if (!uid) {
 
-        //anonymously login the user upon page loading; don't call if already logged in 
-        // anonymousLogIn();
-    }
+    //     //anonymously login the user upon page loading; don't call if already logged in 
+    //     anonymousLogIn();
+    // }
 
 });
 
@@ -17,12 +18,6 @@ $(document).ready(function() {
 
 
 var config = {
-//bran's firebase
-    // apiKey: "AIzaSyAVahZhtTXMuf3JFNjcDSSbSFb2EW6MCNI",
-    // authDomain: "auth-test-a6dcc.firebaseapp.com",
-    // databaseURL: "https://auth-test-a6dcc.firebaseio.com",
-    // storageBucket: "auth-test-a6dcc.appspot.com",
-    // messagingSenderId: "208122145495"
     apiKey: "AIzaSyCfGxrkb9P3oYRWrQ5XL4wxNmpyv_x9VL0",
     authDomain: "theidiotchef-149717.firebaseapp.com",
     databaseURL: "https://theidiotchef-149717.firebaseio.com",
@@ -33,28 +28,44 @@ firebase.initializeApp(config);
 
 //other variables
 let database = firebase.database();
-let guestFolder = database.ref('/guestUsers/');
+// let guestFolder = database.ref('/guestUsers/');
+// decided to use one main db folder
 let memberFolder = database.ref('/members/');
-let onlineUsers = database.ref('/onlineUsers/'); //possible enhancement
+// let onlineUsers = database.ref('/onlineUsers/'); //possible enhancement
 let uid = ''; //user id for tracking purposes
+var currentUser;
+var regFlag = true;
 
 
 //button even listners
-// $('#btn-guest').on('click', function() {
+$('#guest').on('click', function() {
+    // $('#upgrade-from-guest').addClass('show');
+    //login anonymously
+    anonymousLogIn();
 
-//     //login anonymously
-//     anonymousLogIn();
-//     console.log("current USer" + firebase.auth().currentUser);
+});
 
-//     //TODO - IF LOGIN ERROR, SHOULD WE NOT MOVE TO NEXT PAGE?
+// capture email and password
+function upgradeLogin(){
+    $('#registration-modal').hide();
+    // $('#navbar-login-form').hide();
+    let email = $('#registration-email-input').val().trim();
+    let password = $('#registration-password-input').val().trim();
+    const credential = firebase.auth.EmailAuthProvider.credential(
+        email, 
+        password
+    );
 
-//     //call function to render next page 
-//     //TODO
-
-// });
+    firebase.auth().currentUser.link(credential).then(function(user) {
+        console.log("Anonymous account successfully upgraded", user);
+        $('upgrade-from-guest').hide();
+    }, function(error) {
+        console.log("Error upgrading anonymous account", error);
+    });
+}
 
 $('#register').on('click', function() {
-
+    regFlag = true;
     //remove this button by hiding
     $(this).hide();
 
@@ -96,9 +107,14 @@ $('#navbar-logout-button').on('click', function(e) {
 });
 
 $('#registration-button').on('click', function() {
-
-    registerUser();
-  console.log(firebase.auth().currentUser);
+    if (regFlag === true){
+         registerUser();
+    }
+    else if (regFlag === false){
+        upgradeLogin();
+    }
+   
+ 
 
     //prevent page refresh
     return false
@@ -118,21 +134,21 @@ $('#close-modal-button').on('click', function() {
 //anonymously login the user
 function anonymousLogIn() {
 
-    //prevent duplicate login
-    if (uid) return;
-
-    //login 
     firebase.auth().signInAnonymously()
         .then(user => {
+            console.log("in here");
 
             //create user ID, capture it, and make a baseline profile
-            let userFolderName = guestFolder.push().key;
-            let userFolder = database.ref('/guestUsers/' + userFolderName);
-
+            // let userFolderName = guestFolder.push().key;
+            
+            let userFolderName = user.uid;
+            console.log(userFolderName);
+            let userFolder = database.ref('/members/' + userFolderName);
+            $('#upgrade-from-guest').addClass('show');
             //capture that actual user id, set as var accessible to other functions in the page 
             uid = user.uid;
 
-            //let program know if user is anonymously logged in
+            // //let program know if user is anonymously logged in
             logInType = 'anonymous';
 
             //set profile
@@ -162,15 +178,13 @@ function anonymousLogIn() {
             let errorCode = e.code;
             let errorMessage = e.message;
             console.log('anonymous login error: ' + errorMessage);
+            $('#upgrade-from-guest').addClass('show');
 
         });
 }
 
-//login in the existing user
+//login in an existing user
 function memberLogIn() {
-
-    //if already logged in anoynmously, do something
-    //TODO?
 
     let email = $('#email-input').val().trim();
     let pass = $('#password-input').val().trim();
@@ -205,8 +219,10 @@ function memberLogIn() {
 
             //hide login form upon success and display logout button
             $('#navbar-login-form').hide();
-             $('#register').hide();
-            // renderLogOut();
+            $('#register').hide();
+            $('#guest').hide();
+            
+           
 
         })
         .then(() => {
@@ -225,7 +241,7 @@ function memberLogIn() {
 
             let errorCode = e.code;
             let errorMessage = e.message;
-              console.log(e);
+            console.log(e);
             // modal for login messages
             $('.error-modal').addClass('show');
             $('.error-modal').removeClass('hide');
@@ -247,15 +263,14 @@ function registerUser() {
     let email = $('#registration-email-input').val().trim();
     let pass = $('#registration-password-input').val().trim();
 
-
     //empty out text that was input
     $('#registration-email-input').val('');
     $('#registration-password-input').val('');
 
-    firebase.auth().createUserWithEmailAndPassword(email, pass)
+   
+         firebase.auth().createUserWithEmailAndPassword(email, pass)
         .then(user => {
-            //note - upon success, user is logged in automatically per firebase
-
+            //note - upon success, user is logged in automatically per firebase 
             //create user ID, capture it, and make a baseline profile
             uid = user.uid;
             let userFolder = database.ref('/members/' + uid);
@@ -311,15 +326,15 @@ function registerUser() {
             $('#register').show();
 
         })
-
-
-}
-
-function renderLogOut() {
-
-    $('#navbar-logout-button').show();
+       
 
 }
+
+// function renderLogOut() {
+
+//     $('#navbar-logout-button').show();
+
+// }
 
 function logOut() {
 
@@ -353,24 +368,23 @@ function renderNavBarLogIn() {
 
 }
 
-var currentUser;
-// add a real time listener // firebaseUser null if not logged in
-// this allows user to be logged in after registering
+
+// add a real time listener 
+// firebaseUser null if not logged in
+// this also allows user to be logged in after registering
+
 firebase.auth().onAuthStateChanged(firebaseUser => {
-    console.log(firebaseUser);
     currentUser = firebaseUser;
     if (firebaseUser){
-        console.log("user: "+ firebaseUser.email);
-        // btnLogout.show();
         $('#navbar-logout-button').show();
         $('#register').hide();
         $('#navbar-login-form').hide();
+        $('#guest').hide();
     }
     else {
-        console.log ('not logged in');
-        // btnLogout.hide();
         $('#navbar-logout-button').hide();
         $('#register').show();
+        $('#guest').show();
     }
 } )
 
@@ -380,9 +394,23 @@ $('#close-modal').on('click', function(){
     console.log("clicking me!");
     $('.error-modal').removeClass('show');
     $('.error-modal').addClass('hide');
+
+    //prevent page refresh
+    return false;
+
+})
+
+$('#upgrade-from-guest').on('click', function(){
+    //clear out the inputs
+    regFlag = false;
+    $('#registration-modal').show(); 
+
+    //prevent page refresh
+    return false;
+
+
 })
 /*
 Parking Lot
-	Merge anonymous acount data accumulated upon login w/ user's profile
-	
+	Merge anonymous acount data accumulated upon login w/ user's profile	
 */
