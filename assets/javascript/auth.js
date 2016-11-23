@@ -17,6 +17,7 @@ $(document).ready(function() {
 
 
 var config = {
+//bran's firebase
     // apiKey: "AIzaSyAVahZhtTXMuf3JFNjcDSSbSFb2EW6MCNI",
     // authDomain: "auth-test-a6dcc.firebaseapp.com",
     // databaseURL: "https://auth-test-a6dcc.firebaseio.com",
@@ -270,7 +271,8 @@ function registerUser() {
                 email: email,
                 loginStatus: true,
                 previousSearch: {},
-                lastLogIn: firebase.database.ServerValue.TIMESTAMP
+                lastLogIn: firebase.database.ServerValue.TIMESTAMP,
+                ingredients: "blah"
 
             })
              //tell user that they are logged in w email address

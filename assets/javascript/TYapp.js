@@ -1,19 +1,16 @@
-/*
-var config = {
-    apiKey: "AIzaSyBO9FzAeEmaMZiTrt648ni-rUIRzdUGzFs",
-    authDomain: "myfirstfirebase-3c395.firebaseapp.com",
-    databaseURL: "https://myfirstfirebase-3c395.firebaseio.com",
-    storageBucket: "myfirstfirebase-3c395.appspot.com",
-    messagingSenderId: "535414917818"
-  };
-firebase.initializeApp(config);
-
-var database = firebase.database();
-*/
 //various database references for food updates
 let ref = database.ref();
 let ingredientZone = ref.child("ingredientZone");
+let userZone = ref.child('members');
 let usedIngredientsArray = [];
+// var userIng = firebase.auth().currentUser.uid;
+var userPlace = "";
+
+// userZone.on('child_added', function(childSnapshot) {
+    
+//     console.log(userIng);
+//     userPlace = childSnapshot.val().userID;
+// })
 
 ingredientZone.on('child_added', function(childSnapshot) {
  
@@ -87,7 +84,8 @@ $('#addIngredientButton').on('click', function() {
         checked: 'true'
     }
 
-    ingredientZone.child(newIngredientName).set(newIngredient);
+    var currentUID = firebase.auth().currentUser.uid;
+    memberFolder.child(currentUID).child('ingredients').child(newIngredientName).set(newIngredient);
 
     $("#ingredients-search").val("");
 
