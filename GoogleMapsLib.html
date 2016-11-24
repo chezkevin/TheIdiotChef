@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      // var chicago = new google.maps.LatLng(41.850, -87.650);
+      // function initMap() {
+      //   // map = new google.maps.Map(document.getElementById('map'), {
+      //   //   center: {lat: 41.850, lng: -87.650},
+      //   //   zoom: 12
+      //   // });
+      // }
+        function initMap() {
+        var myLatLng = {lat: 41.850, lng: -87.650};
+         var chicago = new google.maps.LatLng(41.881832, -87.623177);
+
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: myLatLng
+        });
+
+        var marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: 'Hello World!'
+        });
+
+        var request = {
+        location: chicago,
+        radius: '1000',
+        query: 'restaraunt'
+      };
+
+      service = new google.maps.places.PlacesService(map);
+      service.textSearch(request, callback);
+
+   
+
+    function callback(results, status) {
+        
+        // var createMarker = [];
+        createMarker = new google.maps.Marker;
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          console.log(results);
+          // var place = results[i];
+          // createMarker(results[i]);
+          var myLatLng = {lat: parseFloat(results[i].geometry.viewport.b.b), lng:parseFloat(results[i].geometry.viewport.f.f) };
+         
+          var marker = new google.maps.Marker({
+            position: results[i].geometry.location,
+            map: map,
+            title: results[i].name + " address: " +results[i].formatted_address,
+            address: results[i].formatted_address
+        });
+        }
+      }
+    }
+ }
+
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHqSSb0xsicQtbUjWDR7soyaEbJuYWaJ8&libraries=places&callback=initMap"
+    async defer></script>
+  </body>
+</html>
+
+   
+
+</script>
+
+</body>
+
+</html>
