@@ -1,33 +1,5 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Simple Map</title>
-    <meta name="viewport" content="initial-scale=1.0">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHqSSb0xsicQtbUjWDR7soyaEbJuYWaJ8&libraries=places&callback=initMap"
-    async defer></script>
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-    <meta charset="utf-8">
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-        width: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
-    <strong>Title: </strong><div id='marker-title'></div>
-    <strong>Position: </strong><div id='marker-position-lat'></div><div id='marker-position-lng'></div>
-    <strong>Address: </strong><div id='marker-address'></div>
-    <script>
+
+  
       var map;
       
         function initMap() {
@@ -147,17 +119,3 @@
 
  }
 
-
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHqSSb0xsicQtbUjWDR7soyaEbJuYWaJ8&libraries=places&callback=initMap"
-    async defer></script>
-  </body>
-</html>
-
-   
-
-</script>
-
-</body>
-
-</html>
