@@ -144,6 +144,24 @@ $(document).ready(function() {
 
     }
 
+// Might need to reauthenticate user sometime - e.g. 
+//  below code from web - needs incorporating into current code
+// FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+// // Get auth credentials from the user for re-authentication. The example below shows
+// // email and password credentials but there are multiple possible providers,
+// // such as GoogleAuthProvider or FacebookAuthProvider.
+// AuthCredential credential = EmailAuthProvider
+//         .getCredential("user@example.com", "password1234");
+
+// // Prompt the user to re-provide their sign-in credentials
+// user.reauthenticate(credential)
+//         .addOnCompleteListener(new OnCompleteListener<Void>() {
+//             @Override
+//             public void onComplete(@NonNull Task<Void> task) {
+//                 Log.d(TAG, "User re-authenticated.");
+//             }
+//         });
     function loginDisplayElements(email, hideId){
         //tell user that they are logged in w email address
         $('#userName').show();
@@ -755,7 +773,7 @@ function initMap(){
         };
 
         infoWindow.setPosition(pos);
-        infoWindow.setContent('Location found.');
+        infoWindow.setContent('Found You!');
         map.setCenter(pos);
         // console.log(map.getCenter());
         centerlocation = map.getCenter();
@@ -828,6 +846,7 @@ function initMap(){
                         $('#marker-position-lat').html(this.getPosition().lat());
                         $('#marker-position-lng').html(this.getPosition().lng());
                         $('#marker-address').html(this.address);
+                        $('.map-well').removeClass('hide');
 
 
                     })
