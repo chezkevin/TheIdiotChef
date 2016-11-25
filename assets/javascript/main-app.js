@@ -1,29 +1,29 @@
 // global configuration details are outside the document.ready function for now
 // notes on disconnect not working for set Login Status = false need to take another look at
+$(document).ready(function() { 
+    var config = {
+        // apiKey: "AIzaSyCfGxrkb9P3oYRWrQ5XL4wxNmpyv_x9VL0",
+        // authDomain: "theidiotchef-149717.firebaseapp.com",
+        // databaseURL: "https://theidiotchef-149717.firebaseio.com",
+        // storageBucket: "theidiotchef-149717.appspot.com",
+        // messagingSenderId: "963963795794"
 
-var config = {
-    // apiKey: "AIzaSyCfGxrkb9P3oYRWrQ5XL4wxNmpyv_x9VL0",
-    // authDomain: "theidiotchef-149717.firebaseapp.com",
-    // databaseURL: "https://theidiotchef-149717.firebaseio.com",
-    // storageBucket: "theidiotchef-149717.appspot.com",
-    // messagingSenderId: "963963795794"
+        apiKey: "AIzaSyDeASMIr2HuqX9YdWU5U9M8wZFb0Apwj80",
+        authDomain: "test-cac0a.firebaseapp.com",
+        databaseURL: "https://test-cac0a.firebaseio.com",
+        storageBucket: "test-cac0a.appspot.com",
+        messagingSenderId: "818755096086"
+      };
+     
+    firebase.initializeApp(config);
 
-    apiKey: "AIzaSyDeASMIr2HuqX9YdWU5U9M8wZFb0Apwj80",
-    authDomain: "test-cac0a.firebaseapp.com",
-    databaseURL: "https://test-cac0a.firebaseio.com",
-    storageBucket: "test-cac0a.appspot.com",
-    messagingSenderId: "818755096086"
-  };
+    var database = firebase.database();
+    // decided to use one main db folder for all members
+    var memberFolder = database.ref('/members/');
+
  
-firebase.initializeApp(config);
 
-var database = firebase.database();
-// decided to use one main db folder for all members
-var memberFolder = database.ref('/members/');
-
-$(document).ready(function() {  
-
-    let uid = ''; //user id for tracking purposes
+    var uid = ''; //user id for tracking purposes
     var currentUser;
     var regFlag = true;
     var userProfile = {
@@ -56,6 +56,7 @@ $(document).ready(function() {
     function captureUserData(user){
         //create user ID, capture it, and make a baseline profile    
         uid = user.uid;
+        console.log("userid" + uid);
         //capture that actual user id, set as var accessible to other functions in the page 
         userProfile.userID = uid;
         userProfile.loginStatus = true;
@@ -75,6 +76,7 @@ $(document).ready(function() {
             userFolder.onDisconnect().remove();
         } 
        
+
             
     }
 
@@ -84,6 +86,8 @@ $(document).ready(function() {
             .then(user => {
                 // capture the user data as guest
                 captureUserData(user);
+               
+                console.log("userid guest" + user.uid)
                 // if successful login then show upgrade button
                 $('#upgrade-from-guest').addClass('show');
                 
@@ -116,14 +120,12 @@ $(document).ready(function() {
 
         firebase.auth().signInWithEmailAndPassword(email, pass)
             .then(user => {
-                // console.log(user);
                 //create user ID, capture it, and make a baseline profile
                 uid = user.uid;
+                console.log("userid" + uid);
                 let userFolder = database.ref('/members/' + uid);
+                
 
-                //capture that actual user id, set as var accessible to other functions in the page 
-                uid = user.uid;
-               
                 userProfile.loginStatus = true;
                 // add to database
                 userFolder.update({loginStatus: userProfile.loginStatus, 
@@ -163,6 +165,8 @@ $(document).ready(function() {
 //             }
 //         });
     function loginDisplayElements(email, hideId){
+        // call once user logged in
+        initialIngredientsList();  // from recipe page
         //tell user that they are logged in w email address
         $('#userName').show();
         $('#userName').html('Logged in as: ' + email);
@@ -203,6 +207,7 @@ $(document).ready(function() {
         firebase.auth().createUserWithEmailAndPassword(email, pass)
             .then(user => {
                 captureUserData(user);
+                console.log("userid create" + uid);
                  //tell user that they are logged in w email address
                 $('#userName').show();
                 $('#userName').html('Logged in as: ' + user.email);
@@ -215,7 +220,7 @@ $(document).ready(function() {
 
                 loginStatusFolder.on('value', function(snapshot) {
                     if (snapshot.val()) {
-                        loginStatusFolder.onDisconnect().set(false);
+                        loginStatusFolder.onDisconnect().update(false);
                     }
                 })
 
@@ -249,8 +254,19 @@ $(document).ready(function() {
 
         firebase.auth().signOut()
             .then(() => {
-                console.log('Signed Out');
+                // console.log('Signed Out');
+
+                // let userFolder = database.ref('/members/' + uid);
+                
+                // if (userProfile.email === 'guest'){
+                    // remove on logout -- this part is not allowed by the db perms
+                    // disconnect works but 
+                    // if you logout then disconnect it does not remove it
+                    // console.log(uid);
+                    // userFolder.remove();
+                // }
                 initialState();
+
 
             })
             .catch(error => {
@@ -450,6 +466,12 @@ $(document).ready(function() {
         // resetEmail();
         return false;
     })
+    $('#cancel-email-reset').on('click', function(){
+        $('.email-update').removeClass('show');
+        $('.email-update').addClass('hide');
+        // resetEmail();
+        return false;
+    })
 
 
     $('#send-email-reset').on('click', function(){
@@ -491,6 +513,9 @@ $(document).ready(function() {
 
     function resetHomepage(){
         $('.homepage').removeClass('hide');
+        $('#email-reset').removeClass('hide');
+        $('#password-reset').removeClass('hide');
+
         // put these here just in case
         $('.recipe-shortlist-page').addClass('hide');
         $('.detailed-view-page').addClass('hide');
@@ -532,21 +557,33 @@ $(document).ready(function() {
     //     console.log(userIng);
     //     userPlace = childSnapshot.val().userID;
     // })
+   
+  
+    function initialIngredientsList(){
+        console.log("recipes" + uid);
+      // var currentUID = uid;
+        console.log("recipes current" + uid);
+        memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
+            console.log(childSnapshot.val().checked);
+            console.log(childSnapshot.val().name);
+            if (usedIngredientsArray.indexOf(childSnapshot.val().name) > -1) {
+                return;
+            } else {
 
-    ingredientZone.on('child_added', function(childSnapshot) {
-     
-        if (usedIngredientsArray.indexOf(childSnapshot.val().name) > -1) {
-            return;
-        } else {
+                let newChild = updateIngredientList(childSnapshot);
 
-            let newChild = updateIngredientList(childSnapshot);
+                addCheckBoxListener(newChild);
+            }
 
-            addCheckBoxListener(newChild);
-        }
-
-    })
+        })  
+    }  
+        
+    
+   
 
     function updateIngredientList(childSnapshot) {
+
+        console.log("in here again")
 
         let target = $("#ingredients-list");
         let id = childSnapshot.val().name;
@@ -604,9 +641,9 @@ $(document).ready(function() {
             name: newIngredientName,
             checked: 'true'
         }
-
-        var currentUID = firebase.auth().currentUser.uid;
-        memberFolder.child(currentUID).child('ingredients').child(newIngredientName).set(newIngredient);
+        // var currentUID = uid;
+        // var currentUID = firebase.auth().currentUser.uid;
+        memberFolder.child(uid).child('ingredients').child(newIngredientName).set(newIngredient);
 
         $("#ingredients-search").val("");
 
@@ -668,7 +705,7 @@ $(document).ready(function() {
                     recipeDiv.append(recipeUsedIngredientsList);
                     recipeDiv.append(recipeMissingIngredientsList);
                     console.log(recipeDiv);
-                    $('.recipe-list').append(recipeDiv);
+                    $('#recipe-list').append(recipeDiv);
                 }
             },
             error: function(err) { alert(err); },
@@ -701,12 +738,13 @@ $(document).ready(function() {
                 method: 'GET'
             })
             .done(function(response) {
-                console.log(response.items.length);
+                // console.log(response.items.length);
                for (var i = 0; i < response.items.length; i++ ){
                     var b = $('<iframe>', {
                         width : videoWidth,
                         height : videoHeight,
                         src : videoSrc + response.items[i].id.videoId,
+                        class : "new-videos",
                     });
                     // var b = $('<iframe>'+ videoSrc + response.items[i].id.videoId + '</iframe>');
                     // console.log("b" + b);
@@ -734,6 +772,19 @@ $(document).ready(function() {
             });
     }
 
+    // $('.new-videos').on('click', function(){
+    //     //make display it on top bigger
+    //     $("#big-image").removeClass('hide');
+    //     $("#big-image").append(this);
+    //     // $(this).attr("height", "100%");
+
+
+    // })
+    // $('#big-image-close').on('click', function(){
+    //     //make it normal
+    //     $("#big-image").addClass('hide');
+        
+    // })
 }) // end of document on ready
 
 /// google maps - initMap must be global and outside document.ready
@@ -804,7 +855,7 @@ function initMap(){
 
     function doSearchFromCurrentLocation(centerlocation)   {
 
-        console.log(centerlocation);
+        // console.log(centerlocation);
         var request = {
             location: centerlocation,
             radius: '500',
@@ -820,7 +871,7 @@ function initMap(){
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 for (var i = 0; i < results.length; i++) {
                     // to view object details  console.log(results); 
-                    console.log(results); 
+                    // console.log(results); 
         
                     var marker = new google.maps.Marker({
                     position: results[i].geometry.location,

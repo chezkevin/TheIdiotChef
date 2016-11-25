@@ -16,6 +16,10 @@
 	height: 30%;
 	width: 30%;
 }
+.email-update{
+	float: left;
+	margin-left: 10px;
+}
 .well {
 	min-height: 100px;
 }

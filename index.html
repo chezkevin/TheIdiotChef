@@ -89,6 +89,7 @@
                     <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
                 </div>
                 <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
+                <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
 
 
                 <div class="modal" id="registration-modal">
@@ -225,6 +226,9 @@
 <!-- add on click to expand each item -->
 </div> <!--End of Recipe Shortlist Page -->
 <div class="detailed-view-page hide"> <!--Detailed View  Page -->
+   <!--  <div class="row hide" id="big-image">
+        <button type="button" class="btn login-items" id="big-image-close">Close</button>
+    </div> -->
     <div class="row">
         <div class="col-md-4">
             <div class="well">
@@ -233,7 +237,7 @@
         </div> <!--  youtube -->
         <div class="col-md-8">
             <div class="well">
-                <div class="recipe-list"></div>
+                <div id="recipe-list"></div>
             </div>
         </div>
     </div>
