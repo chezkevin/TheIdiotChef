@@ -106,6 +106,8 @@ $(document.body).on('click', '.deletebox', function() {
 
 $('#submitIngredientsButton').on('click', function() {
     $('#recipe-list').empty();
+    $('.homepage').addClass('hide'); // added by Fiona
+     $('.recipe-shortlist-page').removeClass('hide'); // added by Fiona
 
     var ingredientsURL = usedIngredientsArray.join("&2C");
 

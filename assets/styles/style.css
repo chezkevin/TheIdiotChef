@@ -16,7 +16,13 @@
 	height: 30%;
 	width: 30%;
 }
-
+.well {
+	min-height: 100px;
+}
+#map {
+height: 100%;
+width: 100%;
+}
 a:hover{
 	cursor: pointer;
 }

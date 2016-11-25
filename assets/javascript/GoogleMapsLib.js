@@ -3,14 +3,16 @@
   <head>
     <title>Simple Map</title>
     <meta name="viewport" content="initial-scale=1.0">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHqSSb0xsicQtbUjWDR7soyaEbJuYWaJ8&libraries=places&callback=initMap"
+    async defer></script>
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <meta charset="utf-8">
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 80%;
-        width: 80%;
+        height: 100%;
+        width: 100%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -147,7 +149,7 @@
 
 
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9pSrvDTzVXj7LToGHJUatXYl0Ts5LpuA&libraries=places&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHqSSb0xsicQtbUjWDR7soyaEbJuYWaJ8&libraries=places&callback=initMap"
     async defer></script>
   </body>
 </html>
