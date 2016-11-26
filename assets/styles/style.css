@@ -14,8 +14,20 @@
 	/*margin-bottom: 10px;*/
 }
 .recipeImage {
-	height: 30%;
-	width: 30%;
+	max-height: 250px;
+	max-width: 250px;
+}
+.recipe {
+	background-color: white;
+	border-color: black;
+	border-style: solid;
+	border-width: 3px;
+	margin-bottom: 10px;
+}
+.inner-recipe {
+	float: right;
+	width: 60%;
+	padding-top: 5%;
 }
 .email-update{
 	float: left;

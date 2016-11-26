@@ -530,7 +530,7 @@ $(document).ready(function() {
     }
     /*
     Parking Lot
-    	Merge anonymous acount data accumulated upon login w/ user's profile	
+        Merge anonymous acount data accumulated upon login w/ user's profile    
     */
     //  click events for whole site
     $('#show-homepage').on('click', function(){
@@ -554,7 +554,7 @@ $(document).ready(function() {
     
     //various database references for food updates
     let ref = database.ref();
-    let ingredientZone = ref.child("ingredientZone");
+    // let ingredientZone = ref.child("ingredientZone");
     let userZone = ref.child('members');
     let usedIngredientsArray = [];
     // var userIng = firebase.auth().currentUser.uid;
@@ -606,8 +606,9 @@ $(document).ready(function() {
         target.find('button#' + id).addClass(checkStatus);
 
         //update ingredient array variable accordingly
-        usedIngredientsArray.push(childSnapshot.val().name);
-
+        if (checked == 'true') {
+            usedIngredientsArray.push(childSnapshot.val().name);
+        }
         return id
 
 
@@ -629,7 +630,7 @@ $(document).ready(function() {
                 $(this).removeClass('fa-circle-o');
             }
 
-            let checkLocation = ingredientZone.child(id);
+            let checkLocation = memberFolder.child(uid).child('ingredients').child(id);
 
             var checkStatus = checkLocation.child('checked');
 
@@ -665,7 +666,7 @@ $(document).ready(function() {
 
         $("#" + ingredientToDelete).remove();
 
-        var deleteLocation = ingredientZone.child(ingredientToDelete);
+        var deleteLocation = memberFolder.child(uid).child('ingredients').child(ingredientToDelete);
 
         deleteLocation.remove();
     });
@@ -676,6 +677,18 @@ $(document).ready(function() {
         $('.recipe-shortlist-page').removeClass('hide'); // added by Fiona
         // $('.recipe-shortlist').removeClass('hide'); // added by Fiona
       
+        var ingredientsRef = memberFolder.child(uid).child('ingredients');
+
+        // ingredientsRef.once('value')
+        //     .then(function(snapshot) {
+        //         snapshot.forEach(function(childSnapshot){
+        //             if (childSnapshot.val('checked') == 'false') {
+        //                 usedIngredientsArray.push(childSnapshot.val('name'));
+        //                 console.log('yay  ' + childSnapshot);
+        //             }
+        //         })
+        //     })
+
         var ingredientsURL = usedIngredientsArray.join("&2C");
 
         console.log(ingredientsURL);
@@ -693,6 +706,8 @@ $(document).ready(function() {
                 for (var i = 0; i < data.length; i++) {
                     var recipeDiv = $('<div class="recipe">');
 
+                    var innerRecipeDiv = $('<div class="inner-recipe">');
+
                     var recipeName = data[i].title;
 
                     var recipeTitle = $('<a class="recipe-title">').text(recipeName);
@@ -709,10 +724,10 @@ $(document).ready(function() {
                     recipeImage.attr('src', data[i].image);
 
                     recipeDiv.append(recipeImage);
-                    recipeDiv.append(recipeTitle);
-                    recipeDiv.append(recipeUsedIngredientsList);
-                    recipeDiv.append(recipeMissingIngredientsList);
-                    console.log(recipeDiv);
+                    innerRecipeDiv.append(recipeTitle);
+                    innerRecipeDiv.append(recipeUsedIngredientsList);
+                    innerRecipeDiv.append(recipeMissingIngredientsList);
+                    recipeDiv.append(innerRecipeDiv);
                     $('#recipe-list').append(recipeDiv);
                 }
             },
@@ -725,13 +740,12 @@ $(document).ready(function() {
     });
 
 
-    $(document).on("click", ".recipe-shortlist", function() {
+    $(document).on("click", ".recipe-title", function() {
         $('.detailed-view-page').removeClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
-        // var youTubeQ = $(this).text();  commmented out for testing
-        // youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
+        var youTubeQ = $(this).text();
+        youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
 
-        var youTubeQ = "chicken";
         var APIKey = "AIzaSyAldakVxQrbZabH9SdIO3iocly3sOA727U"
         var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ APIKey + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
 
@@ -916,7 +930,5 @@ function initMap(){
        
 
  }
-
-
 
 
