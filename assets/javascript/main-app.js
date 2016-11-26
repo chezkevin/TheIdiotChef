@@ -40,14 +40,16 @@ $(document).ready(function() {
         $('#registration-panel').hide();
         $('#navbar-logout-button').hide();
         $('#registration-modal').hide();
-        $('#upgrade-from-guest').removeClass('show');
+        // $('#upgrade-from-guest').removeClass('show');
         $('#upgrade-from-guest').addClass('hide');
-        $('#password-reset').removeClass('show');
+        // $('#password-reset').removeClass('show');
         $('#password-reset').addClass('hide');
-        $('#email-reset').removeClass('show');
+        // $('#email-reset').removeClass('show');
         $('#email-reset').addClass('hide');
-        $('.email-update').removeClass('show');
+        // $('.email-update').removeClass('show');
         $('.email-update').addClass('hide');
+        $('.homepage').addClass('hide');
+        $('.landing-page').removeClass('hide');
 
 
     }
@@ -89,7 +91,10 @@ $(document).ready(function() {
                
                 console.log("userid guest" + user.uid)
                 // if successful login then show upgrade button
-                $('#upgrade-from-guest').addClass('show');
+                $('#upgrade-from-guest').removeClass('hide');
+                $('#reset-email').addClass('hide');
+                $('#reset-password').addClass('hide');
+                $('#show-homepage').removeClass('hide');
                 $('.homepage').removeClass('hide');
                 $('.landing-page').addClass('hide');
                 // call once user logged in
@@ -173,13 +178,14 @@ $(document).ready(function() {
         // call once user logged in
         initialIngredientsList();  // from recipe page
         //tell user that they are logged in w email address
+        $('#show-homepage').removeClass('hide');
         $('.homepage').removeClass('hide');
-        $('#userName').show();
+        // $('#userName').show();
         $('#userName').html('Logged in as: ' + email);
-        $('#upgrade-from-guest').removeClass('show');           
+        // $('#upgrade-from-guest').removeClass('show');           
         $('#upgrade-from-guest').addClass('hide');  // does not seem to hide!
-        $('#password-reset').addClass('show');
-        $('#email-reset').addClass('show');
+        // $('#password-reset').addClass('show');
+        // $('#email-reset').addClass('show');
         $('.landing-page').addClass('hide');
 
         //hide login form upon success and display louto button
@@ -190,7 +196,7 @@ $(document).ready(function() {
 
     function displayErrorMessage(message){
         // modal for login messages
-        $('.error-modal').addClass('show');
+        // $('.error-modal').addClass('show');
         $('.error-modal').removeClass('hide');
         $('#error-modal-message').html(message);
 
@@ -216,7 +222,7 @@ $(document).ready(function() {
                 captureUserData(user);
                 console.log("userid create" + uid);
                  //tell user that they are logged in w email address
-                $('#userName').show();
+                homepage$('#userName').show();
                 $('#userName').html('Logged in as: ' + user.email);
 
             })
@@ -279,7 +285,7 @@ $(document).ready(function() {
             .catch(error => {
                 console.log(error);
                 console.error('Sign Out Error: ', errorMessage);
-                $('.error-modal').addClass('show');
+                // $('.error-modal').addClass('show');
                 $('.error-modal').removeClass('hide');
                 $('#error-modal-message').html('<p>Sign Out Error: ' + errorMessage + '</p>');
 
@@ -380,7 +386,8 @@ $(document).ready(function() {
 
 
         logOut();
-        resetHomepage(); //make homepage visible
+        // resetPageOnLogout();
+        // resetHomepage(); //make homepage visible
 
         //prevent page refresh
         return false
@@ -469,12 +476,12 @@ $(document).ready(function() {
     })
     $('#email-reset').on('click', function(){
         $('.email-update').removeClass('hide');
-        $('.email-update').addClass('show');
+        // $('.email-update').addClass('show');
         // resetEmail();
         return false;
     })
     $('#cancel-email-reset').on('click', function(){
-        $('.email-update').removeClass('show');
+        // $('.email-update').removeClass('show');
         $('.email-update').addClass('hide');
         // resetEmail();
         return false;
@@ -484,7 +491,7 @@ $(document).ready(function() {
     $('#send-email-reset').on('click', function(){
         // $('show-email-input').show();
         resetEmail();
-        $('.email-update').removeClass('show');
+        // $('.email-update').removeClass('show');
         $('#email-update').addClass('hide');
         return false;
     })
@@ -518,15 +525,32 @@ $(document).ready(function() {
         });
     }
 
-    function resetHomepage(){
-        $('.homepage').addClass('hide');
-        $('#email-reset').removeClass('hide');
-        $('#password-reset').removeClass('hide');
-        $('.landing-page').removeClass('hide');
+    // function resetPageOnLogout(){
+    //     $('.homepage').addClass('hide');
+    //     $('.landing-page').removeClass('hide');
+    //     // $('.homepage').removeClass('show');
+    //     // put these here just in case
+    //     $('.recipe-shortlist-page').addClass('hide');
+    //     $('.detailed-view-page').addClass('hide');
 
-        // put these here just in case
+    // }
+
+    function resetHomepage(){
+        console.log("reset homepage");
+
+           
+        $('.homepage').removeClass('hide');
+        // $('.homepage').addClass('show');
+        // $('.landing-page').removeClass('show');
+        $('.landing-page').addClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
         $('.detailed-view-page').addClass('hide');
+        console.log("reset homepage");
+        if (userProfile.email !== 'guest'){
+            $('#email-reset').removeClass('hide');
+            $('#password-reset').removeClass('hide');
+        }
+
     }
     /*
     Parking Lot
@@ -534,7 +558,9 @@ $(document).ready(function() {
     */
     //  click events for whole site
     $('#show-homepage').on('click', function(){
-        resetHompage();
+        resetHomepage();
+
+        return false;
     })
 
     // $('.recipe-shortlist').on('click', function(){

@@ -58,15 +58,17 @@
                             <button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button>
                             <button type="button" class="btn login-items" id="password-reset"><a href="">Reset Password</a></button>
                             <button type="button" class="btn login-items" id="email-reset"><a href="">Update Email</a></button>
-                            <button type="button" class="btn login-items" id="show-homepage"><a href="">Homepage</a></button>
+                            <button type="button" class="btn login-items hide" id="show-homepage"><a href="">Homepage</a></button>
                             <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button>
 
                             <div class="input-group email-update">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
                                 <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
-                            </div>
-                            <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
+                                <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
                             <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
+                            </div>
+                           <!--  <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
+                            <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button> -->
                             <!-- <ul class="nav navbar-nav">
                                 <li><button type="button" class="btn login-items" id="register"><a href="">Register</a></button></li>
                                 <li><button type="button" class="btn login-items" id="guest"><a href="">Guest Login</a></button></li>
@@ -138,14 +140,14 @@
 <!-- Landing Page -->
 
 <div class="row text-center landing-page">
-    <div class="col-md-6 well">
-        <button type="button" class="btn login-items" id="register"><a href="">Register</a></button>
+    <div class="col-md-6 well landing-page">
+        <button type="button" class="btn login-items initial-login" id="register"><a href="">Register</a></button>
     </div>
-    <div class="col-md-6 well">
-        <button type="button" class="btn login-items" id="guest"><a href="">Guest Login</a></button>
+    <div class="col-md-6 well landing-page">
+        <button type="button" class="btn login-items initial-login" id="guest"><a href="">Guest Login</a></button>
     </div>
 </div>
-<div class="row text-center  landing-page well">
+<div class="row text-center initial-login landing-page well">
     <div class="col-md-4"></div>
     <div class="col-md-4">
         <div id="navbar-login-form">
@@ -282,7 +284,7 @@
     <!-- map -->
     <div class="row">
         <div class="col-md-12">
-            <div id="map"></div>
+            <div id="map">Nothing in here?? APIKEY??</div>
         </div>
     </div>
      <div class="row">
@@ -310,8 +312,8 @@
     <!-- <script src="assets/javascript/auth.js"></script> -->
     <!-- <script src="assets/javascript/TYapp.js"></script> -->
     <!-- <script src="assets/javascript/youtube.js"></script> -->
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9pSrvDTzVXj7LToGHJUatXYl0Ts5LpuA&libraries=places&callback=initMap"
-    async defer></script> -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9pSrvDTzVXj7LToGHJUatXYl0Ts5LpuA&libraries=places&callback=initMap"
+    async defer></script>
     <script src="assets/javascript/main-app.js"></script>
     <!-- <script src="assets/javascript/GoogleMapsLib.js"></script> -->
     
