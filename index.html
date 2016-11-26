@@ -55,7 +55,19 @@
                             </a>
                         </div>
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul class="nav navbar-nav">
+                            <button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button>
+                            <button type="button" class="btn login-items" id="password-reset"><a href="">Reset Password</a></button>
+                            <button type="button" class="btn login-items" id="email-reset"><a href="">Update Email</a></button>
+                            <button type="button" class="btn login-items" id="show-homepage"><a href="">Homepage</a></button>
+                            <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button>
+
+                            <div class="input-group email-update">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
+                                <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
+                            </div>
+                            <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
+                            <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
+                            <!-- <ul class="nav navbar-nav">
                                 <li><button type="button" class="btn login-items" id="register"><a href="">Register</a></button></li>
                                 <li><button type="button" class="btn login-items" id="guest"><a href="">Guest Login</a></button></li>
                                 <li id="userName"></li>
@@ -77,21 +89,12 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button>
                             </form>
-                        </div>
+                        </div> -->
                     </div>
                 </nav>
-
-                <button type="button" class="btn login-items" id="password-reset"><a href="">Reset Password</a></button>
-                <button type="button" class="btn login-items" id="email-reset"><a href="">Update Email</a></button>
-                <button type="button" class="btn login-items" id="show-homepage"><a href="">Homepage</a></button>
-                <div class="input-group email-update">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
-                    <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
-                </div>
-                <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
-                <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
-
-
+               <!--  User account management -->
+                
+                <!-- Modal window for registration -->
                 <div class="modal" id="registration-modal">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -126,11 +129,46 @@
                 <h3 id="description">
 					Add ingredients to the list, and The Idiot Chef will generate recipe ideas for you! Full instructions and video tutorial links are included!
 				</h3>
+                <div class="row text-center" id="userName"></div>
             </div>
             <div class="col-lg-2">
             </div>
         </div>
-    <div class="homepage">  <!-- Start of Homepage -->
+<!-- end of body below Navbar -->
+<!-- Landing Page -->
+
+<div class="row text-center landing-page">
+    <div class="col-md-6 well">
+        <button type="button" class="btn login-items" id="register"><a href="">Register</a></button>
+    </div>
+    <div class="col-md-6 well">
+        <button type="button" class="btn login-items" id="guest"><a href="">Guest Login</a></button>
+    </div>
+</div>
+<div class="row text-center  landing-page well">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div id="navbar-login-form">
+            <label for="email-input" id="login-form-message"></label>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+
+
+
+<!-- Start of Homepage -->
+    <div class="homepage hide">  
         <div class="row">
             <div class="col-lg-2">
             </div>

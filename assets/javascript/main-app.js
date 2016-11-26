@@ -90,6 +90,11 @@ $(document).ready(function() {
                 console.log("userid guest" + user.uid)
                 // if successful login then show upgrade button
                 $('#upgrade-from-guest').addClass('show');
+                $('.homepage').removeClass('hide');
+                $('.landing-page').addClass('hide');
+                // call once user logged in
+                initialIngredientsList();  // from recipe page
+
                 
             }).catch(e => {
                 let errorCode = e.code;
@@ -168,14 +173,16 @@ $(document).ready(function() {
         // call once user logged in
         initialIngredientsList();  // from recipe page
         //tell user that they are logged in w email address
+        $('.homepage').removeClass('hide');
         $('#userName').show();
         $('#userName').html('Logged in as: ' + email);
         $('#upgrade-from-guest').removeClass('show');           
         $('#upgrade-from-guest').addClass('hide');  // does not seem to hide!
         $('#password-reset').addClass('show');
         $('#email-reset').addClass('show');
+        $('.landing-page').addClass('hide');
 
-        //hide login form upon success and display logout button
+        //hide login form upon success and display louto button
         $('#navbar-login-form').hide();
         $('#register').hide();
         $(hideId).hide();
@@ -512,9 +519,10 @@ $(document).ready(function() {
     }
 
     function resetHomepage(){
-        $('.homepage').removeClass('hide');
+        $('.homepage').addClass('hide');
         $('#email-reset').removeClass('hide');
         $('#password-reset').removeClass('hide');
+        $('.landing-page').removeClass('hide');
 
         // put these here just in case
         $('.recipe-shortlist-page').addClass('hide');

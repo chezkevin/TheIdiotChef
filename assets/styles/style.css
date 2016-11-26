@@ -10,6 +10,7 @@
 	border-style: solid;
 	border-color: lightgrey;
 	margin-top: 10px;
+	float: left;
 	/*margin-bottom: 10px;*/
 }
 .recipeImage {
