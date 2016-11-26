@@ -37,9 +37,9 @@ $(document).ready(function() {
 
     function initialState() {
 
-        $('#registration-panel').hide();
-        $('#navbar-logout-button').hide();
-        $('#registration-modal').hide();
+        $('#registration-panel').addClass('hide');
+        $('#navbar-logout-button').addClass('hide');
+        $('#registration-modal').addClass('hide');
         // $('#upgrade-from-guest').removeClass('show');
         $('#upgrade-from-guest').addClass('hide');
         // $('#password-reset').removeClass('show');
@@ -49,6 +49,7 @@ $(document).ready(function() {
         // $('.email-update').removeClass('show');
         $('.email-update').addClass('hide');
         $('.homepage').addClass('hide');
+        $('#show-homepage').addClass('hide');
         $('.landing-page').removeClass('hide');
 
 
@@ -303,8 +304,8 @@ $(document).ready(function() {
     function renderNavBarLogIn() {
 
         //hide logout button and display login form
-        $('#navbar-logout-button').hide();
-        $('#navbar-login-form').show();
+        $('#navbar-logout-button').addClass('hide');
+        $('#navbar-login-form').removeClass('hide');
 
 
     }
@@ -382,7 +383,7 @@ $(document).ready(function() {
 
     $('#navbar-logout-button').on('click', function(e) {
 
-        e.preventDefault();
+        // e.preventDefault();
 
 
         logOut();
@@ -423,10 +424,10 @@ $(document).ready(function() {
     firebase.auth().onAuthStateChanged(firebaseUser => {
         currentUser = firebaseUser;
         if (firebaseUser){
-            $('#navbar-logout-button').show();
-            $('#register').hide();
-            $('#navbar-login-form').hide();
-            $('#guest').hide();
+            $('#navbar-logout-button').removeClass('hide');
+            $('#register').addClass('hide');
+            $('#navbar-login-form').addClass('hide');
+            $('#guest').addClass('hide');
             //listener in event of log-out DRY OPPORTUNITY -IN ALL 3 login flows
             
                 //     }
@@ -437,9 +438,9 @@ $(document).ready(function() {
 
             }
             else {
-                $('#navbar-logout-button').hide();
-                $('#register').show();
-                $('#guest').show();
+                $('#navbar-logout-button').addClass('hide');
+                $('#register').removeClass('hide');
+                $('#guest').removeClass('hide');
             }
     })
 
@@ -575,6 +576,7 @@ $(document).ready(function() {
     $('#back-recipe-shortlist').on('click', function(){
         $('.recipe-shortlist-page').removeClass('hide');
         $('.detailed-view-page').addClass('hide');
+        return false;
     })
 
     
