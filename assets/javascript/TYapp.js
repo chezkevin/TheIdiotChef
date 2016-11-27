@@ -729,6 +729,9 @@ $(document).ready(function() {
             }
 
         });
+
+        console.log("Recipe data: " + foodQueryURL);
+
     });
 
 
