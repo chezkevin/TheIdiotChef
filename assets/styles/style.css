@@ -6,6 +6,10 @@
 }
 .error-modal {
 	display: none; 
+	z-index: 1001;
+}
+#reg-error-message {
+	color:red;
 }
 /*.panel-default {
 	height: 50px;

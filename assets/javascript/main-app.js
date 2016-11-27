@@ -20,9 +20,6 @@ $(document).ready(function() {
     var database = firebase.database();
     // decided to use one main db folder for all members
     var memberFolder = database.ref('/members/');
-
- 
-
     var uid = ''; //user id for tracking purposes
     var currentUser;
     var regFlag = true;
@@ -34,212 +31,190 @@ $(document).ready(function() {
         lastLogIn: firebase.database.ServerValue.TIMESTAMP
     };
 
-
     function initialState() {
-
-        // $('#registration-panel').addClass('hide');
-        $('#navbar-logout-button').addClass('hide');
-        $('#registration-modal').hide();
-        // $('#upgrade-from-guest').removeClass('show');
-        $('#upgrade-from-guest').addClass('hide');
-        // $('#password-reset').removeClass('show');
-        $('#password-reset').addClass('hide');
-        // $('#email-reset').removeClass('show');
-        $('#email-reset').addClass('hide');
-        // $('.email-update').removeClass('show');
-        $('.email-update').addClass('hide');
+        // Elements to Hide
+        // by adding a class hide
         $('.homepage').addClass('hide');
+        $('.email-update').addClass('hide');
         $('#show-homepage').addClass('hide');
+        $('#navbar-logout-button').addClass('hide');
+        $('#upgrade-from-guest').addClass('hide');
+        $('#password-reset').addClass('hide');
+        $('#email-reset').addClass('hide');
+        // hidden by setting the display to none
+        $('#registration-modal').hide();
+        // Elements to Hide
+        // hidden by removing a class hide
         $('.landing-page').removeClass('hide');
+        // displayed by setting display to block
         $('#register').show();
         $('#guest').show();
 
     }
 
-
-    function captureUserData(user){
-        //create user ID, capture it, and make a baseline profile    
-        uid = user.uid;
-        console.log("userid" + uid);
-        //capture that actual user id, set as var accessible to other functions in the page 
+    // Function to capture user data on login as member or guest
+    function captureUserData(user, status){
+                uid = user.uid;
+        //set as var accessible to other functions in the page 
         userProfile.userID = uid;
         userProfile.loginStatus = true;
         userProfile.email = user.email;
-      
+        // if logging in as a guest (anonymous)
         if (userProfile.email === null){
             userProfile.email = "guest";
         }
-
-        let userFolder = database.ref('/members/' + uid);
         // add to database
-        userFolder.set(userProfile);
-        // next says what to do when user closes window / disconnects
+        let userFolder = database.ref('/members/' + uid);
+        if ( status = 'new'){
+            userFolder.set(userProfile);
+        } 
+        else if (status = 'existing'){
+              userProfile.loginStatus = true;
+              // add to database
+              userFolder.update({loginStatus: userProfile.loginStatus, 
+                        lastLogIn: userProfile.lastLogIn}
+            );
+        }
+        
+        // when user closes window / disconnects remove the guest user
         // Logout handled later on
         if (userProfile.email === 'guest'){
             // let userFolder = database.ref('/members/' + uid);
             userFolder.onDisconnect().remove();
         } 
-       
-
             
     }
+
+
 
     //anonymously login the user - for Guest User option
     function anonymousLogIn() {
         firebase.auth().signInAnonymously()
             .then(user => {
                 // capture the user data as guest
-                captureUserData(user);
-               
-                console.log("userid guest" + user.uid)
-                // if successful login then show upgrade button
-                $('#upgrade-from-guest').removeClass('hide');
-                $('#reset-email').addClass('hide');
-                $('#reset-password').addClass('hide');
-                $('#show-homepage').removeClass('hide');
-                $('.homepage').removeClass('hide');
-                $('.landing-page').addClass('hide');
-                $('#userName').show();
-                $('#userName').html('Logged in as: guest');
-                // call once user logged in
-                initialIngredientsList();  // from recipe page
+                let status = "new";
+                captureUserData(user, status);
+                // if successful login then display relevant guest items
+                displayGuestItems();
+                // display homepage with message that a guest is logged in
+                showHomepage("guest");
+                // displays the initial ingredients stored in the database (if any) 
+                initialIngredientsList();  
 
                 
             }).catch(e => {
+                // catch any errors related to guest / anonymous login
                 let errorCode = e.code;
                 let errorMessage = e.message;
                 // try to make errors plain English
+                // network related errors
                 if (errorCode = "auth/network-request-failed") {
                     let displayMessage = 'Network error - unable to login as guest. Please try again.';
                 }
                 else {
                     let displayMessage = '<p> Guest Login Error: ' + errorCode + ' Please try again.</p>';
                 }
-
+                // for all other errors
                 let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
-                displayErrorMessage(displayMessage); //modal not popping *****
+                // call display message function
+                displayErrorMessage(displayMessage); 
 
             });
     }
 
+    // capture email and password
+    function upgradeLogin(){
+       
+        // $('#navbar-login-form').hide();
+        let email = $('#registration-email-input').val().trim();
+        let password = $('#registration-password-input').val().trim();
+        const credential = firebase.auth.EmailAuthProvider.credential(
+            email, 
+            password
+        );
+
+        firebase.auth().currentUser.link(credential).then(function(user) {
+
+            let userFolder = database.ref('/members/' + uid);
+            userFolder.update({email: user.email, 
+                        lastLogIn: userProfile.lastLogIn}
+                    );
+            // set DOM items to display on login
+            loginDisplayElements(user.email);
+            // hide modal on successful registration
+            hideRegistrationModal();
+
+        }, function(error) {
+            // console.log("Error upgrading anonymous account", error);
+            let displayMessage = '<p>Error creating user account. Please try again later.</p>';
+            displayErrorMessage(displayMessage); //modal not popping *****
+
+
+        });
+    }
+
     //login in an existing user
     function memberLogIn() {
-
+        // capture email and password input from Dom
         let email = $('#email-input').val().trim();
         let pass = $('#password-input').val().trim();
 
-        //clear out the inputs
+        //clear out the inputs for next user
         $('#email-input').val('');
         $('#password-input').val('');
 
+
         firebase.auth().signInWithEmailAndPassword(email, pass)
             .then(user => {
-                //create user ID, capture it, and make a baseline profile
-                uid = user.uid;
-                console.log("userid" + uid);
-                let userFolder = database.ref('/members/' + uid);
-                
 
-                userProfile.loginStatus = true;
-                // add to database
-                userFolder.update({loginStatus: userProfile.loginStatus, 
-                        lastLogIn: userProfile.lastLogIn}
-                    );
-                
-                loginDisplayElements(user.email, '#guest');
+                let status = "existing";
+                captureUserData(user, status);
+                 // set DOM items to display on login 
+                loginDisplayElements(user.email);
             
             }).catch(e => {
-                
+                // captures errors on login 
                 let errorCode = e.code;
                 let errorMessage = e.message;
-                console.log("in here with error");
                 let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
+                // displays error messages
                 displayErrorMessage(displayMessage);  
 
             });
 
     }
 
-// Might need to reauthenticate user sometime - e.g. 
-//  below code from web - needs incorporating into current code
-// FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-// // Get auth credentials from the user for re-authentication. The example below shows
-// // email and password credentials but there are multiple possible providers,
-// // such as GoogleAuthProvider or FacebookAuthProvider.
-// AuthCredential credential = EmailAuthProvider
-//         .getCredential("user@example.com", "password1234");
-
-// // Prompt the user to re-provide their sign-in credentials
-// user.reauthenticate(credential)
-//         .addOnCompleteListener(new OnCompleteListener<Void>() {
-//             @Override
-//             public void onComplete(@NonNull Task<Void> task) {
-//                 Log.d(TAG, "User re-authenticated.");
-//             }
-//         });
-    function loginDisplayElements(email, hideId){
-        // call once user logged in
-        initialIngredientsList();  // from recipe page
-        //tell user that they are logged in w email address
-        $('#show-homepage').removeClass('hide');
-        $('.homepage').removeClass('hide');
-        // $('#userName').show();
-        $('#userName').html('Logged in as: ' + email);
-        // $('#upgrade-from-guest').removeClass('show');           
-        $('#upgrade-from-guest').addClass('hide');  // does not seem to hide!
-        // $('#password-reset').addClass('show');
-        // $('#email-reset').addClass('show');
-        $('.landing-page').addClass('hide');
-
-        //hide login form upon success and display louto button
-        $('#navbar-login-form').hide();
-        $('#register').hide();
-        $(hideId).hide();
-    }
-
-    function displayErrorMessage(message){
-        // modal for login messages
-        // $('.error-modal').addClass('show');
-        $('.error-modal').show();
-        $('#error-modal-message').html(message);
-
-    }
-
     function registerUser() {
 
         //update dom - hide various items upon register button click
-        $('#registration-modal').show();
-        $('#navbar-login-form').hide();
+        showRegistrationItems();
 
         let email = $('#registration-email-input').val().trim();
         let pass = $('#registration-password-input').val().trim();
         //empty out text that was input
         $('#registration-email-input').val('');
         $('#registration-password-input').val('');
-
-
-
-       
+ 
         firebase.auth().createUserWithEmailAndPassword(email, pass)
             .then(user => {
-                captureUserData(user);
-                console.log("userid create" + uid);
-                 //tell user that they are logged in w email address
-                $('#userName').show();
-                $('#userName').html('Logged in as: ' + user.email);
-
+                let status = "new";
+                captureUserData(user, status);
+                 // set login items and 
+                 // tell user that they are logged in w email address
+                loginDisplayElements(user.email);
+                //hide modal on sucessful registration
+                hideRegistrationModal();
             })
             .then(() => {
 
                 //listener in event of log-out DRY OPPORTUNITY -IN ALL 3 login flows
                 let loginStatusFolder = database.ref('/members/' + uid + '/loginStatus');
 
-                loginStatusFolder.on('value', function(snapshot) {
-                    if (snapshot.val()) {
-                        loginStatusFolder.onDisconnect().update(false);
-                    }
-                })
+                // loginStatusFolder.on('value', function(snapshot) {
+                //     if (snapshot.val()) {
+                //         loginStatusFolder.onDisconnect().update(false);
+                //     }
+                // })
 
                 //on success, render next page
                 //TODO
@@ -251,16 +226,13 @@ $(document).ready(function() {
 
                 let errorCode = e.code;
                 let errorMessage = e.message;
-                console.log('login error: ' + errorMessage);
-                // $('.error-modal').addClass('show');
-                // $('.error-modal').removeClass('hide');
-                // $('#error-modal-message').html('<p>Login Error: ' + errorMessage + ' Please try again.</p>');
                 let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
-                displayErrorMessage(displayMessage);  
+               
+                $('#reg-error-msg').html(displayMessage); 
                 // reset page
                 $('#navbar-login-form').show();
                 $('#register').show();
-                // initialState();
+
 
             })
            
@@ -294,48 +266,135 @@ $(document).ready(function() {
 
     }
 
-    function renderNavBarLogIn() {
+    // event listener for authentication state change e.g. logout 
+    // this also allows user to be logged in after registering
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+        currentUser = firebaseUser;
+        if (firebaseUser){
+            $('#navbar-logout-button').removeClass('hide');
+            $('#register').hide();
+            $('#navbar-login-form').hide();
+            $('#guest').addClass('hide');
+        }
+        else {
+            $('#navbar-logout-button').addClass('hide');
+            $('#register').show();
+            $('#guest').removeClass('hide');
+        }
+    })
 
-        //hide logout button and display login form
-        $('#navbar-logout-button').addClass('hide');
-        $('#navbar-login-form').show();
+    // reset password
+    function resetPassword(){
+        let auth = firebase.auth();
+        let user = firebase.auth().currentUser;
+        let emailAddress = user.email;
+        console.log(emailAddress);
 
-
-
-    }
-
-
-    // capture email and password
-    function upgradeLogin(){
-       
-        // $('#navbar-login-form').hide();
-        let email = $('#registration-email-input').val().trim();
-        let password = $('#registration-password-input').val().trim();
-        const credential = firebase.auth.EmailAuthProvider.credential(
-            email, 
-            password
-        );
-
-        firebase.auth().currentUser.link(credential).then(function(user) {
-
-            let userFolder = database.ref('/members/' + uid);
-            userFolder.update({email: user.email, 
-                        lastLogIn: userProfile.lastLogIn}
-                    );
-            
-            loginDisplayElements(user.email, '#upgrade-from-guest');
-            $('#registration-modal').hide();
-            $('#upgrade-from-guest').addClass('hide');
-
+        auth.sendPasswordResetEmail(emailAddress).then(function() {
+          // Email sent.
         }, function(error) {
-            // console.log("Error upgrading anonymous account", error);
-            let displayMessage = '<p>Error creating user account. Please try again later.</p>';
-            displayErrorMessage(displayMessage); //modal not popping *****
-
-
+          // An error happened.
+          console.log(error);
+        });
+    }
+    // change email
+    function resetEmail(){
+        var user = firebase.auth().currentUser;
+        var email =  $('#update-email-input').val();
+        $('#update-email-input').val('');
+        // get updated email from an input box
+        user.updateEmail(email).then(function() {
+          // Update successful.
+        }, function(error) {
+          // An error happened.
         });
     }
 
+    // resets homepage layout when navigating from other pages
+    function resetHomepage(){ 
+        $('.homepage').removeClass('hide');
+       
+        $('.landing-page').addClass('hide');
+        $('.recipe-shortlist-page').addClass('hide');
+        $('.detailed-view-page').addClass('hide');
+        if (userProfile.email !== 'guest'){
+            $('#email-reset').removeClass('hide');
+            $('#password-reset').removeClass('hide');
+        }
+    }
+
+    // sets page layout after login 
+    function loginDisplayElements(email){
+        // call once user logged in to display items on homepage
+        // displays ingredients stored in database for that user
+        initialIngredientsList();  // from recipe page
+        //tell user that they are logged in with email address
+        showHomepage(email);     
+        // items to hide    
+        $('#upgrade-from-guest').addClass('hide');  
+        $('.landing-page').addClass('hide');
+        //hide login form upon success and display logout button
+        $('#navbar-login-form').hide();
+        $('#register').hide();
+        $('#email-reset').removeClass('hide');
+        $('#password-reset').removeClass('hide');
+    }
+    // displays default homepage and DOM items
+    function showHomepage(email){
+        $('#show-homepage').removeClass('hide');
+        $('.homepage').removeClass('hide');
+        $('#userName').show();
+        $('#userName').html('Logged in as: ' + email); 
+    }
+    // displays additional items for an anon guest user
+    function displayGuestItems(){
+        // display guest upgrade button
+        $('#upgrade-from-guest').removeClass('hide');
+        // make sure the following buttons are hidden
+        $('#reset-email').addClass('hide');
+        $('#reset-password').addClass('hide');
+        $('.landing-page').addClass('hide');
+    }
+    // displays additional items for a member  user
+    function displayMemberItems(){
+        $('#password-reset').addClass('hide');
+        $('#email-reset').addClass('hide');
+    }
+    // resets homepage layout when navigating from other pages
+    function resetHomepage(){ 
+        $('.homepage').removeClass('hide');
+        $('#show-homepage').removeClass('hide'); //added
+        $('.landing-page').addClass('hide');
+        $('.recipe-shortlist-page').addClass('hide');
+        $('.detailed-view-page').addClass('hide');
+        if (userProfile.email !== 'guest'){
+            $('#email-reset').removeClass('hide');
+            $('#password-reset').removeClass('hide');
+        }
+    }
+    // modal for login error messages
+    function displayErrorMessage(message){  
+        $('.error-modal').show();
+        $('#error-modal-message').html(message);
+    }
+    //hide modal on success
+    function hideRegistrationModal(){ 
+        $('#registration-modal').hide();
+        $('#register').hide();
+    }
+    // displays registration dom items
+    function showRegistrationItems(){
+        $('#registration-modal').show();
+        $('#navbar-login-form').hide();
+    }
+    // displays login dom items
+    function renderNavBarLogIn() {
+        //hide logout button and display login form
+        $('#navbar-logout-button').addClass('hide');
+        $('#navbar-login-form').show();
+    }
+    
+    // Button Actions Section
     $('#register').on('click', function() {
         regFlag = true;
         //remove this button by hiding
@@ -407,38 +466,15 @@ $(document).ready(function() {
 
         $('#registration-modal').hide();
         $('#register').show();
+        $('#reg-error-msg').html('');
+        $('#reg-error-msg').hide();
 
         //prevent page refresh
         return false
 
     });
 
-
-
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-        currentUser = firebaseUser;
-        if (firebaseUser){
-            $('#navbar-logout-button').removeClass('hide');
-            $('#register').hide();
-            $('#navbar-login-form').hide();
-            $('#guest').addClass('hide');
-            //listener in event of log-out DRY OPPORTUNITY -IN ALL 3 login flows
-            
-                //     }
-                    // })
-            // add a real time listener 
-            // firebaseUser null if not logged in
-            // this also allows user to be logged in after registering
-
-            }
-            else {
-                $('#navbar-logout-button').addClass('hide');
-                $('#register').show();
-                $('#guest').removeClass('hide');
-            }
-    })
-
-    // close error msg
+   // close error msg
     $('#close-modal').on('click', function(){
         // $('.error-modal').hide();
         console.log("clicking me!");
@@ -460,9 +496,6 @@ $(document).ready(function() {
 
 
     })
-
-    // Show and hide initial elements
-    initialState();
 
 
     $('#password-reset').on('click', function(){
@@ -491,62 +524,9 @@ $(document).ready(function() {
         return false;
     })
 
-    // reset password
-    function resetPassword(){
-        let auth = firebase.auth();
-        let user = firebase.auth().currentUser;
-        let emailAddress = user.email;
-        console.log(emailAddress);
-
-        auth.sendPasswordResetEmail(emailAddress).then(function() {
-          // Email sent.
-          // console.log("email");
-
-        }, function(error) {
-          // An error happened.
-          console.log(error);
-        });
-    }
-
-    function resetEmail(){
-        var user = firebase.auth().currentUser;
-        var email =  $('#update-email-input').val();
-        $('#update-email-input').val('');
-        // get updated email from an input box
-        user.updateEmail(email).then(function() {
-          // Update successful.
-        }, function(error) {
-          // An error happened.
-        });
-    }
-
-    // function resetPageOnLogout(){
-    //     $('.homepage').addClass('hide');
-    //     $('.landing-page').removeClass('hide');
-    //     // $('.homepage').removeClass('show');
-    //     // put these here just in case
-    //     $('.recipe-shortlist-page').addClass('hide');
-    //     $('.detailed-view-page').addClass('hide');
-
-    // }
-
-    function resetHomepage(){
-        console.log("reset homepage");
-
-           
-        $('.homepage').removeClass('hide');
-        // $('.homepage').addClass('show');
-        // $('.landing-page').removeClass('show');
-        $('.landing-page').addClass('hide');
-        $('.recipe-shortlist-page').addClass('hide');
-        $('.detailed-view-page').addClass('hide');
-        console.log("reset homepage");
-        if (userProfile.email !== 'guest'){
-            $('#email-reset').removeClass('hide');
-            $('#password-reset').removeClass('hide');
-        }
-
-    }
+    // Show and hide initial elements
+    initialState();
+   
     /*
     Parking Lot
         Merge anonymous acount data accumulated upon login w/ user's profile    
@@ -590,12 +570,9 @@ $(document).ready(function() {
    
   
     function initialIngredientsList(){
-        console.log("recipes" + uid);
-      // var currentUID = uid;
-        console.log("recipes current" + uid);
-        memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
-            console.log(childSnapshot.val().checked);
-            console.log(childSnapshot.val().name);
+        
+            memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
+        
             if (usedIngredientsArray.indexOf(childSnapshot.val().name) > -1) {
                 return;
             } else {
@@ -613,7 +590,6 @@ $(document).ready(function() {
 
     function updateIngredientList(childSnapshot) {
 
-        console.log("in here again")
 
         let target = $("#ingredients-list");
         let id = childSnapshot.val().name;
