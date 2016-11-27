@@ -58,7 +58,9 @@
                                   <li class="active login-items" id="email-reset"><a href="#">Reset Email</a></li>
                                   <li class="active login-items hide" id="show-homepage"><a href="#">Homepage</a></li>
                                   <li class="active login-items hide" id="navbar-logout-button"><a href="#">Logout</a></li>
+                                  <li class="active login-items hide" id="google-maps"><a href="#">Google Maps</a></li>
                                   <li class="row text-center" id="userName">
+
                                 </ul>
 
                                 <div class="input-group email-update">
@@ -203,25 +205,25 @@
                     </div>
                 </div>
             </div>
+            </div> <!--End of Detailed View  Page -->
             <!-- map -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="map">Nothing in here?? APIKEY??</div>
-                </div>
+             <div class="map-page hide" style="height:100%; width:100%;">
+                    <div id="map"></div>
             </div>
-             <div class="row">
-                 <div class="well map-well hide">
-                    <div class="col-md-12">
-                        <strong>Title: </strong><div id='marker-title'></div>
-                        <strong>Position: </strong><div id='marker-position-lat'></div><div id='marker-position-lng'></div>
-                        <strong>Address: </strong><div id='marker-address'></div>
+            <div class="map-page hide">
+                 <div class="row">
+                     <div class="well map-well hide">
+                        <div class="col-md-12">
+                            <strong>Title: </strong><div id='marker-title'></div>
+                            <strong>Position: </strong><div id='marker-position-lat'></div><div id='marker-position-lng'></div>
+                            <strong>Address: </strong><div id='marker-address'></div>
+                        </div>
                     </div>
+                </div> <!-- googlemaps -->
+                <div class="row">
+                    <button type="button" class="btn login-items" id="back-recipe-shortlist">Back To Recipes</button>
                 </div>
-            </div> <!-- googlemaps -->
-            <div class="row">
-                <button type="button" class="btn login-items" id="back-recipe-shortlist">Back To Recipes</button>
-            </div>
-        </div> <!--End of Detailed View  Page -->
+        </div> <!-- end of map page -->
     </div>  <!-- end of container -->
     <footer class="footer">
         <div class="container">

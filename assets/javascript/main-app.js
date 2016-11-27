@@ -54,7 +54,7 @@ $(document).ready(function() {
 
     // Function to capture user data on login as member or guest
     function captureUserData(user, status){
-                uid = user.uid;
+        uid = user.uid;
         //set as var accessible to other functions in the page 
         userProfile.userID = uid;
         userProfile.loginStatus = true;
@@ -65,17 +65,22 @@ $(document).ready(function() {
         }
         // add to database
         let userFolder = database.ref('/members/' + uid);
+        // check what is happening and handle accordingly - new user, existing or upgrade
         if ( status = 'new'){
             userFolder.set(userProfile);
         } 
         else if (status = 'existing'){
-              userProfile.loginStatus = true;
-              // add to database
-              userFolder.update({loginStatus: userProfile.loginStatus, 
+            userProfile.loginStatus = true;
+            // add to database
+            userFolder.update({loginStatus: userProfile.loginStatus, 
+                        lastLogIn: userProfile.lastLogIn}
+            );
+        } else if (status = 'upgrade'){
+            userFolder.update({email: user.email, 
                         lastLogIn: userProfile.lastLogIn}
             );
         }
-        
+            
         // when user closes window / disconnects remove the guest user
         // Logout handled later on
         if (userProfile.email === 'guest'){
@@ -135,21 +140,16 @@ $(document).ready(function() {
 
         firebase.auth().currentUser.link(credential).then(function(user) {
 
-            let userFolder = database.ref('/members/' + uid);
-            userFolder.update({email: user.email, 
-                        lastLogIn: userProfile.lastLogIn}
-                    );
+            let status = 'upgrade';
+            captureUserData(user, status);
             // set DOM items to display on login
             loginDisplayElements(user.email);
             // hide modal on successful registration
             hideRegistrationModal();
 
         }, function(error) {
-            // console.log("Error upgrading anonymous account", error);
-            let displayMessage = '<p>Error creating user account. Please try again later.</p>';
-            displayErrorMessage(displayMessage); //modal not popping *****
-
-
+            // function to handle error message display
+            registrationErrorMsg(error);
         });
     }
 
@@ -173,12 +173,8 @@ $(document).ready(function() {
                 loginDisplayElements(user.email);
             
             }).catch(e => {
-                // captures errors on login 
-                let errorCode = e.code;
-                let errorMessage = e.message;
-                let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
-                // displays error messages
-                displayErrorMessage(displayMessage);  
+               // displays error messages
+                displayErrorMessage(e);  
 
             });
 
@@ -224,14 +220,15 @@ $(document).ready(function() {
             })
             .catch(e => {
 
-                let errorCode = e.code;
-                let errorMessage = e.message;
-                let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
+                // let errorCode = e.code;
+                // let errorMessage = e.message;
+                // let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
                
-                $('#reg-error-msg').html(displayMessage); 
-                // reset page
-                $('#navbar-login-form').show();
-                $('#register').show();
+                // $('#reg-error-msg').html(displayMessage); 
+                // // reset page
+                // $('#navbar-login-form').show();
+                // $('#register').show();
+                registrationErrorMsg(e);
 
 
             })
@@ -338,6 +335,7 @@ $(document).ready(function() {
         $('#register').hide();
         $('#email-reset').removeClass('hide');
         $('#password-reset').removeClass('hide');
+        $('#google-maps').removeClass('hide');
     }
     // displays default homepage and DOM items
     function showHomepage(email){
@@ -354,6 +352,7 @@ $(document).ready(function() {
         $('#reset-email').addClass('hide');
         $('#reset-password').addClass('hide');
         $('.landing-page').addClass('hide');
+         $('#google-maps').removeClass('hide');
     }
     // displays additional items for a member  user
     function displayMemberItems(){
@@ -373,7 +372,12 @@ $(document).ready(function() {
         }
     }
     // modal for login error messages
-    function displayErrorMessage(message){  
+    function displayErrorMessage(e){  
+        // captures errors on login 
+        let errorCode = e.code;
+        let errorMessage = e.message;
+        let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
+        // display on DOM 
         $('.error-modal').show();
         $('#error-modal-message').html(message);
     }
@@ -392,6 +396,15 @@ $(document).ready(function() {
         //hide logout button and display login form
         $('#navbar-logout-button').addClass('hide');
         $('#navbar-login-form').show();
+    }
+    //error handling for registration and upgrade user
+    function registrationErrorMsg(error){
+        let displayMessage = '<p>Error creating user account. Please try again later.</p>';
+        // displayErrorMessage(displayMessage); //modal not popping *****
+        $('#reg-error-msg').html(displayMessage); 
+        // reset page
+        $('#navbar-login-form').show();
+        $('#register').show();
     }
     
     // Button Actions Section
@@ -412,36 +425,20 @@ $(document).ready(function() {
     $('#guest').on('click', function() {
         //login anonymously
         anonymousLogIn();
-
         //prevent page refresh
         return false
-
     });
 
     // navbar on click function 
     $('#navbar-login-button').on('click', function() {
-
-        //login anonymously
+        //login as member
         memberLogIn();
-        console.log(firebase.auth().currentUser);
-
-
-        //call function to render next page
-        //TODO
-
         //prevent page refresh
         return false
-
     });
 
     $('#navbar-logout-button').on('click', function(e) {
-
-        // e.preventDefault();
-
-
         logOut();
-        // resetPageOnLogout();
-        // resetHomepage(); //make homepage visible
 
         //prevent page refresh
         return false
@@ -450,13 +447,11 @@ $(document).ready(function() {
 
     $('#registration-button').on('click', function() {
         if (regFlag === true){
-             registerUser();
+            registerUser();
         }
         else if (regFlag === false){
             upgradeLogin();
         }
-       
-
         //prevent page refresh
         return false
 
@@ -467,7 +462,6 @@ $(document).ready(function() {
         $('#registration-modal').hide();
         $('#register').show();
         $('#reg-error-msg').html('');
-        $('#reg-error-msg').hide();
 
         //prevent page refresh
         return false
@@ -476,10 +470,8 @@ $(document).ready(function() {
 
    // close error msg
     $('#close-modal').on('click', function(){
-        // $('.error-modal').hide();
-        console.log("clicking me!");
+        // hide message
         $('.error-modal').hide();
-        // $('.error-modal').addClass('hide');
 
         //prevent page refresh
         return false;
@@ -490,69 +482,57 @@ $(document).ready(function() {
         //clear out the inputs
         regFlag = false;
         $('#registration-modal').show(); 
-
         //prevent page refresh
         return false;
-
-
     })
-
 
     $('#password-reset').on('click', function(){
         resetPassword();
         return false;
     })
+
     $('#email-reset').on('click', function(){
         $('.email-update').removeClass('hide');
-        // $('.email-update').addClass('show');
-        // resetEmail();
         return false;
     })
     $('#cancel-email-reset').on('click', function(){
-        // $('.email-update').removeClass('show');
         $('.email-update').addClass('hide');
-        // resetEmail();
         return false;
     })
 
 
     $('#send-email-reset').on('click', function(){
-        // $('show-email-input').show();
         resetEmail();
-        // $('.email-update').removeClass('show');
         $('#email-update').addClass('hide');
         return false;
     })
 
-    // Show and hide initial elements
-    initialState();
-   
-    /*
-    Parking Lot
-        Merge anonymous acount data accumulated upon login w/ user's profile    
-    */
-    //  click events for whole site
-    $('#show-homepage').on('click', function(){
-        resetHomepage();
-
-        return false;
-    })
-
-    // $('.recipe-shortlist').on('click', function(){
-    //     $('.detailed-view-page').removeClass('hide');
-    //     $('.recipe-shortlist-page').addClass('hide');
-    //     //  // call the youtube function
-    //     // youtube();
-    //     // recipe functions?
-
-    // })
-
+   // back button to recipe short from detailed page  page
     $('#back-recipe-shortlist').on('click', function(){
         $('.recipe-shortlist-page').removeClass('hide');
         $('.detailed-view-page').addClass('hide');
         return false;
     })
 
+    $('#show-homepage').on('click', function(){
+        resetHomepage();
+
+        return false;
+    })
+
+    $('#google-maps').on('click', function(){
+        $('.map-page').removeClass('hide');
+
+        return false;
+    })
+
+
+    // Show and hide initial elements
+    initialState();
+
+
+
+//// This is where Recipe API is called and handled
     
     //various database references for food updates
     let ref = database.ref();
@@ -561,12 +541,6 @@ $(document).ready(function() {
     let usedIngredientsArray = [];
     // var userIng = firebase.auth().currentUser.uid;
     var userPlace = "";
-
-    // userZone.on('child_added', function(childSnapshot) {
-        
-    //     console.log(userIng);
-    //     userPlace = childSnapshot.val().userID;
-    // })
    
   
     function initialIngredientsList(){
@@ -812,25 +786,26 @@ $(document).ready(function() {
 var map;
       
 function initMap(){
+    // initialised the map and sets the default center location
     var center = new google.maps.LatLng(41.881832, -87.623177);
     var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat:41.881832, lng: -87.623177},
-      zoom: 15
+      zoom: 15  // 15 is a street level zoom
     });
 
-    // var map = new google.maps.Map(document.getElementById('map'), {
-    //   zoom: 15,
-    //   center: chicago
-    // });
+    // Zoom levels
+    // 1: World
+    // 5: Landmass/continent
+    // 10: City
+    // 15: Streets
+    // 20: Buildings
 
+    // set the default marker - in case that geolocation not working or disabled
     var marker = new google.maps.Marker({
       position: center,
       map: map,
       title: 'Chicago!'
     });
-
-
-
 
     var infoWindow = new google.maps.InfoWindow({map: map});
 
@@ -848,38 +823,24 @@ function initMap(){
         map.setCenter(pos);
         // console.log(map.getCenter());
         centerlocation = map.getCenter();
-        console.log("in part 1");
         doSearchFromCurrentLocation(centerlocation)
       }, function() {
-        // if user does not allow location
-        // handleLocationError(true, infoWindow, map.getCenter());
-        // handleLocationError(true, infoWindow, centerlocation);
-              console.log("in part 2");
-              doSearchFromCurrentLocation(center);
+        // if user does not allow location just use default
+        doSearchFromCurrentLocation(center);
       });
     } 
     else {
       // if geolocation doesnt work just center map on predefined coords and search
-      // handleLocationError(false, infoWindow, centerlocation);
-       console.log("in part 3");
         doSearchFromCurrentLocation(center);
-    }
-
-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    // infoWindow.setPosition(pos);
-    // infoWindow.setContent(browserHasGeolocation ?
-                          // 'Error: The Geolocation service failed.' :
-                          // 'Error: Your browser doesn\'t support geolocation.');
-       
     }
 
     function doSearchFromCurrentLocation(centerlocation)   {
 
-        // console.log(centerlocation);
+        // search for 
         var request = {
             location: centerlocation,
-            radius: '500',
-            query: 'restaraunt'
+            radius: '1000',
+            query: 'grocery'
           };
 
         service = new google.maps.places.PlacesService(map);
@@ -896,7 +857,7 @@ function initMap(){
                     var marker = new google.maps.Marker({
                     position: results[i].geometry.location,
                     map: map,
-                    title: results[i].name + " Opening Now: " + results[i].opening_hours.open_now + " Address: " + results[i].formatted_address,
+                    title: results[i].name + " Address: " + results[i].formatted_address,
                     // title: results[i].name,
                     address: results[i].formatted_address
                     });
