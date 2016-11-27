@@ -39,7 +39,7 @@ $(document).ready(function() {
 
         $('#registration-panel').addClass('hide');
         $('#navbar-logout-button').addClass('hide');
-        $('#registration-modal').addClass('hide');
+        $('#registration-modal').hide();
         // $('#upgrade-from-guest').removeClass('show');
         $('#upgrade-from-guest').addClass('hide');
         // $('#password-reset').removeClass('show');
@@ -206,7 +206,7 @@ $(document).ready(function() {
     function registerUser() {
 
         //update dom - hide various items upon register button click
-        $('#registration-modal').hide();
+        $('#registration-modal').show();
         $('#navbar-login-form').hide();
 
         let email = $('#registration-email-input').val().trim();

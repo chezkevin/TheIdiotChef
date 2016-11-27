@@ -19,288 +19,231 @@
 </head>
 
 <body>
-    </script>
-
     <div class="container">
-    <!-- Error Modal -->
-        <div class="modal error-modal">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title ">Error!</h4>
-              </div>
-              <div class="modal-body" id="error-modal-message">
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="close-modal">Close</button>
-              </div>
-            </div><!-- /.modal-content -->
-          </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-    <!-- navbar -->
-        <div class="row">
-            <div class="container">
-                <nav class="navbar navbar-default">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand" href="#">
-                                <span class="glyphicon glyphicon-cutlery"></span>
-                                TheIdiotChef
-                            </a>
-                        </div>
-                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button>
-                            <button type="button" class="btn login-items" id="password-reset"><a href="">Reset Password</a></button>
-                            <button type="button" class="btn login-items" id="email-reset"><a href="">Update Email</a></button>
-                            <button type="button" class="btn login-items hide" id="show-homepage"><a href="">Homepage</a></button>
-                            <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button>
-
-                            <div class="input-group email-update">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
-                                <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
-                                <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
-                            <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
+        <!-- Error Modal -->
+            <div class="modal error-modal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title ">Error!</h4>
+                  </div>
+                  <div class="modal-body" id="error-modal-message">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="close-modal">Close</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        <!-- navbar -->
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="#">
+                                    <span class="glyphicon glyphicon-cutlery"></span>
+                                    TheIdiotChef
+                                </a>
                             </div>
-                           <!--  <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
-                            <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button> -->
-                            <!-- <ul class="nav navbar-nav">
-                                <li><button type="button" class="btn login-items" id="register"><a href="">Register</a></button></li>
-                                <li><button type="button" class="btn login-items" id="guest"><a href="">Guest Login</a></button></li>
-                                <li id="userName"></li>
-                                <li><button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button></li>
-                                <li id="userName"></li>
-                            </ul>
-                            <form id="signin" class="navbar-form navbar-right" role="form">
-                                <div id="navbar-login-form">
-                                    <label for="email-input" id="login-form-message"></label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                        <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
-                                    </div>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                        <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
-                                </div>
+                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                <button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button>
+                                <button type="button" class="btn login-items" id="password-reset"><a href="">Reset Password</a></button>
+                                <button type="button" class="btn login-items" id="email-reset"><a href="">Update Email</a></button>
+                                <button type="button" class="btn login-items hide" id="show-homepage"><a href="">Homepage</a></button>
                                 <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button>
-                            </form>
-                        </div> -->
-                    </div>
-                </nav>
-               <!--  User account management -->
-                
-                <!-- Modal window for registration -->
-                <div class="modal" id="registration-modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title" id="lineModalLabel">Register!</h3>
-                            <button id="close-modal-button" class="btn btn-default">X</button>
-                        </div>
 
-                        <div class="modal-body">
-                            <!-- content goes here -->
-                            <form>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Email address</label>
-                                    <input type="email" class="form-control" id="registration-email-input" placeholder="Enter email">
+                                <div class="input-group email-update">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
+                                    <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
+                                    <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
+                                <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
                                 </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Password</label>
-                                    <input type="password" class="form-control" id="registration-password-input" placeholder="Password">
-                                </div>
-                                <button id="registration-button" type="submit" class="btn btn-default">Submit</button>
-                            </form>
+                               <!--  <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
+                                <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button> -->
+                                <!-- <ul class="nav navbar-nav">
+                                    <li><button type="button" class="btn login-items" id="register"><a href="">Register</a></button></li>
+                                    <li><button type="button" class="btn login-items" id="guest"><a href="">Guest Login</a></button></li>
+                                    <li id="userName"></li>
+                                    <li><button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button></li>
+                                    <li id="userName"></li>
+                                </ul>
+                                <form id="signin" class="navbar-form navbar-right" role="form">
+                                    <div id="navbar-login-form">
+                                        <label for="email-input" id="login-form-message"></label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                            <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
+                                        </div>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                            <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button>
+                                </form>
+                            </div> -->
+                        </div>
+                    </nav>
+                   <!--  User account management -->
+                    
+                    <!-- Modal window for registration -->
+                    <div class="modal" id="registration-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="lineModalLabel">Register!</h3>
+                                <button id="close-modal-button" class="btn btn-default">X</button>
+                            </div>
+
+                            <div class="modal-body">
+                                <!-- content goes here -->
+                                <form>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Email address</label>
+                                        <input type="email" class="form-control" id="registration-email-input" placeholder="Enter email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Password</label>
+                                        <input type="password" class="form-control" id="registration-password-input" placeholder="Password">
+                                    </div>
+                                    <button id="registration-button" type="submit" class="btn btn-default">Submit</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
+                <!-- </div> -->
+     <!-- body below navbar -->
+                <div class="col-lg-2">
                 </div>
-            </div>
- <!-- body below navbar -->
-            <div class="col-lg-2">
-            </div>
-            <div class="col-lg-8 text-center">
-                <h1>
-					The Idiot Chef
-				</h1>
-                <h3 id="description">
-					Add ingredients to the list, and The Idiot Chef will generate recipe ideas for you! Full instructions and video tutorial links are included!
-				</h3>
-                <div class="row text-center" id="userName"></div>
-            </div>
-            <div class="col-lg-2">
-            </div>
-        </div>
-<!-- end of body below Navbar -->
-<!-- Landing Page -->
-
-<div class="row text-center landing-page">
-    <div class="col-md-6 well landing-page">
-        <button type="button" class="btn login-items initial-login" id="register"><a href="">Register</a></button>
-    </div>
-    <div class="col-md-6 well landing-page">
-        <button type="button" class="btn login-items initial-login" id="guest"><a href="">Guest Login</a></button>
-    </div>
-</div>
-<div class="row text-center initial-login landing-page well">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        <div id="navbar-login-form">
-            <label for="email-input" id="login-form-message"></label>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
-            </div>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
-            </div>
-            <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
-        </div>
-    </div>
-    <div class="col-md-4"></div>
-</div>
-
-
-
-
-<!-- Start of Homepage -->
-    <div class="homepage hide">  
-        <div class="row">
-            <div class="col-lg-2">
-            </div>
-            <div class="col-lg-8">
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="ingredients-search">
-                        <span class="input-group-btn">
-						<button id='addIngredientButton' class="btn btn-default" type="button">Add Ingredient</button>
-						<button id='submitIngredientsButton' class="btn btn-default" type="button">Submit Ingredients</button>
-						</span>
-                    </div>
+                <div class="col-lg-8 text-center">
+                    <h1>
+    					The Idiot Chef
+    				</h1>
+                    <h3 id="description">
+    					Add ingredients to the list, and The Idiot Chef will generate recipe ideas for you! Full instructions and video tutorial links are included!
+    				</h3>
+                    <div class="row text-center" id="userName"></div>
                 </div>
-            </div>
-            <div class="col-lg-2">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3" id="ingredient-zone">
-                <h3>
-                    <span class="glyphicon glyphicon-leaf"></span>
-                    Your ingredients
-                </h3>
-                <section id="ingredients-list">
-                </section>
-            </div>
-            <div class="col-md-3" id="recipe-zone">
-                <h3>
-                    <span class="glyphicon glyphicon-list-alt"></span>
-                    Recipes
-                </h3>
-                <section class="recipe-list">
-                </section>
-            </div>
-            <div class="col-md-6" id="video-zone">
-                <h3>
-                    <span class="glyphicon glyphicon-film"></span>
-                    Videos
-                </h3>
-                <section class="video-list">
-                    Click on a recipe title to view videos for that recipe!
-                </section>
-            </div>
-        </div>
-    </div> <!-- End of Home Page -->
+                <div class="col-lg-2">
+                </div>
+    <!-- end of body below Navbar -->
+    <!-- Landing Page -->
 
-<div id='recipe-list' class="recipe-shortlist-page hide"> <!--Recipe Shortlist Page -->
-<!--      <div class="row recipe-shortlist" id="recipe-1">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="well">
- put recipe summary data in here - click on well to go to next page for detailed recipe and videos                      
-            </div>
+    <div class="row text-center landing-page">
+        <div class="col-md-6 well landing-page">
+            <button type="button" class="btn login-items initial-login" id="register"><a href="">Register</a></button>
+        </div>
+        <div class="col-md-6 well landing-page">
+            <button type="button" class="btn login-items initial-login" id="guest"><a href="">Guest Login</a></button>
         </div>
     </div>
-     <div class="row recipe-shortlist" id="recipe-2">>
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="well">
- put recipe summary data in here - click on well to go to next page for detailed recipe and videos                      
-
-            </div>
-        </div>
-    </div>
-    <div class="row recipe-shortlist" id="recipe-3">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="well">
- put recipe summary data in here - click on well to go to next page for detailed recipe and videos                
-
-            </div>
-        </div>
-    </div>
-     <div class="row recipe-shortlist" id="recipe-4">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="well">
-
- put recipe summary data in here - click on well to go to next page for detailed recipe and videos
-                
-            </div>
-        </div>
-    </div>
-     <div class="row recipe-shortlist" id="recipe-5">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="well">
-
- put recipe summary data in here - click on well to go to next page for detailed recipe and videos                
-            </div>
-        </div>
-    </div> -->
-<!-- add on click to expand each item -->
-</div> <!--End of Recipe Shortlist Page -->
-<div class="detailed-view-page hide"> <!--Detailed View  Page -->
-   <!--  <div class="row hide" id="big-image">
-        <button type="button" class="btn login-items" id="big-image-close">Close</button>
-    </div> -->
-    <div class="row">
+    <div class="row text-center initial-login landing-page well">
+        <div class="col-md-4"></div>
         <div class="col-md-4">
-            <div class="well">
-                <div class="video-list" ></div>
-            </div>
-        </div> <!--  youtube -->
-        <div class="col-md-8">
-            <div class="well">
-                <div id="recipe-list"></div>
-            </div>
-        </div>
-    </div>
-    <!-- map -->
-    <div class="row">
-        <div class="col-md-12">
-            <div id="map">Nothing in here?? APIKEY??</div>
-        </div>
-    </div>
-     <div class="row">
-         <div class="well map-well hide">
-            <div class="col-md-12">
-                <strong>Title: </strong><div id='marker-title'></div>
-                <strong>Position: </strong><div id='marker-position-lat'></div><div id='marker-position-lng'></div>
-                <strong>Address: </strong><div id='marker-address'></div>
+            <div id="navbar-login-form">
+                <label for="email-input" id="login-form-message"></label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
             </div>
         </div>
-    </div> <!-- googlemaps -->
-    <div class="row">
-        <button type="button" class="btn login-items" id="back-recipe-shortlist">Back To Recipes</button>
+        <div class="col-md-4"></div>
     </div>
-</div> <!--End of Detailed View  Page -->
-</div>  <!-- end of container -->
+
+    <!-- Start of Homepage -->
+        <div class="homepage hide">  
+            <div class="row">
+                <div class="col-lg-2">
+                </div>
+                <div class="col-lg-8">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="ingredients-search">
+                            <span class="input-group-btn">
+    						<button id='addIngredientButton' class="btn btn-default" type="button">Add Ingredient</button>
+    						<button id='submitIngredientsButton' class="btn btn-default" type="button">Submit Ingredients</button>
+    						</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3" id="ingredient-zone">
+                    <h3>
+                        <span class="glyphicon glyphicon-leaf"></span>
+                        Your ingredients
+                    </h3>
+                    <section id="ingredients-list">
+                    </section>
+                </div>
+                <div class="col-md-3" id="recipe-zone">
+                    <h3>
+                        <span class="glyphicon glyphicon-list-alt"></span>
+                        Recipes
+                    </h3>
+                    <section class="recipe-list">
+                    </section>
+                </div>
+                <div class="col-md-6" id="video-zone">
+                    <h3>
+                        <span class="glyphicon glyphicon-film"></span>
+                        Videos
+                    </h3>
+                    <section class="video-list">
+                        Click on a recipe title to view videos for that recipe!
+                    </section>
+                </div>
+            </div>
+        </div> <!-- End of Home Page -->
+
+        <div id='recipe-list' class="recipe-shortlist-page hide"> <!--Recipe Shortlist Page -->
+        </div> <!--End of Recipe Shortlist Page -->
+        <div class="detailed-view-page hide"> <!--Detailed View  Page -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="well">
+                        <div class="video-list" ></div>
+                    </div>
+                </div> <!--  youtube -->
+                <div class="col-md-8">
+                    <div class="well">
+                        <div id="recipe-list"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- map -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="map">Nothing in here?? APIKEY??</div>
+                </div>
+            </div>
+             <div class="row">
+                 <div class="well map-well hide">
+                    <div class="col-md-12">
+                        <strong>Title: </strong><div id='marker-title'></div>
+                        <strong>Position: </strong><div id='marker-position-lat'></div><div id='marker-position-lng'></div>
+                        <strong>Address: </strong><div id='marker-address'></div>
+                    </div>
+                </div>
+            </div> <!-- googlemaps -->
+            <div class="row">
+                <button type="button" class="btn login-items" id="back-recipe-shortlist">Back To Recipes</button>
+            </div>
+        </div> <!--End of Detailed View  Page -->
+    </div>  <!-- end of container -->
     <footer class="footer">
         <div class="container">
             <a href="https://www.dominos.com/en/" target="_blank">
@@ -308,18 +251,10 @@
         </a>
         </div>
     </footer>
-    <!-- Javascript -->
-    <!-- <script src="assets/javascript/auth.js"></script> -->
-    <!-- <script src="assets/javascript/TYapp.js"></script> -->
-    <!-- <script src="assets/javascript/youtube.js"></script> -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9pSrvDTzVXj7LToGHJUatXYl0Ts5LpuA&libraries=places&callback=initMap"
     async defer></script>
     <script src="assets/javascript/main-app.js"></script>
-    <!-- <script src="assets/javascript/GoogleMapsLib.js"></script> -->
     
-
-<!--     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9pSrvDTzVXj7LToGHJUatXYl0Ts5LpuA&libraries=places&callback=initMap"
-    async defer></script> -->
 </body>
 
 </html>
