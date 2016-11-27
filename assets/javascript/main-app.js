@@ -26,14 +26,25 @@ $(document).ready(function() {
     var userProfile = {
         userID: uid,
         email: '',
-        loginStatus: null,
         previousSearch: {},
         lastLogIn: firebase.database.ServerValue.TIMESTAMP
     };
 
-    function initialState() {
-        // Elements to Hide
-        // by adding a class hide
+    function resetOnRefresh() {
+        // if there is a user logged in - log them out - they need to reauthenticate
+        if (userProfile.uid !== '')
+        {
+            logOut();
+
+        } else{
+            initialState();
+        }
+      
+
+    }
+
+    function initialState(){
+        //hide the below DOM items
         $('.homepage').addClass('hide');
         $('.email-update').addClass('hide');
         $('#show-homepage').addClass('hide');
@@ -41,6 +52,7 @@ $(document).ready(function() {
         $('#upgrade-from-guest').addClass('hide');
         $('#password-reset').addClass('hide');
         $('#email-reset').addClass('hide');
+        $('.map-page').addClass('hide');
         // hidden by setting the display to none
         $('#registration-modal').hide();
         // Elements to Hide
@@ -49,15 +61,15 @@ $(document).ready(function() {
         // displayed by setting display to block
         $('#register').show();
         $('#guest').show();
-
     }
+
 
     // Function to capture user data on login as member or guest
     function captureUserData(user, status){
         uid = user.uid;
         //set as var accessible to other functions in the page 
         userProfile.userID = uid;
-        userProfile.loginStatus = true;
+        // userProfile.loginStatus = true;
         userProfile.email = user.email;
         // if logging in as a guest (anonymous)
         if (userProfile.email === null){
@@ -70,10 +82,9 @@ $(document).ready(function() {
             userFolder.set(userProfile);
         } 
         else if (status = 'existing'){
-            userProfile.loginStatus = true;
+            // userProfile.loginStatus = true;
             // add to database
-            userFolder.update({loginStatus: userProfile.loginStatus, 
-                        lastLogIn: userProfile.lastLogIn}
+            userFolder.update({lastLogIn: userProfile.lastLogIn}
             );
         } else if (status = 'upgrade'){
             userFolder.update({email: user.email, 
@@ -108,21 +119,8 @@ $(document).ready(function() {
 
                 
             }).catch(e => {
-                // catch any errors related to guest / anonymous login
-                let errorCode = e.code;
-                let errorMessage = e.message;
-                // try to make errors plain English
-                // network related errors
-                if (errorCode = "auth/network-request-failed") {
-                    let displayMessage = 'Network error - unable to login as guest. Please try again.';
-                }
-                else {
-                    let displayMessage = '<p> Guest Login Error: ' + errorCode + ' Please try again.</p>';
-                }
-                // for all other errors
-                let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
-                // call display message function
-                displayErrorMessage(displayMessage); 
+                
+                displayErrorMessage(e.message); 
 
             });
     }
@@ -174,7 +172,7 @@ $(document).ready(function() {
             
             }).catch(e => {
                // displays error messages
-                displayErrorMessage(e);  
+                displayErrorMessage(e.message);  
 
             });
 
@@ -201,33 +199,8 @@ $(document).ready(function() {
                 //hide modal on sucessful registration
                 hideRegistrationModal();
             })
-            .then(() => {
-
-                //listener in event of log-out DRY OPPORTUNITY -IN ALL 3 login flows
-                let loginStatusFolder = database.ref('/members/' + uid + '/loginStatus');
-
-                // loginStatusFolder.on('value', function(snapshot) {
-                //     if (snapshot.val()) {
-                //         loginStatusFolder.onDisconnect().update(false);
-                //     }
-                // })
-
-                //on success, render next page
-                //TODO
-                // renderLogOut();
-
-
-            })
             .catch(e => {
 
-                // let errorCode = e.code;
-                // let errorMessage = e.message;
-                // let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
-               
-                // $('#reg-error-msg').html(displayMessage); 
-                // // reset page
-                // $('#navbar-login-form').show();
-                // $('#register').show();
                 registrationErrorMsg(e);
 
 
@@ -243,15 +216,10 @@ $(document).ready(function() {
     
                 initialState();
 
-
             })
-            .catch(error => {
-                console.log(error);
-                console.error('Sign Out Error: ', errorMessage);
-                // $('.error-modal').addClass('show');
-                $('.error-modal').show();
-                $('#error-modal-message').html('<p>Sign Out Error: ' + errorMessage + '</p>');
-
+            .catch(e => {
+                
+                displayErrorMessage(e.message);
 
             });
 
@@ -277,6 +245,7 @@ $(document).ready(function() {
             $('#navbar-logout-button').addClass('hide');
             $('#register').show();
             $('#guest').removeClass('hide');
+            $('#google-maps').addClass('hide');
         }
     })
 
@@ -289,9 +258,9 @@ $(document).ready(function() {
 
         auth.sendPasswordResetEmail(emailAddress).then(function() {
           // Email sent.
-        }, function(error) {
+        }, function(e) {
           // An error happened.
-          console.log(error);
+            displayErrorMessage(e.message);
         });
     }
     // change email
@@ -302,15 +271,15 @@ $(document).ready(function() {
         // get updated email from an input box
         user.updateEmail(email).then(function() {
           // Update successful.
-        }, function(error) {
+        }, function(e) {
           // An error happened.
+          displayErrorMessage(e.message);
         });
     }
 
     // resets homepage layout when navigating from other pages
     function resetHomepage(){ 
         $('.homepage').removeClass('hide');
-       
         $('.landing-page').addClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
         $('.detailed-view-page').addClass('hide');
@@ -372,14 +341,14 @@ $(document).ready(function() {
         }
     }
     // modal for login error messages
-    function displayErrorMessage(e){  
+    function displayErrorMessage(message){  
         // captures errors on login 
-        let errorCode = e.code;
-        let errorMessage = e.message;
-        let displayMessage = '<p>Login Error: ' + errorMessage + ' Please try again.</p>';
+        // let errorCode = e.code;
+        // let errorMessage = e.message;
+        let displayMessage = '<p>Error: ' + message + ' Please try again.</p>';
         // display on DOM 
         $('.error-modal').show();
-        $('#error-modal-message').html(message);
+        $('#error-modal-message').html(displayMessage);
     }
     //hide modal on success
     function hideRegistrationModal(){ 
@@ -400,7 +369,6 @@ $(document).ready(function() {
     //error handling for registration and upgrade user
     function registrationErrorMsg(error){
         let displayMessage = '<p>Error creating user account. Please try again later.</p>';
-        // displayErrorMessage(displayMessage); //modal not popping *****
         $('#reg-error-msg').html(displayMessage); 
         // reset page
         $('#navbar-login-form').show();
@@ -527,8 +495,8 @@ $(document).ready(function() {
     })
 
 
-    // Show and hide initial elements
-    initialState();
+    // if the browser is refeshed - log user out and they must reauthenticate
+    resetOnRefresh();
 
 
 
