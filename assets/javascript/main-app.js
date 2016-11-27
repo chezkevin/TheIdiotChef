@@ -37,7 +37,7 @@ $(document).ready(function() {
 
     function initialState() {
 
-        $('#registration-panel').addClass('hide');
+        // $('#registration-panel').addClass('hide');
         $('#navbar-logout-button').addClass('hide');
         $('#registration-modal').hide();
         // $('#upgrade-from-guest').removeClass('show');
@@ -51,7 +51,8 @@ $(document).ready(function() {
         $('.homepage').addClass('hide');
         $('#show-homepage').addClass('hide');
         $('.landing-page').removeClass('hide');
-
+        $('#register').show();
+        $('#guest').show();
 
     }
 
@@ -98,6 +99,8 @@ $(document).ready(function() {
                 $('#show-homepage').removeClass('hide');
                 $('.homepage').removeClass('hide');
                 $('.landing-page').addClass('hide');
+                $('#userName').show();
+                $('#userName').html('Logged in as: guest');
                 // call once user logged in
                 initialIngredientsList();  // from recipe page
 
@@ -198,7 +201,7 @@ $(document).ready(function() {
     function displayErrorMessage(message){
         // modal for login messages
         // $('.error-modal').addClass('show');
-        $('.error-modal').removeClass('hide');
+        $('.error-modal').show();
         $('#error-modal-message').html(message);
 
     }
@@ -223,7 +226,7 @@ $(document).ready(function() {
                 captureUserData(user);
                 console.log("userid create" + uid);
                  //tell user that they are logged in w email address
-                homepage$('#userName').show();
+                $('#userName').show();
                 $('#userName').html('Logged in as: ' + user.email);
 
             })
@@ -268,17 +271,7 @@ $(document).ready(function() {
 
         firebase.auth().signOut()
             .then(() => {
-                // console.log('Signed Out');
-
-                // let userFolder = database.ref('/members/' + uid);
-                
-                // if (userProfile.email === 'guest'){
-                    // remove on logout -- this part is not allowed by the db perms
-                    // disconnect works but 
-                    // if you logout then disconnect it does not remove it
-                    // console.log(uid);
-                    // userFolder.remove();
-                // }
+    
                 initialState();
 
 
@@ -287,7 +280,7 @@ $(document).ready(function() {
                 console.log(error);
                 console.error('Sign Out Error: ', errorMessage);
                 // $('.error-modal').addClass('show');
-                $('.error-modal').removeClass('hide');
+                $('.error-modal').show();
                 $('#error-modal-message').html('<p>Sign Out Error: ' + errorMessage + '</p>');
 
 
@@ -305,7 +298,8 @@ $(document).ready(function() {
 
         //hide logout button and display login form
         $('#navbar-logout-button').addClass('hide');
-        $('#navbar-login-form').removeClass('hide');
+        $('#navbar-login-form').show();
+
 
 
     }
@@ -425,8 +419,8 @@ $(document).ready(function() {
         currentUser = firebaseUser;
         if (firebaseUser){
             $('#navbar-logout-button').removeClass('hide');
-            $('#register').addClass('hide');
-            $('#navbar-login-form').addClass('hide');
+            $('#register').hide();
+            $('#navbar-login-form').hide();
             $('#guest').addClass('hide');
             //listener in event of log-out DRY OPPORTUNITY -IN ALL 3 login flows
             
@@ -439,7 +433,7 @@ $(document).ready(function() {
             }
             else {
                 $('#navbar-logout-button').addClass('hide');
-                $('#register').removeClass('hide');
+                $('#register').show();
                 $('#guest').removeClass('hide');
             }
     })
@@ -448,8 +442,8 @@ $(document).ready(function() {
     $('#close-modal').on('click', function(){
         // $('.error-modal').hide();
         console.log("clicking me!");
-        $('.error-modal').removeClass('show');
-        $('.error-modal').addClass('hide');
+        $('.error-modal').hide();
+        // $('.error-modal').addClass('hide');
 
         //prevent page refresh
         return false;

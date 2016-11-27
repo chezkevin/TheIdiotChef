@@ -1,15 +1,22 @@
 .checkbox {
 	display: inline;
 }
+.btn-success{
+	margin-left: 30px;
+}
 .error-modal {
 	display: none; 
+}
+.panel-default {
+	height: 50px;
+	width: 100px;
 }
 .login-items {
 	/*float: left;*/
 	border-width: 0.5px;
 	border-style: solid;
 	border-color: lightgrey;
-	margin-top: 10px;
+	margin-top: 5px;
 	float: left;
 	/*margin-bottom: 10px;*/
 }

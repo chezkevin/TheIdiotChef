@@ -21,21 +21,22 @@
 <body>
     <div class="container">
         <!-- Error Modal -->
-            <div class="modal error-modal">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title ">Error!</h4>
-                  </div>
-                  <div class="modal-body" id="error-modal-message">
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="close-modal">Close</button>
-                  </div>
-                </div><!-- /.modal-content -->
-              </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
+        <div class="modal error-modal">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title ">Error!</h4>
+              </div>
+              <div class="modal-body" id="error-modal-message">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="close-modal">Close</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
         <!-- navbar -->
+
                     <nav class="navbar navbar-default">
                         <div class="container-fluid">
                             <div class="navbar-header">
@@ -51,11 +52,19 @@
                                 </a>
                             </div>
                             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                <button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button>
-                                <button type="button" class="btn login-items" id="password-reset"><a href="">Reset Password</a></button>
-                                <button type="button" class="btn login-items" id="email-reset"><a href="">Update Email</a></button>
-                                <button type="button" class="btn login-items hide" id="show-homepage"><a href="">Homepage</a></button>
-                                <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button>
+                                <ul class="nav nav-pills">
+                                  <li class="active login-items" id="upgrade-from-guest"><a href="#">Upgrade Login</a></li>
+                                  <li  class="active login-items" id="password-reset"><a href="#">Reset Password</a></li>
+                                  <li class="active login-items" id="email-reset"><a href="#">Reset Email</a></li>
+                                  <li class="active login-items hide" id="show-homepage"><a href="#">Homepage</a></li>
+                                  <li class="active login-items hide" id="navbar-logout-button"><a href="#">Logout</a></li>
+                                <li class="row text-center" id="userName"></div>
+                                </ul>
+                            <!--     <button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button>
+                                <button type="button" class="btn login-items" id="password-reset"><a href="">Reset Password</a></button> -->
+                                <!-- <button type="button" class="btn login-items" id="email-reset"><a href="">Update Email</a></button> -->
+                                <!-- <button type="button" class="btn login-items hide" id="show-homepage"><a href="">Homepage</a></button> -->
+                              <!--   <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button> -->
 
                                 <div class="input-group email-update">
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
@@ -97,7 +106,6 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h3 class="modal-title" id="lineModalLabel">Register!</h3>
-                                <button id="close-modal-button" class="btn btn-default">X</button>
                             </div>
 
                             <div class="modal-body">
@@ -112,6 +120,7 @@
                                         <input type="password" class="form-control" id="registration-password-input" placeholder="Password">
                                     </div>
                                     <button id="registration-button" type="submit" class="btn btn-default">Submit</button>
+                                    <button id="close-modal-button" class="btn btn-default">Close</button>
                                 </form>
                             </div>
                         </div>
@@ -127,7 +136,9 @@
                     <h3 id="description">
     					Add ingredients to the list, and The Idiot Chef will generate recipe ideas for you! Full instructions and video tutorial links are included!
     				</h3>
-                    <div class="row text-center" id="userName"></div>
+                    <!-- <div class="panel panel-default"> -->
+                        <div class="row text-center" id="userName"></div>
+                    <!-- </div> -->
                 </div>
                 <div class="col-lg-2">
                 </div>
@@ -172,7 +183,7 @@
                             <input type="text" class="form-control" id="ingredients-search">
                             <span class="input-group-btn">
     						<button id='addIngredientButton' class="btn btn-default" type="button">Add Ingredient</button>
-    						<button id='submitIngredientsButton' class="btn btn-default" type="button">Submit Ingredients</button>
+    						<button id='submitIngredientsButton' class="btn btn-default btn-success" type="button">Lets Get Cooking!</button>
     						</span>
                         </div>
                     </div>
