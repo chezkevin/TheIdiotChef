@@ -7,10 +7,10 @@
 .error-modal {
 	display: none; 
 }
-.panel-default {
+/*.panel-default {
 	height: 50px;
 	width: 100px;
-}
+}*/
 .login-items {
 	/*float: left;*/
 	border-width: 0.5px;
@@ -40,8 +40,18 @@
 	float: left;
 	margin-left: 10px;
 }
-.well {
-	min-height: 100px;
+.initial-login{
+	margin-left: 25%;
+	margin-right: 22.5%;
+	margin-top: 17.5%;
+	padding-left: 10%;
+	padding-right: 10%;
+
+}
+.login-well {
+	min-height: 180px;
+	margin-left: 2.5%;
+	width: 30%;
 }
 .map-well{
 	 min-height: 200px;

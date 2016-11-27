@@ -38,7 +38,7 @@
         <!-- navbar -->
 
                     <nav class="navbar navbar-default">
-                        <div class="container-fluid">
+                        <!-- <div class="container-fluid"> -->
                             <div class="navbar-header">
                                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                                     <span class="sr-only">Toggle navigation</span>
@@ -58,46 +58,16 @@
                                   <li class="active login-items" id="email-reset"><a href="#">Reset Email</a></li>
                                   <li class="active login-items hide" id="show-homepage"><a href="#">Homepage</a></li>
                                   <li class="active login-items hide" id="navbar-logout-button"><a href="#">Logout</a></li>
-                                <li class="row text-center" id="userName"></div>
+                                  <li class="row text-center" id="userName">
                                 </ul>
-                            <!--     <button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button>
-                                <button type="button" class="btn login-items" id="password-reset"><a href="">Reset Password</a></button> -->
-                                <!-- <button type="button" class="btn login-items" id="email-reset"><a href="">Update Email</a></button> -->
-                                <!-- <button type="button" class="btn login-items hide" id="show-homepage"><a href="">Homepage</a></button> -->
-                              <!--   <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button> -->
 
                                 <div class="input-group email-update">
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
                                     <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
                                     <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
-                                <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
+                                    <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
                                 </div>
-                               <!--  <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
-                                <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button> -->
-                                <!-- <ul class="nav navbar-nav">
-                                    <li><button type="button" class="btn login-items" id="register"><a href="">Register</a></button></li>
-                                    <li><button type="button" class="btn login-items" id="guest"><a href="">Guest Login</a></button></li>
-                                    <li id="userName"></li>
-                                    <li><button type="button" class="btn login-items" id="upgrade-from-guest"><a href="">Upgrade Login</a></button></li>
-                                    <li id="userName"></li>
-                                </ul>
-                                <form id="signin" class="navbar-form navbar-right" role="form">
-                                    <div id="navbar-login-form">
-                                        <label for="email-input" id="login-form-message"></label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                            <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
-                                        </div>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                            <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary" id="navbar-logout-button">Log Out</button>
-                                </form>
-                            </div> -->
-                        </div>
+                            </div>
                     </nav>
                    <!--  User account management -->
                     
@@ -146,16 +116,13 @@
     <!-- Landing Page -->
 
     <div class="row text-center landing-page">
-        <div class="col-md-6 well landing-page">
+        <div class="col-md-4 well login-well landing-page">
             <button type="button" class="btn login-items initial-login" id="register"><a href="">Register</a></button>
         </div>
-        <div class="col-md-6 well landing-page">
+        <div class="col-md-4 well login-well landing-page">
             <button type="button" class="btn login-items initial-login" id="guest"><a href="">Guest Login</a></button>
         </div>
-    </div>
-    <div class="row text-center initial-login landing-page well">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
+        <div class="col-md-4 well login-well landing-page">
             <div id="navbar-login-form">
                 <label for="email-input" id="login-form-message"></label>
                 <div class="input-group">
@@ -169,7 +136,7 @@
                 <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
             </div>
         </div>
-        <div class="col-md-4"></div>
+    
     </div>
 
     <!-- Start of Homepage -->
