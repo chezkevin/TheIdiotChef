@@ -96,6 +96,7 @@ h1 img{
 body {
 	background-image: url("background.jpg");
 	background-size: 100%;
+	background-attachment: fixed;
 }
 
 h1 {

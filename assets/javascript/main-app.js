@@ -695,6 +695,22 @@ $(document).ready(function() {
                     var recipeImage = $("<img class='recipeImage'>");
                     recipeImage.attr('src', data[i].image);
 
+                    var recipeID = data[i].id;
+                    var recipeQueryURL = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + recipeID + '/information?includeNutrition=false';
+
+                    $.ajax({
+                        url: recipeQueryURL,
+                        type: 'GET',
+                        data: {},
+                        dataType: 'json',
+                        success: function(data) {
+                                console.log(data);
+                        },
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("X-Mashape-Authorization", apiKey);
+                        }
+                    })
+
                     recipeDiv.append(recipeImage);
                     innerRecipeDiv.append(recipeTitle);
                     innerRecipeDiv.append(recipeUsedIngredientsList);
