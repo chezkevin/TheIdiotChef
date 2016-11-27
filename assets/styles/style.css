@@ -123,7 +123,7 @@ h2, h3, span {
 	color: white;
 }
 
-section#video-list,
+section.video-list,
 section#ingredients-list,
 section#recipe-list {
     min-height: 100px;

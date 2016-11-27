@@ -731,18 +731,21 @@ $(document).ready(function() {
     $(document).on("click", ".recipe-title", function() {
         $('.detailed-view-page').removeClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
-        var youTubeQ = $(this).text();
+        var recipeTitle = $(this).text();
+        var youTubeQ = recipeTitle;
+
         youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
 
         var APIKey = "AIzaSyAldakVxQrbZabH9SdIO3iocly3sOA727U"
         var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ APIKey + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
 
-        displayVideos(queryURL, '100%', '100%', 'https://www.youtube.com/embed/');
+        displayVideos(recipeTitle, queryURL, '100%', '100%', 'https://www.youtube.com/embed/');
     });
-    
 
-    function displayVideos(queryURL, videoWidth, videoHeight, videoSrc) {
+    function displayVideos(recipe, queryURL, videoWidth, videoHeight, videoSrc) {
+        console.log("recipe: " + recipe);        
         $('.video-list').empty();
+        $('.video-list').append("You searched for: " + recipe + ". Click on any of the videos below for recipes!");
         $.ajax({
                 url: queryURL,
                 method: 'GET'
