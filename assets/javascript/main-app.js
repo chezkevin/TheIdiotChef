@@ -69,7 +69,6 @@ $(document).ready(function() {
         uid = user.uid;
         //set as var accessible to other functions in the page 
         userProfile.userID = uid;
-        // userProfile.loginStatus = true;
         userProfile.email = user.email;
         // if logging in as a guest (anonymous)
         if (userProfile.email === null){
