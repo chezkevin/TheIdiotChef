@@ -94,8 +94,12 @@
     firebase.initializeApp(config);
 
     var database = firebase.database();
+    var storefolder = database.ref('/stores/');
+    var uniqueKey = storefolder.push().key;
+
+
     // decided to use one main db folder for all members
-    var memberFolder = database.ref('/members/');
+    // var memberFolder = database.ref('/members/');
     var map;
     var latitude = 41.881832;
     var longitude =  -87.623177; 
@@ -297,11 +301,12 @@ function initMap(){
 
 
                      // var uid = user.uid;
-                    var loggedUser;
+                    // var loggedUser;
                     // hardcoded UID
-                    let storefolder = memberFolder.child('jUNYKMY0a4TjdIZAqrOcAvalHHl1').child('/stores/');
-                    storefolder.set(storeLocation);
-                    storefolder.onDisconnect().set(null);
+                    /// UID not being passed
+                    // workaround create unique key and store date there until logout
+                    storefolder.child(uniqueKey).set(storeLocation);
+                    storefolder.child(uniqueKey).onDisconnect().set(null);
 
                     
                 }
@@ -309,9 +314,9 @@ function initMap(){
         }
     }
        
-    let storefolder = memberFolder.child('jUNYKMY0a4TjdIZAqrOcAvalHHl1').child('/stores/');
+    // let storefolder = memberFolder.child(uniqueKey).child('/stores/');
 
-    storefolder.on('child_added', function(childSnapshot){
+    storefolder.child(uniqueKey).on('child_added', function(childSnapshot){
         count++;
         console.log(childSnapshot);
         //empty table   
