@@ -333,7 +333,7 @@ $(document).ready(function() {
         $('#register').hide();
         $('#email-reset').removeClass('hide');
         $('#password-reset').removeClass('hide');
-        $('.map-page').removeClass('hide');
+        // $('.map-page').removeClass('hide');
         // $('#google-maps').removeClass('hide');
     }
     // displays default homepage and DOM items
@@ -351,7 +351,7 @@ $(document).ready(function() {
         $('#reset-email').addClass('hide');
         $('#reset-password').addClass('hide');
         $('.landing-page').addClass('hide');
-        $('.map-page').removeClass('hide');
+        // $('.map-page').removeClass('hide');
          // $('#google-maps').removeClass('hide');
     }
     // displays additional items for a member  user
@@ -517,6 +517,15 @@ $(document).ready(function() {
         resetHomepage();
 
         return false;
+    })
+
+
+    $('#open-map').on('click', function(){
+        $('.map-page').removeClass('hide');
+    })
+
+    $('#close-map').on('click', function(){
+        $('.map-page').addClass('hide');
     })
 
     // $('#open-map').on('click', function(){
