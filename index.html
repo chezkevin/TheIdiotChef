@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>The Idiot Chef</title>
+    <meta name="viewport" content="initial-scale=1.0">
     <link rel='shortcut icon' href='favicon_tic.ico' type='image/x-icon'/ >
     <!-- Bootstrap CDN-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -12,10 +13,7 @@
     <script src="https://use.fontawesome.com/475b1e26ce.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Kalam|Pacifico" rel="stylesheet">
     <!-- Firebase Reference -->
-   <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
-    <meta name="viewport" content="initial-scale=1.0">
-
-    
+   <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>   
 </head>
 
 <body>
@@ -36,113 +34,108 @@
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
         <!-- navbar -->
+        <nav class="navbar navbar-default">
+        <!-- <div class="container-fluid"> -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <span class="glyphicon glyphicon-cutlery"></span>
+                    TheIdiotChef
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav nav-pills">
+                  <li class="login-items" id="upgrade-from-guest"><a href="#">Upgrade Login</a></li>
+                  <li  class="login-items" id="password-reset"><a href="#">Reset Password</a></li>
+                  <li class="login-items" id="email-reset"><a href="#">Reset Email</a></li>
+                  <li class="login-items hide" id="show-homepage"><a href="#">Homepage</a></li>
+                <!--   <li class="login-items hide" id="google-maps"><a href="#">Google Maps</a></li> -->
+                  <li class="active login-items hide" id="navbar-logout-button"><a href="#">Logout</a></li>
 
-                    <nav class="navbar navbar-default">
-                        <!-- <div class="container-fluid"> -->
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <a class="navbar-brand" href="#">
-                                    <span class="glyphicon glyphicon-cutlery"></span>
-                                    TheIdiotChef
-                                </a>
-                            </div>
-                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                <ul class="nav nav-pills">
-                                  <li class="login-items" id="upgrade-from-guest"><a href="#">Upgrade Login</a></li>
-                                  <li  class="login-items" id="password-reset"><a href="#">Reset Password</a></li>
-                                  <li class="login-items" id="email-reset"><a href="#">Reset Email</a></li>
-                                  <li class="login-items hide" id="show-homepage"><a href="#">Homepage</a></li>
-                                  <li class="login-items hide" id="google-maps"><a href="#">Google Maps</a></li>
-                                  <li class="active login-items hide" id="navbar-logout-button"><a href="#">Logout</a></li>
+                </ul>
+                <div class="row text-center" id="userName"></div>
 
-                                </ul>
-                                <div class="row text-center" id="userName"></div>
+                <div class="input-group email-update">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
+                    <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
+                    <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
+                    <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
+                </div>
+            </div>
+        </nav>
+        <!-- Modal window for registration -->
+        <div class="modal" id="registration-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="lineModalLabel">Register!</h3>
+                </div>
 
-                                <div class="input-group email-update">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user email-update"></i></span>
-                                    <input id="update-email-input" type="email" class="form-control email-update" name="email" value="" placeholder="Member Email Address">
-                                    <button type="button" class="btn login-items email-update" id="send-email-reset"><a href="">Submit New Email</a></button>
-                                    <button type="button" class="btn login-items email-update" id="cancel-email-reset"><a href="">Cancel</a></button>
-                                </div>
-                            </div>
-                    </nav>
-                   <!--  User account management -->
-                    
-                    <!-- Modal window for registration -->
-                    <div class="modal" id="registration-modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title" id="lineModalLabel">Register!</h3>
-                            </div>
-
-                            <div class="modal-body">
-                                <!-- content goes here -->
-                                <form>
-                                    <div class="form-group">
-                                        <div id="reg-error-msg"></div>
-                                        <label for="exampleInputEmail1">Email address</label>
-                                        <input type="email" class="form-control" id="registration-email-input" placeholder="Enter email">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Password</label>
-                                        <input type="password" class="form-control" id="registration-password-input" placeholder="Password">
-                                    </div>
-                                    <button id="registration-button" type="submit" class="btn btn-default">Submit</button>
-                                    <button id="close-modal-button" class="btn btn-default">Close</button>
-                                </form>
-                            </div>
+                <div class="modal-body">
+                    <!-- content goes here -->
+                    <form>
+                        <div class="form-group">
+                            <div id="reg-error-msg"></div>
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" class="form-control" id="registration-email-input" placeholder="Enter email">
                         </div>
-                    </div>
-                <!-- </div> -->
-     <!-- body below navbar -->
-                <div class="col-lg-2">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" id="registration-password-input" placeholder="Password">
+                        </div>
+                        <button id="registration-button" type="submit" class="btn btn-default">Submit</button>
+                        <button id="close-modal-button" class="btn btn-default">Close</button>
+                    </form>
                 </div>
-                <div class="col-lg-8 text-center">
-                    <h1>
-    					The Idiot Chef
-    				</h1>
-                    <h3 id="description">
-    					Add ingredients to the list, and The Idiot Chef will generate recipe ideas for you! Full instructions and video tutorial links are included!
-    				</h3>
-                    <!-- <div class="panel panel-default"> -->
-                        <!-- <div class="row text-center" id="userName"></div> -->
-                    <!-- </div> -->
-                </div>
-                <div class="col-lg-2">
-                </div>
-    <!-- end of body below Navbar -->
-    <!-- Landing Page -->
-
-    <div class="row text-center landing-page">
-        <div class="col-md-4 well login-well landing-page">
-            <button type="button" class="btn login-items initial-login" id="register"><a href="">Register</a></button>
-        </div>
-        <div class="col-md-4 well login-well landing-page">
-            <button type="button" class="btn login-items initial-login" id="guest"><a href="">Guest Login</a></button>
-        </div>
-        <div class="col-md-4 well login-well landing-page">
-            <div id="navbar-login-form">
-                <label for="email-input" id="login-form-message"></label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                    <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
             </div>
         </div>
-    
-    </div>
+        <!-- </div> -->
+        <!-- body below navbar -->
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-8 text-center">
+            <h1>
+				The Idiot Chef
+			</h1>
+            <h3 id="description">
+				Add ingredients to the list, and The Idiot Chef will generate recipe ideas for you! Full instructions and video tutorial links are included!
+			</h3>
+            <!-- <div class="panel panel-default"> -->
+                <!-- <div class="row text-center" id="userName"></div> -->
+            <!-- </div> -->
+        </div>
+        <div class="col-lg-2">
+        </div>
+        <!-- end of body below Navbar -->
+        <!-- Landing Page -->
+        <div class="row text-center landing-page">
+            <div class="col-xs-12 col-md-4 well login-well landing-page">
+                <button type="button" class="btn login-items initial-login" id="register"><a href="">Register</a></button>
+            </div>
+            <div class="col-xs-12 col-md-4 well login-well landing-page">
+                <button type="button" class="btn login-items initial-login" id="guest"><a href="">Guest Login</a></button>
+            </div>
+            <div class="col-xs-12 col-md-4 well login-well landing-page">
+                <div id="navbar-login-form">
+                    <label for="email-input" id="login-form-message"></label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
+                </div>
+            </div>
+        </div>
 
-    <!-- Start of Homepage -->
+        <!-- Start of Homepage -->
         <div class="homepage hide">  
             <div class="row">
                 <div class="col-lg-2">
@@ -158,8 +151,18 @@
                         </div>
                     </div>
                 </div>
+               <!-- map link -->
                 <div class="col-lg-2">
-                </div>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                         <div class="col-md-6">
+                            <div class="well map-well">
+                                <p>Missing Ingredients? Click on the <strong>Map</strong> button to do a search for open grocery stores nearby.  <button class="btn btn-default btn-success" id="open-map">Map</button></p> 
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>    
             </div>
             <div class="row">
                 <div class="col-md-3" id="ingredient-zone">
@@ -191,6 +194,7 @@
         </div> <!-- End of Home Page -->
 
         <div id='recipe-list' class="recipe-shortlist-page hide"> <!--Recipe Shortlist Page -->
+
         </div> <!--End of Recipe Shortlist Page -->
         <div class="detailed-view-page hide"> <!--Detailed View  Page -->
             <div class="row">
@@ -205,26 +209,13 @@
                     </div>
                 </div>
             </div>
-            </div> <!--End of Detailed View  Page -->
-            <!-- map -->
-             <div class="map-page hide" style="height:100%; width:100%;">
-                    <div id="map"></div>
+            <div class="row">
+                <button type="button" class="btn login-items" id="back-recipe-shortlist">Back To Recipes</button>
             </div>
-            <div class="map-page hide">
-                 <div class="row">
-                     <div class="well map-well hide">
-                        <div class="col-md-12">
-                            <strong>Title: </strong><div id='marker-title'></div>
-                            <strong>Position: </strong><div id='marker-position-lat'></div><div id='marker-position-lng'></div>
-                            <strong>Address: </strong><div id='marker-address'></div>
-                        </div>
-                    </div>
-                </div> <!-- googlemaps -->
-                <div class="row">
-                    <button type="button" class="btn login-items" id="back-recipe-shortlist">Back To Recipes</button>
-                </div>
-        </div> <!-- end of map page -->
+        </div> <!--End of Detailed View  Page -->
+
     </div>  <!-- end of container -->
+    <!-- </div> -->
     <footer class="footer">
         <div class="container">
             <a href="https://www.dominos.com/en/" target="_blank">
@@ -232,9 +223,9 @@
         </a>
         </div>
     </footer>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9pSrvDTzVXj7LToGHJUatXYl0Ts5LpuA&libraries=places&callback=initMap"
-    async defer></script>
-    <script src="assets/javascript/main-app.js"></script>
+     <script src="assets/javascript/main-app.js"></script>
+    
+
     
 </body>
 

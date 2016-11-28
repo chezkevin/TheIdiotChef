@@ -5,6 +5,9 @@
     <meta name="viewport" content="initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
+    <!-- Bootstrap CDN-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="assets/styles/style.css" rel="stylesheet">
     <meta charset="utf-8">
     <style>
       /* Always set the map height explicitly to define the size of the div
@@ -12,6 +15,14 @@
       #map {
         height: 80%;
         width: 80%;
+        margin-top: 5%;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-bottom: 1%;
+
+      }
+      #map-panel{
+        margin: 5%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -22,21 +33,65 @@
     </style>
   </head>
   <body>
-    <div id="map"></div>
-    <table id="map-stores">
-        <tbody></tbody>
-    </table>
-    <script>
+  <!-- <div class="container"> -->
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                </button>
+                <a class="navbar-brand" href="#">
+                    <span class="glyphicon glyphicon-cutlery"></span>
+                    TheIdiotChef
+                </a>
+                <button class="btn btn-default btn-success" id="close-map">Exit Map</button>
+                <div class="row text-center" id="userName"></div>
+            </div>
+        </nav>  
+        
+       <!--  map cant go into anything of it wont display properly -->
+        <div id="map"></div>
+            
 
-      // Initialize Firebase
-  var config = {
+  
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="well">
+                    <div><h3>Instructions</h3></div>
+                    <ol>
+                        <li>Allowing Geolocation the map will find your current location. </li>
+                        <li>You can also find your current location on the map yourself and click it.</li>
+                        <li> In either case stores within a 500m radius will be marked on the map.</li>
+                        <li>The results are also in the table below - select a row to find it on the map.</li>
+                        <li>Use google map navigation to zoom in and out and pan on the map.</li>
+                    </ol>
+                    <div class="panel table-responsive" id="map-panel">
+                        <table class="table-striped table-bordered" id="map-stores">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+                <div class="col-md-8">
+
+                </div>
+            <div class="col-md-2"></div>
+        </div>
+    <!-- </div> -->
+    <script>
+    // Initialize Firebase
+    var config = {
     apiKey: "AIzaSyASu2lz5VMPyQcFkLBdtjhDI7fBAtIlf2U",
     authDomain: "project--4875216557722276856.firebaseapp.com",
     databaseURL: "https://project--4875216557722276856.firebaseio.com",
     storageBucket: "project--4875216557722276856.appspot.com",
     messagingSenderId: "306080221352"
-  };
-  firebase.initializeApp(config);
+    };
+    
+    firebase.initializeApp(config);
 
     var database = firebase.database();
     // decided to use one main db folder for all members
@@ -44,7 +99,27 @@
     var map;
     var latitude = 41.881832;
     var longitude =  -87.623177; 
+   
 
+    // function openMapWin() {
+    //     mapWindow = window.open("GoogleMapsLibhtml", "mapWindow", "width=100%, height=100%");   // Opens a new window
+    // }
+
+    // function closeMapWin() {
+    //     mapWindow.close();   // Closes the new window
+    // }
+//     var loggedUser = null;
+// $(document).on('load', function(){
+//     firebase.auth().get(firebaseUser => {
+
+//         loggedUser = firebase.auth().currentUser.uid;
+//         console.log(loggedUser);
+
+//     })
+// })
+
+
+ 
 
 function initMap(){
     // initialised the map and sets the default center location
@@ -221,11 +296,12 @@ function initMap(){
                     // marker.setMap(null); 
 
 
-
-                    let storefolder = database.ref('/stores/');
+                     // var uid = user.uid;
+                    var loggedUser;
+                    // hardcoded UID
+                    let storefolder = memberFolder.child('jUNYKMY0a4TjdIZAqrOcAvalHHl1').child('/stores/');
                     storefolder.set(storeLocation);
                     storefolder.onDisconnect().set(null);
-
 
                     
                 }
@@ -233,11 +309,11 @@ function initMap(){
         }
     }
        
-    
+    let storefolder = memberFolder.child('jUNYKMY0a4TjdIZAqrOcAvalHHl1').child('/stores/');
 
-    database.ref('stores').on('child_added', function(childSnapshot){
+    storefolder.on('child_added', function(childSnapshot){
         count++;
-        console.log(count);
+        console.log(childSnapshot);
         //empty table   
         if (childSnapshot.val().openNow){
             var open = 'Open';
@@ -248,16 +324,19 @@ function initMap(){
             var open = childSnapshot.val().openNow;
         }
         
-        $('#map-stores > tbody:last-child').append('<tr class="store-data" data-name=' + childSnapshot.val().name + ' data-lat=' + childSnapshot.val().position_lat + ' data-lng=' + childSnapshot.val().position_lng+ '><td>'+ count +'</td><td>'+ childSnapshot.val().name +'</td><td>'+ childSnapshot.val().formatted_address +'</td><td>'+ open +'</td></tr>');
-        // $('<tr>').attr('data-lat', childSnapshot.val().position_lat);
-        // $('<tr>').attr('data-lng', childSnapshot.val().position_lng); 
+        $('#map-stores > tbody:last-child').append('<tr class="store-data" data-name=' + JSON.stringify(childSnapshot.val().name) + ' data-lat=' + childSnapshot.val().position_lat + ' data-lng=' + childSnapshot.val().position_lng+ '><td>'+ count +'</td><td>'+ childSnapshot.val().name +'</td><td>'+ childSnapshot.val().formatted_address +'</td><td>'+ open +'</td></tr>');
+        
 
     });  
 
 
  }
 
+$('#close-map').on('click', function(){
 
+    window.close();
+
+})
 
 
     </script>

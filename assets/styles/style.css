@@ -8,6 +8,26 @@
 	display: none; 
 	z-index: 1001;
 }
+.nav{
+	float: left;
+}
+.map-well {
+	float: left;
+	min-height: 100px;
+}
+#close-map {
+	float:right ;
+	margin: auto;
+}
+#open-map {
+	margin: center;
+}
+#userName {
+	float: right;
+	color: blue;
+	padding-right: 80px;
+	margin: 20px;
+}
 #reg-error-message {
 	color:red;
 }
@@ -57,18 +77,16 @@
 	margin-left: 2.5%;
 	width: 30%;
 }
-.map-well{
+/*.map-well{
 	 min-height: 200px;
 }
 #map {
 	/*height: 100%;
 	width: 100%;*/
-	 height: 300px;
-	 width: 100%;
-	 margin-top: 20px;
-	 margin-bottom: 20px;
-	/*position: relative;*/
-}
+/*	 position: absolute; //must put this for map to be displayed
+     height: 80%;
+     width: 80%;
+}*/
 a:hover{
 	cursor: pointer;
 }

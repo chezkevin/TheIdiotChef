@@ -1,5 +1,4 @@
-// global configuration details are outside the document.ready function for now
-// notes on disconnect not working for set Login Status = false need to take another look at
+
 $(document).ready(function() { 
     var config = {
         // apiKey: "AIzaSyCfGxrkb9P3oYRWrQ5XL4wxNmpyv_x9VL0",
@@ -20,6 +19,7 @@ $(document).ready(function() {
     var database = firebase.database();
     // decided to use one main db folder for all members
     var memberFolder = database.ref('/members/');
+    var loggedUser = null;
     var uid = ''; //user id for tracking purposes
     var currentUser;
     var regFlag = true;
@@ -29,6 +29,14 @@ $(document).ready(function() {
         previousSearch: {},
         lastLogIn: firebase.database.ServerValue.TIMESTAMP
     };
+    var mapWindow = window;
+
+    function openMapWin() {
+        mapWindow = window.open("GoogleMapsLib.html");   // Opens a new window
+        
+    }
+
+
 
     function resetOnRefresh() {
         // if there is a user logged in - log them out - they need to reauthenticate
@@ -59,8 +67,8 @@ $(document).ready(function() {
         // hidden by removing a class hide
         $('.landing-page').removeClass('hide');
         // displayed by setting display to block
-        $('#register').show();
         $('#guest').show();
+        $('#register').show();
     }
 
 
@@ -214,6 +222,13 @@ $(document).ready(function() {
             .then(() => {
     
                 initialState();
+                // close the map if it is open
+                // if (mapWindow !== null){
+                //     closeMapWin();
+                // }
+                
+                
+
 
             })
             .catch(e => {
@@ -234,17 +249,19 @@ $(document).ready(function() {
     // this also allows user to be logged in after registering
     firebase.auth().onAuthStateChanged(firebaseUser => {
         currentUser = firebaseUser;
+        loggedUser = firebase.auth().currentUser.uid;
+        console.log(loggedUser);
         if (firebaseUser){
             $('#navbar-logout-button').removeClass('hide');
             $('#register').hide();
             $('#navbar-login-form').hide();
-            $('#guest').addClass('hide');
+            $('#guest').hide();
         }
         else {
             $('#navbar-logout-button').addClass('hide');
             $('#register').show();
-            $('#guest').removeClass('hide');
-            $('#google-maps').addClass('hide');
+            $('#guest').show();
+            // $('#google-maps').addClass('hide');
         }
     })
 
@@ -303,7 +320,7 @@ $(document).ready(function() {
         $('#register').hide();
         $('#email-reset').removeClass('hide');
         $('#password-reset').removeClass('hide');
-        $('#google-maps').removeClass('hide');
+        // $('#google-maps').removeClass('hide');
     }
     // displays default homepage and DOM items
     function showHomepage(email){
@@ -320,7 +337,7 @@ $(document).ready(function() {
         $('#reset-email').addClass('hide');
         $('#reset-password').addClass('hide');
         $('.landing-page').addClass('hide');
-         $('#google-maps').removeClass('hide');
+         // $('#google-maps').removeClass('hide');
     }
     // displays additional items for a member  user
     function displayMemberItems(){
@@ -487,12 +504,17 @@ $(document).ready(function() {
         return false;
     })
 
-    $('#google-maps').on('click', function(){
-        $('.map-page').removeClass('hide');
+    $('#open-map').on('click', function(){
+        // $('.show-map').removeClass('hide');
+        openMapWin();
+        // $('#userName').show();
+    });
 
-        return false;
-    })
 
+    $('#close-map').on('click', function(){
+        closeMapWin();
+        // $('.show-map').addClass('hide');
+    });
 
     // if the browser is refeshed - log user out and they must reauthenticate
     resetOnRefresh();
@@ -512,7 +534,7 @@ $(document).ready(function() {
   
     function initialIngredientsList(){
         
-            memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
+        memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
         
             if (usedIngredientsArray.indexOf(childSnapshot.val().name) > -1) {
                 return;
@@ -522,7 +544,6 @@ $(document).ready(function() {
 
                 addCheckBoxListener(newChild);
             }
-
         })  
     }  
         
@@ -766,114 +787,4 @@ $(document).ready(function() {
         
     // })
 }) // end of document on ready
-
-/// google maps - initMap must be global and outside document.ready
-
-var map;
-      
-function initMap(){
-    // initialised the map and sets the default center location
-    var center = new google.maps.LatLng(41.881832, -87.623177);
-    var map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat:41.881832, lng: -87.623177},
-      zoom: 15  // 15 is a street level zoom
-    });
-
-    // Zoom levels
-    // 1: World
-    // 5: Landmass/continent
-    // 10: City
-    // 15: Streets
-    // 20: Buildings
-
-    // set the default marker - in case that geolocation not working or disabled
-    var marker = new google.maps.Marker({
-      position: center,
-      map: map,
-      title: 'Chicago!'
-    });
-
-    var infoWindow = new google.maps.InfoWindow({map: map});
-
-    // HTML5 geolocation. 
-    // gets users current location then does search in predefined radius
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-
-        infoWindow.setPosition(pos);
-        infoWindow.setContent('Found You!');
-        map.setCenter(pos);
-        // console.log(map.getCenter());
-        centerlocation = map.getCenter();
-        doSearchFromCurrentLocation(centerlocation)
-      }, function() {
-        // if user does not allow location just use default
-        doSearchFromCurrentLocation(center);
-      });
-    } 
-    else {
-      // if geolocation doesnt work just center map on predefined coords and search
-        doSearchFromCurrentLocation(center);
-    }
-
-    function doSearchFromCurrentLocation(centerlocation)   {
-
-        // search for 
-        var request = {
-            location: centerlocation,
-            radius: '1000',
-            query: 'grocery'
-          };
-
-        service = new google.maps.places.PlacesService(map);
-        service.textSearch(request, callback);
-
-        function callback(results, status) {
-        
-            createMarker = new google.maps.Marker;
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    // to view object details  console.log(results); 
-                    // console.log(results); 
-        
-                    var marker = new google.maps.Marker({
-                    position: results[i].geometry.location,
-                    map: map,
-                    title: results[i].name + " Address: " + results[i].formatted_address,
-                    // title: results[i].name,
-                    address: results[i].formatted_address
-                    });
-
-                    // marker.addListener('center_changed', function(){
-                    //     //3 sec after the center has changed pan back to the marker
-                    //     window.setTimeout(function(){
-                    //         map.panTo(marker.getPosition());}, 3000);
-                    // })
-                    // this allows you to zoom in and click on a flag to get
-                    // details to populate DOM
-                    marker.addListener('click', function(){
-                        map.setZoom(15);
-                        map.setCenter(this.getPosition());
-                        // console.log(marker);
-                        $('#marker-title').html(this.title);
-                        // can use these coord to recenter the map and to save for later 
-                        $('#marker-position-lat').html(this.getPosition().lat());
-                        $('#marker-position-lng').html(this.getPosition().lng());
-                        $('#marker-address').html(this.address);
-                        $('.map-well').removeClass('hide');
-
-
-                    })
-                }
-            }
-        }
-    }
-       
-
- }
-
 
