@@ -658,7 +658,9 @@ $(document).ready(function() {
     $('#submitIngredientsButton').on('click', function() {
         $('.recipe-list').empty();
         $('.homepage').addClass('hide'); // added by Fiona
-        $('.recipe-shortlist-page').removeClass('hide'); // added by Fiona
+        $('#map-page').addClass('hide'); // added by Fiona
+        $('.recipe-shortlist-page').removeClass('hide');
+
         // $('.recipe-shortlist').removeClass('hide'); // added by Fiona
       
         var ingredientsRef = memberFolder.child(uid).child('ingredients');
