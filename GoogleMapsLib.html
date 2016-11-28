@@ -4,6 +4,7 @@
     <title>Simple Map</title>
     <meta name="viewport" content="initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
     <meta charset="utf-8">
     <style>
       /* Always set the map height explicitly to define the size of the div
@@ -26,77 +27,124 @@
     <strong>Position: </strong><div id='marker-position-lat'></div><div id='marker-position-lng'></div>
     <strong>Address: </strong><div id='marker-address'></div>
     <script>
-      var map;
+
+      // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyASu2lz5VMPyQcFkLBdtjhDI7fBAtIlf2U",
+    authDomain: "project--4875216557722276856.firebaseapp.com",
+    databaseURL: "https://project--4875216557722276856.firebaseio.com",
+    storageBucket: "project--4875216557722276856.appspot.com",
+    messagingSenderId: "306080221352"
+  };
+  firebase.initializeApp(config);
+
+    var database = firebase.database();
+    // decided to use one main db folder for all members
+    var memberFolder = database.ref('/members/');
+    var storeLocation = {
+      name: "",
+      address: "",
+      openNow: false,
+      rating: 0
+    }
+
+    var map;
       
-        function initMap() {
-        var center = new google.maps.LatLng(41.881832, -87.623177);
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat:41.881832, lng: -87.623177},
-          zoom: 15
-        });
+function initMap(){
+    // initialised the map and sets the default center location
+    var center = new google.maps.LatLng(41.881832, -87.623177);
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat:41.881832, lng: -87.623177},
+      zoom: 15  // 15 is a street level zoom
+    });
 
-        // var map = new google.maps.Map(document.getElementById('map'), {
-        //   zoom: 15,
-        //   center: chicago
-        // });
+    // Zoom levels
+    // 1: World
+    // 5: Landmass/continent
+    // 10: City
+    // 15: Streets
+    // 20: Buildings
 
-        var marker = new google.maps.Marker({
-          position: center,
-          map: map,
-          title: 'Chicago!'
-        });
+    // set the default marker - in case that geolocation not working or disabled
+    var marker = new google.maps.Marker({
+      position: center,
+      map: map,
+      title: 'Chicago!'
+    });
 
+    var infoWindow = new google.maps.InfoWindow({map: map});
 
+    function findNewCenter(latitude,longitude){
+       var pos = {
+          lat: latitude,
+          lng: longitude
+        };
 
+        infoWindow.setPosition(pos);
+        infoWindow.setContent('Found You!');
+        map.setCenter(pos);
+        // console.log(map.getCenter());
+        centerlocation = map.getCenter();
+        doSearchFromCurrentLocation(centerlocation);
+    }
 
-       var infoWindow = new google.maps.InfoWindow({map: map});
+    // HTML5 geolocation. 
+    // gets users current location then does search in predefined radius
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        findNewCenter(position.coords.latitude,position.coords.longitude);
+        // var pos = {
+        //   lat: position.coords.latitude,
+        //   lng: position.coords.longitude
+        // };
 
-        // HTML5 geolocation. 
-        // gets users current location then does search in predefined radius
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            map.setCenter(pos);
-            // console.log(map.getCenter());
-            centerlocation = map.getCenter();
-            console.log("in part 1");
-            doSearchFromCurrentLocation(centerlocation)
-          }, function() {
-            // if user does not allow location
-            // handleLocationError(true, infoWindow, map.getCenter());
-            // handleLocationError(true, infoWindow, centerlocation);
-                  console.log("in part 2");
-                  doSearchFromCurrentLocation(center);
-          });
-        } 
-        else {
-          // if geolocation doesnt work just center map on predefined coords and search
-          // handleLocationError(false, infoWindow, centerlocation);
-           console.log("in part 3");
-            doSearchFromCurrentLocation(center);
-        }
-
-        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         // infoWindow.setPosition(pos);
-        // infoWindow.setContent(browserHasGeolocation ?
-                              // 'Error: The Geolocation service failed.' :
-                              // 'Error: Your browser doesn\'t support geolocation.');
-           
-        }
+        // infoWindow.setContent('Found You!');
+        // map.setCenter(pos);
+        // // console.log(map.getCenter());
+        // centerlocation = map.getCenter();
+        
+      }, function() {
+        // if user does not allow location just use default
+        doSearchFromCurrentLocation(center);
+      });
+    } 
+    else {
+      // if geolocation doesnt work just center map on predefined coords and search
+        doSearchFromCurrentLocation(center);
+    }
+
+    //Add listener - to allow user to click where they are and it will do another search
+    map.addListener("click", function (event) {
+        var latitude = event.latLng.lat();
+        var longitude = event.latLng.lng();  
+
+        // recenter  map
+        map.panTo(new google.maps.LatLng(latitude,longitude));
+        // createMarker = new google.maps.Marker;
+        // var pos = {
+        //     lat: latitude,
+        //     lng: longitude
+        //   };
+
+        // infoWindow.setPosition(pos);
+        // infoWindow.setContent('Here You are!');
+        // map.setCenter(pos);
+        // // console.log(map.getCenter());
+        // centerlocation = map.getCenter();
+        // // do a search
+        // doSearchFromCurrentLocation(centerlocation);
+        findNewCenter(latitude, longitude);
+
+}); //end addListener
 
     function doSearchFromCurrentLocation(centerlocation)   {
 
-        console.log(centerlocation);
+        // search for 
         var request = {
             location: centerlocation,
-            radius: '500',
-            query: 'restaraunt'
+            radius: '1000',
+            query: 'grocery'
           };
 
         service = new google.maps.places.PlacesService(map);
@@ -104,16 +152,25 @@
 
         function callback(results, status) {
         
-            createMarker = new google.maps.Marker;
+            // createMarker = new google.maps.Marker;
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 for (var i = 0; i < results.length; i++) {
                     // to view object details  console.log(results); 
                     console.log(results); 
+
+                    /// save results to database
+                    storeLocation.name = JSON.stringify(results[i].name);
+                    storeLocation.address = JSON.stringify(results[i].formatted_address);
+                    // storeLocation.openNow = results[i].opening_hours.open_now;
+                    storeLocation.rating = JSON.stringify(results[i].rating);
+
+                     let storefolder = database.ref('/stores/');
+                     storefolder.push(storefolder);
         
                     var marker = new google.maps.Marker({
                     position: results[i].geometry.location,
                     map: map,
-                    title: results[i].name + " Opening Now: " + results[i].opening_hours.open_now + " Address: " + results[i].formatted_address,
+                    title: results[i].name + " Address: " + results[i].formatted_address,
                     // title: results[i].name,
                     address: results[i].formatted_address
                     });
@@ -126,7 +183,7 @@
                     // this allows you to zoom in and click on a flag to get
                     // details to populate DOM
                     marker.addListener('click', function(){
-                        map.setZoom(15);
+                        map.setZoom(10);
                         map.setCenter(this.getPosition());
                         // console.log(marker);
                         $('#marker-title').html(this.title);
@@ -134,6 +191,7 @@
                         $('#marker-position-lat').html(this.getPosition().lat());
                         $('#marker-position-lng').html(this.getPosition().lng());
                         $('#marker-address').html(this.address);
+                        $('.map-well').removeClass('hide');
 
 
                     })
@@ -144,6 +202,7 @@
        
 
  }
+
 
 
     </script>
