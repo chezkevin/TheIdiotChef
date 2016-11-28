@@ -13,7 +13,30 @@
     <script src="https://use.fontawesome.com/475b1e26ce.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Kalam|Pacifico" rel="stylesheet">
     <!-- Firebase Reference -->
-   <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>   
+   <script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>  
+       <style>
+       /*// needed for maps - leave here for now*/
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 80%;
+        width: 80%;
+        margin-top: 5%;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-bottom: 1%;
+
+      }
+      #map-panel{
+        margin: 5%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style> 
 </head>
 
 <body>
@@ -152,7 +175,7 @@
                     </div>
                 </div>
                <!-- map link -->
-                <div class="col-lg-2">
+   <!--              <div class="col-lg-2">
                     <div class="row">
                         <div class="col-md-3"></div>
                          <div class="col-md-6">
@@ -162,7 +185,7 @@
                         </div>
                         <div class="col-md-3"></div>
                     </div>
-                </div>    
+                </div>   -->  
             </div>
             <div class="row">
                 <div class="col-md-3" id="ingredient-zone">
@@ -216,6 +239,35 @@
 
     </div>  <!-- end of container -->
     <!-- </div> -->
+    <div id="map" class="map-page"></div>
+     <div class="map-page row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="well">
+                    <div><h3>Instructions</h3></div>
+                    <ol>
+                        <li>Allowing Geolocation the map will find your current location. </li>
+                        <li>You can also find your current location on the map yourself and click it.</li>
+                        <li> In either case stores within a 500m radius will be marked on the map.</li>
+                        <li>The results are also in the table below - select a row to find it on the map.</li>
+                        <li>Use google map navigation to zoom in and out and pan on the map.</li>
+                    </ol>
+                    <div class="panel table-responsive" id="map-panel">
+                        <table class="table-striped table-bordered" id="map-stores">
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+                <div class="col-md-8">
+
+                </div>
+            <div class="col-md-2"></div>
+        </div>
     <footer class="footer">
         <div class="container">
             <a href="https://www.dominos.com/en/" target="_blank">
@@ -223,6 +275,8 @@
         </a>
         </div>
     </footer>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9pSrvDTzVXj7LToGHJUatXYl0Ts5LpuA&libraries=places&callback=initMap"
+    async defer></script>
      <script src="assets/javascript/main-app.js"></script>
     
 

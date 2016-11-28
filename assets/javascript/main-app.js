@@ -1,27 +1,40 @@
+var config = {        
+    apiKey: "AIzaSyB86ufSLxlXh_Oj7Se_rmg5FmddSA9qYEU",
+    authDomain: "test-a0542.firebaseapp.com",
+    databaseURL: "https://test-a0542.firebaseio.com",
+    storageBucket: "test-a0542.appspot.com",
+    messagingSenderId: "655697953340"
+  
 
-$(document).ready(function() { 
-    var config = {
-        // apiKey: "AIzaSyCfGxrkb9P3oYRWrQ5XL4wxNmpyv_x9VL0",
-        // authDomain: "theidiotchef-149717.firebaseapp.com",
-        // databaseURL: "https://theidiotchef-149717.firebaseio.com",
-        // storageBucket: "theidiotchef-149717.appspot.com",
-        // messagingSenderId: "963963795794"
-
-        apiKey: "AIzaSyDeASMIr2HuqX9YdWU5U9M8wZFb0Apwj80",
-        authDomain: "test-cac0a.firebaseapp.com",
-        databaseURL: "https://test-cac0a.firebaseio.com",
-        storageBucket: "test-cac0a.appspot.com",
-        messagingSenderId: "818755096086"
+        // apiKey: "AIzaSyDeASMIr2HuqX9YdWU5U9M8wZFb0Apwj80",
+        // authDomain: "test-cac0a.firebaseapp.com",
+        // databaseURL: "https://test-cac0a.firebaseio.com",
+        // storageBucket: "test-cac0a.appspot.com",
+        // messagingSenderId: "818755096086"
       };
      
-    firebase.initializeApp(config);
+firebase.initializeApp(config);
 
-    var database = firebase.database();
-    // decided to use one main db folder for all members
-    var memberFolder = database.ref('/members/');
+var database = firebase.database();
+// decided to use one main db folder for all members
+//needed for maps to access so global
+var memberFolder = database.ref('/members/');
+
+
+
+
+// decided to use one main db folder for all members
+// var memberFolder = database.ref('/members/');
+var map;
+var latitude = 41.881832;
+var longitude =  -87.623177; 
+var currentUser;
+
+$(document).ready(function() { 
+    
     var loggedUser = null;
     var uid = ''; //user id for tracking purposes
-    var currentUser;
+    
     var regFlag = true;
     var userProfile = {
         userID: uid,
@@ -320,6 +333,7 @@ $(document).ready(function() {
         $('#register').hide();
         $('#email-reset').removeClass('hide');
         $('#password-reset').removeClass('hide');
+        $('.map-page').removeClass('hide');
         // $('#google-maps').removeClass('hide');
     }
     // displays default homepage and DOM items
@@ -337,6 +351,7 @@ $(document).ready(function() {
         $('#reset-email').addClass('hide');
         $('#reset-password').addClass('hide');
         $('.landing-page').addClass('hide');
+        $('.map-page').removeClass('hide');
          // $('#google-maps').removeClass('hide');
     }
     // displays additional items for a member  user
@@ -504,17 +519,17 @@ $(document).ready(function() {
         return false;
     })
 
-    $('#open-map').on('click', function(){
-        // $('.show-map').removeClass('hide');
-        openMapWin();
-        // $('#userName').show();
-    });
+    // $('#open-map').on('click', function(){
+    //     // $('.show-map').removeClass('hide');
+    //     openMapWin();
+    //     // $('#userName').show();
+    // });
 
 
-    $('#close-map').on('click', function(){
-        closeMapWin();
-        // $('.show-map').addClass('hide');
-    });
+    // $('#close-map').on('click', function(){
+    //     closeMapWin();
+    //     // $('.show-map').addClass('hide');
+    // });
 
     // if the browser is refeshed - log user out and they must reauthenticate
     resetOnRefresh();
@@ -786,5 +801,240 @@ $(document).ready(function() {
     //     $("#big-image").addClass('hide');
         
     // })
+    // call this in document on ready
+    // initMap();
 }) // end of document on ready
+
+
+
+    // function openMapWin() {
+    //     mapWindow = window.open("GoogleMapsLibhtml", "mapWindow", "width=100%, height=100%");   // Opens a new window
+    // }
+
+    // function closeMapWin() {
+    //     mapWindow.close();   // Closes the new window
+    // }
+//     var loggedUser = null;
+// $(document).on('load', function(){
+//     firebase.auth().get(firebaseUser => {
+
+//         loggedUser = firebase.auth().currentUser.uid;
+//         console.log(loggedUser);
+
+//     })
+// })
+
+
+ 
+
+function initMap(){
+    // initialised the map and sets the default center location
+    var center = new google.maps.LatLng(latitude,longitude);
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: latitude, lng: longitude},
+      zoom: 15  // 15 is a street level zoom
+    });
+    var message='';
+    var markersArray =[];
+
+    // Zoom levels
+    // 1: World
+    // 5: Landmass/continent
+    // 10: City
+    // 15: Streets
+    // 20: Buildings
+
+    var infoWindow = new google.maps.InfoWindow({map: map});
+
+    function findNewCenter(latitude,longitude, message){
+        var pos = {
+          lat: latitude,
+          lng: longitude
+        };
+
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(message);
+       
+        // infoMessage(latitude,longitude);
+        map.setCenter(pos);
+        // console.log(map.getCenter());
+        centerlocation = map.getCenter();
+        doSearchFromCurrentLocation(centerlocation);
+    }
+
+    // HTML5 geolocation. 
+    // gets users current location then does search in predefined radius
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+        message = "<strong>You are here!</strong>"
+        findNewCenter(position.coords.latitude,position.coords.longitude,message);
+        
+      }, function() {
+        // if user does not allow location just use default
+        doSearchFromCurrentLocation(center);
+      });
+    } 
+    else {
+      // if geolocation doesnt work just center map on predefined coords and search
+        doSearchFromCurrentLocation(center);
+    }
+    
+    $(document).on('click', '.store-data', function(){
+
+        latitude = $(this).data('lat');
+        longitude = $(this).data('lng');
+        message = "<strong>" + $(this).data('name') + "</strong> is here.";
+
+        // infoMessage(latitude,longitude);
+        var pos = {
+          lat: latitude,
+          lng: longitude
+        };
+
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(message);
+        // map.setZoom(15);
+        // findNewCenter(latitude, longitude, message);
+
+     })
+
+        function clearOverlays() {
+          for (var i = 0; i < markersArray.length; i++ ) {
+            markersArray[i].setMap(null);
+          }
+          markersArray.length = 0;
+        }
+    //Add listener - to allow user to click where they are and it will do another search
+    map.addListener("click", function (event) {
+        var latitude = event.latLng.lat();
+        var longitude = event.latLng.lng();  
+        clearOverlays();
+        // recenter  map
+        map.panTo(new google.maps.LatLng(latitude,longitude));
+
+        message = "<strong>Found You!</strong>";
+
+        findNewCenter(latitude, longitude, message);
+
+
+    }); //end addListener
+
+    var count = 0;  
+
+    // This is where the stores are located and marked on the map
+    function doSearchFromCurrentLocation(centerlocation)   {
+
+        // search for 
+        var request = {
+            location: centerlocation,
+            radius: '500',  //500m radius
+            query: 'grocery'
+          };
+        
+        // marker.setMap(null); //clears markers
+        service = new google.maps.places.PlacesService(map);
+        service.textSearch(request, callback);  
+  
+
+ 
+
+        function callback(results, status) {
+
+            $('#map-stores > tbody').empty();
+            $('#map-stores > tbody:last-child').append('<tr><th> Number </th><th> Store Name </th><th> Store Address </th><th> Open Now </th></tr>');
+            count = 0;
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                var storeLocation = [];
+                for (var i = 0; i < results.length; i++) {
+                    // to view object details  console.log(results); 
+
+                    try{
+                      open = results[i].opening_hours.weekday_text;
+                    }
+                    catch(e){
+                      open='No information provided';
+                    }
+
+                    try{
+                      openNow = results[i].opening_hours.open_now;
+
+                    }
+                    catch(e){
+                      openNow='No information provided';
+                    }
+
+
+
+                    storeLocation.push({name : results[i].name, formatted_address:results[i].formatted_address,openNow: openNow, openingTime: open, position_lat: results[i].geometry.location.lat(), position_lng: results[i].geometry.location.lng()});
+                    console.log(storeLocation);
+                    // var marker = new google.maps.Marker();
+                    // marker.setMap(null); //clears markers
+                    var marker = new google.maps.Marker({
+                    position: results[i].geometry.location,
+                    map: map,
+                    title: results[i].name + " Address: " + results[i].formatted_address,
+                    address: results[i].formatted_address
+                    });
+
+                    markersArray.push(marker);
+                    // marker.setMap(null); //clears markers
+
+                    marker.addListener('click', function(){
+                        // map.setZoom(15);
+                        map.setCenter(this.getPosition());
+                        // $('.map-well').removeClass('hide');
+                    })
+
+                    // marker.setMap(null); 
+
+
+                     // var uid = user.uid;
+                    // var loggedUser;
+                    // hardcoded UID
+                    /// UID not being passed
+                    // workaround create unique key and store date there until logout
+                    // var currentUID = firebase.auth().currentUser.uid;
+                    // uniqueKey = "dfasfsdafasfasf";
+
+                    uid = firebase.auth().currentUser.uid;
+                    var storefolder = memberFolder.child(uid).child('/stores/');
+                    storefolder.set(storeLocation);
+                    storefolder.onDisconnect().set(null);
+                    storeLocation = [];
+
+                    storefolder.on('child_added', function(childSnapshot){
+                        count++;
+                        //empty table  
+                        // console.log(childSnapshot.val()); 
+                        if (childSnapshot.val().openNow){
+                            var open = 'Open';
+                        }
+                        else if (!childSnapshot.val().openNow){
+                            var open = 'Closed';
+                        } else{
+                            var open = childSnapshot.val().openNow;
+                        }
+                       
+                        $('#map-stores > tbody:last-child').append('<tr class="store-data" data-name=' + JSON.stringify(childSnapshot.val().name) + ' data-lat=' + childSnapshot.val().position_lat + ' data-lng=' + childSnapshot.val().position_lng+ '><td>'+ count +'</td><td>'+ childSnapshot.val().name +'</td><td>'+ childSnapshot.val().formatted_address +'</td><td>'+ open +'</td></tr>');
+        
+
+                    });  
+
+
+ }
+                }
+            }
+        }
+    }
+       
+
+
+
+
+// $('#close-map').on('click', function(){
+
+//     window.close();
+
+// })
+
 
