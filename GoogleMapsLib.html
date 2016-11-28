@@ -23,9 +23,9 @@
   </head>
   <body>
     <div id="map"></div>
-    <strong>Title: </strong><div id='marker-title'></div>
-    <strong>Position: </strong><div id='marker-position-lat'></div><div id='marker-position-lng'></div>
-    <strong>Address: </strong><div id='marker-address'></div>
+    <table id="map-stores">
+        <tbody></tbody>
+    </table>
     <script>
 
       // Initialize Firebase
@@ -41,22 +41,20 @@
     var database = firebase.database();
     // decided to use one main db folder for all members
     var memberFolder = database.ref('/members/');
-    var storeLocation = {
-      name: "",
-      address: "",
-      openNow: false,
-      rating: 0
-    }
-
     var map;
-      
+    var latitude = 41.881832;
+    var longitude =  -87.623177; 
+
+
 function initMap(){
     // initialised the map and sets the default center location
-    var center = new google.maps.LatLng(41.881832, -87.623177);
+    var center = new google.maps.LatLng(latitude,longitude);
     var map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat:41.881832, lng: -87.623177},
+      center: {lat: latitude, lng: longitude},
       zoom: 15  // 15 is a street level zoom
     });
+    var message='';
+    var markersArray =[];
 
     // Zoom levels
     // 1: World
@@ -66,22 +64,31 @@ function initMap(){
     // 20: Buildings
 
     // set the default marker - in case that geolocation not working or disabled
-    var marker = new google.maps.Marker({
-      position: center,
-      map: map,
-      title: 'Chicago!'
-    });
+    // var marker = new google.maps.Marker({
+    //   position: center,
+    //   map: map,
+    //   title: 'Chicago!'
+    // });
 
     var infoWindow = new google.maps.InfoWindow({map: map});
 
-    function findNewCenter(latitude,longitude){
-       var pos = {
+    // function infoMessage(latitude,longitude){
+
+
+    //     infoWindow.setPosition(pos);
+    //     infoWindow.setContent(message);
+    // }
+
+    function findNewCenter(latitude,longitude, message){
+        var pos = {
           lat: latitude,
           lng: longitude
         };
 
         infoWindow.setPosition(pos);
-        infoWindow.setContent('Found You!');
+        infoWindow.setContent(message);
+       
+        // infoMessage(latitude,longitude);
         map.setCenter(pos);
         // console.log(map.getCenter());
         centerlocation = map.getCenter();
@@ -91,18 +98,9 @@ function initMap(){
     // HTML5 geolocation. 
     // gets users current location then does search in predefined radius
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        findNewCenter(position.coords.latitude,position.coords.longitude);
-        // var pos = {
-        //   lat: position.coords.latitude,
-        //   lng: position.coords.longitude
-        // };
-
-        // infoWindow.setPosition(pos);
-        // infoWindow.setContent('Found You!');
-        // map.setCenter(pos);
-        // // console.log(map.getCenter());
-        // centerlocation = map.getCenter();
+        navigator.geolocation.getCurrentPosition(function(position) {
+        message = "<strong>You are here!</strong>"
+        findNewCenter(position.coords.latitude,position.coords.longitude,message);
         
       }, function() {
         // if user does not allow location just use default
@@ -113,95 +111,152 @@ function initMap(){
       // if geolocation doesnt work just center map on predefined coords and search
         doSearchFromCurrentLocation(center);
     }
+    
+    $(document).on('click', '.store-data', function(){
 
+        latitude = $(this).data('lat');
+        longitude = $(this).data('lng');
+        message = "<strong>" + $(this).data('name') + "</strong> is here.";
+
+        // infoMessage(latitude,longitude);
+        var pos = {
+          lat: latitude,
+          lng: longitude
+        };
+
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(message);
+        // map.setZoom(15);
+        // findNewCenter(latitude, longitude, message);
+
+     })
+
+        function clearOverlays() {
+          for (var i = 0; i < markersArray.length; i++ ) {
+            markersArray[i].setMap(null);
+          }
+          markersArray.length = 0;
+        }
     //Add listener - to allow user to click where they are and it will do another search
     map.addListener("click", function (event) {
         var latitude = event.latLng.lat();
         var longitude = event.latLng.lng();  
-
+        clearOverlays();
         // recenter  map
         map.panTo(new google.maps.LatLng(latitude,longitude));
-        // createMarker = new google.maps.Marker;
-        // var pos = {
-        //     lat: latitude,
-        //     lng: longitude
-        //   };
 
-        // infoWindow.setPosition(pos);
-        // infoWindow.setContent('Here You are!');
-        // map.setCenter(pos);
-        // // console.log(map.getCenter());
-        // centerlocation = map.getCenter();
-        // // do a search
-        // doSearchFromCurrentLocation(centerlocation);
-        findNewCenter(latitude, longitude);
+        message = "<strong>Found You!</strong>";
 
-}); //end addListener
+        findNewCenter(latitude, longitude, message);
 
+
+    }); //end addListener
+
+    var count = 0;  
+
+    // This is where the stores are located and marked on the map
     function doSearchFromCurrentLocation(centerlocation)   {
 
         // search for 
         var request = {
             location: centerlocation,
-            radius: '1000',
+            radius: '500',  //500m radius
             query: 'grocery'
           };
-
+        
+        // marker.setMap(null); //clears markers
         service = new google.maps.places.PlacesService(map);
-        service.textSearch(request, callback);
+        service.textSearch(request, callback);  
+  
+
+ 
 
         function callback(results, status) {
-        
-            // createMarker = new google.maps.Marker;
+
+            $('#map-stores > tbody').empty();
+            $('#map-stores > tbody:last-child').append('<tr><th> Number </th><th> Store Name </th><th> Store Address </th><th> Open Now </th></tr>');
+            count = 0;
             if (status == google.maps.places.PlacesServiceStatus.OK) {
+                var storeLocation = [];
                 for (var i = 0; i < results.length; i++) {
                     // to view object details  console.log(results); 
-                    console.log(results); 
 
-                    /// save results to database
-                    storeLocation.name = JSON.stringify(results[i].name);
-                    storeLocation.address = JSON.stringify(results[i].formatted_address);
-                    // storeLocation.openNow = results[i].opening_hours.open_now;
-                    storeLocation.rating = JSON.stringify(results[i].rating);
+                    try{
+                      open = results[i].opening_hours.weekday_text;
+                    }
+                    catch(e){
+                      open='No information provided';
+                    }
 
-                     let storefolder = database.ref('/stores/');
-                     storefolder.push(storefolder);
-        
+                    try{
+                      openNow = results[i].opening_hours.open_now;
+
+                    }
+                    catch(e){
+                      openNow='No information provided';
+                    }
+
+
+
+                    storeLocation.push({name : results[i].name, formatted_address:results[i].formatted_address,openNow: openNow, openingTime: open, position_lat: results[i].geometry.location.lat(), position_lng: results[i].geometry.location.lng()});
+                    
+                    // var marker = new google.maps.Marker();
+                    // marker.setMap(null); //clears markers
                     var marker = new google.maps.Marker({
                     position: results[i].geometry.location,
                     map: map,
                     title: results[i].name + " Address: " + results[i].formatted_address,
-                    // title: results[i].name,
                     address: results[i].formatted_address
                     });
 
-                    // marker.addListener('center_changed', function(){
-                    //     //3 sec after the center has changed pan back to the marker
-                    //     window.setTimeout(function(){
-                    //         map.panTo(marker.getPosition());}, 3000);
-                    // })
-                    // this allows you to zoom in and click on a flag to get
-                    // details to populate DOM
+                    markersArray.push(marker);
+                    // marker.setMap(null); //clears markers
+
                     marker.addListener('click', function(){
-                        map.setZoom(10);
+                        // map.setZoom(15);
                         map.setCenter(this.getPosition());
-                        // console.log(marker);
-                        $('#marker-title').html(this.title);
-                        // can use these coord to recenter the map and to save for later 
-                        $('#marker-position-lat').html(this.getPosition().lat());
-                        $('#marker-position-lng').html(this.getPosition().lng());
-                        $('#marker-address').html(this.address);
                         $('.map-well').removeClass('hide');
-
-
                     })
+
+                    // marker.setMap(null); 
+
+
+
+                    let storefolder = database.ref('/stores/');
+                    storefolder.set(storeLocation);
+                    storefolder.onDisconnect().set(null);
+
+
+                    
                 }
             }
         }
     }
        
+    
+
+    database.ref('stores').on('child_added', function(childSnapshot){
+        count++;
+        console.log(count);
+        //empty table   
+        if (childSnapshot.val().openNow){
+            var open = 'Open';
+        }
+        else if (!childSnapshot.val().openNow){
+            var open = 'Closed';
+        } else{
+            var open = childSnapshot.val().openNow;
+        }
+        
+        $('#map-stores > tbody:last-child').append('<tr class="store-data" data-name=' + childSnapshot.val().name + ' data-lat=' + childSnapshot.val().position_lat + ' data-lng=' + childSnapshot.val().position_lng+ '><td>'+ count +'</td><td>'+ childSnapshot.val().name +'</td><td>'+ childSnapshot.val().formatted_address +'</td><td>'+ open +'</td></tr>');
+        // $('<tr>').attr('data-lat', childSnapshot.val().position_lat);
+        // $('<tr>').attr('data-lng', childSnapshot.val().position_lng); 
+
+    });  
+
 
  }
+
 
 
 
