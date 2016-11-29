@@ -97,20 +97,23 @@ $(document).ready(function() {
         if (userProfile.email === null){
             userProfile.email = "guest";
         }
+        console.log("status: " + status);
         // add to database
         let userFolder = database.ref('/members/' + uid);
         // check what is happening and handle accordingly - new user, existing or upgrade
-        if ( status = 'new'){
+        if ( status === 'new'){
+             // console.log("in here ***");
             userFolder.set(userProfile);
         } 
-        else if (status = 'existing'){
+        else if (status === 'existing'){
             // userProfile.loginStatus = true;
             // add to database
+            // console.log("in here ****");
             userFolder.update({lastLogIn: userProfile.lastLogIn}
             );
-        } else if (status = 'upgrade'){
-            userFolder.update({email: user.email, 
-                        lastLogIn: userProfile.lastLogIn}
+        } else if (status === 'upgrade'){
+            // console.log("in here");
+            userFolder.update({email: user.email}
             );
         }
             
@@ -159,8 +162,8 @@ $(document).ready(function() {
         );
 
         firebase.auth().currentUser.link(credential).then(function(user) {
-
-            let status = 'upgrade';
+console.log("here toooooo");
+            var status = 'upgrade';
             captureUserData(user, status);
             // set DOM items to display on login
             loginDisplayElements(user.email);
@@ -213,6 +216,7 @@ $(document).ready(function() {
  
         firebase.auth().createUserWithEmailAndPassword(email, pass)
             .then(user => {
+                console.log("here users");
                 let status = "new";
                 captureUserData(user, status);
                  // set login items and 
@@ -335,8 +339,10 @@ $(document).ready(function() {
         $('#register').hide();
         $('#email-reset').removeClass('hide');
         $('#password-reset').removeClass('hide');
+        // recipe-shortlist-page
         // $('.map-page').removeClass('hide');
         // $('#google-maps').removeClass('hide');
+        $('.recipe-shortlist-page').addClass('hide');
     }
     // displays default homepage and DOM items
     function showHomepage(email){
