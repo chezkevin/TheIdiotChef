@@ -15,6 +15,17 @@
 	float: left;
 	min-height: 100px;
 }
+.star {
+     text-indent: -5000px;
+     display: block;
+     background: transparent url(assets/images/star.png);
+     height: 10px;
+     width: 10px;
+}
+
+.star.favorited {
+     background-position: 0;
+}
 #close-map {
 	float:right ;
 	margin: auto;

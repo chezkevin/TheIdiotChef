@@ -19,6 +19,7 @@ var database = firebase.database();
 // decided to use one main db folder for all members
 //needed for maps to access so global
 var memberFolder = database.ref('/members/');
+var player;
 
 
 
@@ -74,6 +75,7 @@ $(document).ready(function() {
         $('#password-reset').addClass('hide');
         $('#email-reset').addClass('hide');
         $('.map-page').addClass('hide');
+        $('.recipe-shortlist-page').addClass('hide');
         // hidden by setting the display to none
         $('#registration-modal').hide();
         // Elements to Hide
@@ -506,12 +508,7 @@ $(document).ready(function() {
         return false;
     })
 
-   // back button to recipe short from detailed page  page
-    $('#back-recipe-shortlist').on('click', function(){
-        $('.recipe-shortlist-page').removeClass('hide');
-        $('.detailed-view-page').addClass('hide');
-        return false;
-    })
+
 
     $('#show-homepage').on('click', function(){
         resetHomepage();
@@ -765,23 +762,38 @@ $(document).ready(function() {
                 method: 'GET'
             })
             .done(function(response) {
-                // console.log(response.items.length);
+            
                for (var i = 0; i < response.items.length; i++ ){
                     var b = $('<iframe>', {
+                        allowScriptAccess : "always",
                         width : videoWidth,
                         height : videoHeight,
-                        src : videoSrc + response.items[i].id.videoId,
+                        id: "myytplayer"+i,
+                        src : videoSrc + response.items[i].id.videoId + "?version=3&enablejsapi=1&playerapiid=ytplayer",
                         class : "new-videos",
                     });
+
+
                     // var b = $('<iframe>'+ videoSrc + response.items[i].id.videoId + '</iframe>');
                     // console.log("b" + b);
                     $('.video-list').append(b);
+                    // b.append('<p><a href="javascript:" class="star"></a></p>');
                     // var c = $('<div>'+ response.items[i].snippet.title +'</div>');
                     // var d = $('<div>'+ response.items[i].snippet.description +'</div>');
                     // console.log(response.items[i].snippet.title);
                     // $('#video-list').append(c);
                     // $('#video-list').append(d);
 
+            
+                    // function onYouTubeIframeAPIReady() {
+                    //     var playerstring = 'myytplayer'+i;
+                    //     // var players =  ;
+                    //     var players = new YT.Player("player" + i);
+
+                    //     console.log("players" +players);
+                    // }
+
+                    
                     // firebase.initializeApp(config);
 
                     var newVideo = {
@@ -799,41 +811,44 @@ $(document).ready(function() {
             });
     }
 
-    // $('.new-videos').on('click', function(){
-    //     //make display it on top bigger
-    //     $("#big-image").removeClass('hide');
-    //     $("#big-image").append(this);
-    //     // $(this).attr("height", "100%");
+// function pauseVideoOnSlide(){
+//   var iframe =document.getElementById('myytplayer0');
+
+//     if (iframe) {
+//         var target = iframe.contentWindow;
+//         target.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+//     }
+// }
+    
+    // back button to recipe short from detailed page  page
+    $('#back-recipe-shortlist').on('click', function(){
+        $('.recipe-shortlist-page').removeClass('hide');
+        $('.detailed-view-page').addClass('hide');
+        // stop any videos playing
+            // cant get stop video to work
+            // var slides = document.getElementsByClassName("new-videos");
+            // for(var i = 0; i < slides.length; i++)
+            // {
+            //    $('#myytplayer' + i).onload = function(){
+            //     var target = document.getElementById('myytplayer' + i).contentWindow;
+            //     target.postMessage(JSON.stringify({
+            //     "event": "command",
+            //     "func": "pauseVideo",
+            //     "args": ""}), "*");
+            //     };
+     
+            // }
+            // remove videos - this will stop them playing
+            $('.video-list').empty();
+            
 
 
-    // })
-    // $('#big-image-close').on('click', function(){
-    //     //make it normal
-    //     $("#big-image").addClass('hide');
-        
-    // })
-    // call this in document on ready
-    // initMap();
+
+
+            return false;
+        })
+
 }) // end of document on ready
-
-
-
-    // function openMapWin() {
-    //     mapWindow = window.open("GoogleMapsLibhtml", "mapWindow", "width=100%, height=100%");   // Opens a new window
-    // }
-
-    // function closeMapWin() {
-    //     mapWindow.close();   // Closes the new window
-    // }
-//     var loggedUser = null;
-// $(document).on('load', function(){
-//     firebase.auth().get(firebaseUser => {
-
-//         loggedUser = firebase.auth().currentUser.uid;
-//         console.log(loggedUser);
-
-//     })
-// })
 
 
  
