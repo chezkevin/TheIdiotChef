@@ -160,8 +160,12 @@ section#recipe-list {
 }
 
 #submitIngredientsButton {
-	width: 100%;
+	width: 66%;
 	margin-left: 0;
+}
+#clearIngredientsButton {
+	margin: 0;
+	width: 33%;
 }
 #navbar-login-button{
 	margin-top: 10px;
@@ -210,6 +214,11 @@ section#recipe-list {
 	height: 600px;
 	width: 800px;
 
+}
+
+.selected-recipe-image {
+	max-width: 600px;
+	max-height: 600px;
 }
 
 @media only screen and (max-width: 980px) {

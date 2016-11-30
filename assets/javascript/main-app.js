@@ -877,7 +877,7 @@ $(document).on('click', '#close-expanded-video', function(){
             data: {},
             dataType: 'json',
             success: function(data) {
-                $('.recipe-list').empty();
+                $('#recipe-list').empty();
                 for (var i = 0; i < data.length; i++) {
                     var recipeDiv = $('<div class="recipe">');
 
