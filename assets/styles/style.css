@@ -4,6 +4,9 @@
 .btn-success{
 	margin-left: 30px;
 }
+.btn-warning{
+	margin-top: 5px;
+}
 .error-modal {
 	display: none; 
 	z-index: 1001;
@@ -15,6 +18,11 @@
 	float: left;
 	min-height: 100px;
 	margin-top: 10px;
+}
+.expand-video-icon{
+	float: right;
+	margin: 5px;
+	color: red;
 }
 .star {
      text-indent: -5000px;
@@ -197,6 +205,11 @@ section#recipe-list {
 }
 #login-text {
 	height: 60px;
+}
+#expand-video-panel{
+	height: 100%;
+	width: 100%;
+
 }
 
 @media only screen and (max-width: 980px) {

@@ -80,6 +80,7 @@ $(document).ready(function() {
         $('.detailed-view-page').addClass('hide');
         // hidden by setting the display to none
         $('#registration-modal').hide();
+        $('.expand-video-page').addClass('hide');
         // Elements to Hide
         // hidden by removing a class hide
         $('.landing-page').removeClass('hide');
@@ -87,6 +88,9 @@ $(document).ready(function() {
         $('#guest').show();
         $('#register').show();
         $('#topZone').show();
+   //// added for Brandon
+        usedIngredientsArray = [];
+        $('#ingredients-list').empty();
     }
 
 
@@ -322,6 +326,7 @@ console.log("here toooooo");
         $('.landing-page').addClass('hide');
         $('#topZone').show();
         // hide
+        $('.expand-video-page').addClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
         $('.detailed-view-page').addClass('hide');
         if (userProfile.email !== 'guest'){
@@ -430,6 +435,35 @@ console.log("here toooooo");
     }
     
     // Button Actions Section
+    // expand video
+    $(document).on('click', '.expand-video', function(){
+        // console.log("in here");
+        // hide the detailed-recipe-page
+        $('.detailed-view-page').addClass('hide');
+        // show new page
+        $('.expand-video-page').removeClass('hide');
+        // add a close video button
+        var b = $('<button>', {
+            id: "close-expanded-video",
+            class: "btn btn-success"
+        })
+        b.html("Back to Recipe and Videos")
+        $('#expand-video-panel').append(b);
+        // maximize the video
+        var videoId =$(this).data('video');
+        $('#expand-video-panel').append($('#'+videoId));
+
+    })
+
+$(document).on('click', '#close-expanded-video', function(){
+    // hide the detailed-recipe-page
+        $('.detailed-view-page').removeClass('hide');
+        // show new page
+        $('.expand-video-page').addClass('hide');
+        $('#expand-video-panel').empty();
+        $('#close-expanded-video').remove();
+})
+
     $('#register').on('click', function() {
         regFlag = true;
         //remove this button by hiding
@@ -547,10 +581,17 @@ console.log("here toooooo");
 
     $('#open-map').on('click', function(){
         $('.map-page').removeClass('hide');
+        //hide homepage and topZone
+        $('.homepage').hide();
+        $('#topZone').hide();
+
     })
 
     $('#close-map').on('click', function(){
         $('.map-page').addClass('hide');
+        //hide homepage and topZone
+        $('.homepage').show();
+        $('#topZone').show();
     })
 
     // $('#open-map').on('click', function(){
@@ -581,56 +622,151 @@ console.log("here toooooo");
     var userPlace = "";
    
   
-    function initialIngredientsList(){
+    // function initialIngredientsList(){
         
-        memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
+    //     memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
         
-            if (usedIngredientsArray.indexOf(childSnapshot.val().name) > -1) {
-                return;
-            } else {
+    //         if (usedIngredientsArray.indexOf(childSnapshot.val().name) > -1) {
+    //             return;
+    //         } else {
 
-                let newChild = updateIngredientList(childSnapshot);
+    //             let newChild = updateIngredientList(childSnapshot);
 
-                addCheckBoxListener(newChild);
-            }
-        })  
-    }  
+    //             addCheckBoxListener(newChild);
+    //         }
+    //     })  
+    // }  
         
     
    
 
-    function updateIngredientList(childSnapshot) {
+    // function updateIngredientList(childSnapshot) {
 
 
+    //     let target = $("#ingredients-list");
+    //     let id = childSnapshot.val().name;
+    //     let checked = childSnapshot.val().checked;
+    //     let checkStatus = (checked == true ? 'checkbox' : 'nocheckbox');
+    //     let icon = (checked == true ? 'fa-check-circle-o' : 'fa-circle-o');
+
+    //     //render new DOM element and add to DOM target node
+    //     let newItem = $('<div>').attr('id', id).addClass('ingredient');
+    //     newItem.html("<button id='" + id + "'><i class='fa " + icon + " ' aria-hidden='true'></i></button><span id='name'> " + id + " </span><button class='deletebox' id='" + id + "'><i class='fa fa-trash' aria-hidden='true'></i></button></div>");
+    //     target.append(newItem);
+    //     target.find('button#' + id).addClass(checkStatus);
+
+    //     //update ingredient array variable accordingly
+    //     if (checked == 'true') {
+    //         usedIngredientsArray.push(childSnapshot.val().name);
+    //     }
+    //     return id
+
+
+    // }
+
+    // function addCheckBoxListener(id) {
+        
+    //     let clickTarget = $('#' + id + ' > .fa');    
+
+    //     clickTarget.on('click', function() {
+
+    //         let checkIcon = $(this).hasClass('fa-check-circle-o');
+
+    //         if (checkIcon) {
+    //             $(this).removeClass('fa-check-circle-o');
+    //             $(this).addClass('fa-circle-o');
+    //         } else {
+    //             $(this).addClass('fa-check-circle-o');
+    //             $(this).removeClass('fa-circle-o');
+    //         }
+
+    //         let checkLocation = memberFolder.child(uid).child('ingredients').child(id);
+
+    //         var checkStatus = checkLocation.child('checked');
+
+    //         checkLocation.update({ checked: !checkIcon });
+
+    //     });
+    // }
+
+
+    // $('#addIngredientButton').on('click', function() {
+
+    //     usedIngredientsArray = [];
+
+    //     var newIngredientName = $('#ingredients-search').val().trim();
+
+    //     var newIngredient = {
+    //         name: newIngredientName,
+    //         checked: 'true'
+    //     }
+    //     // var currentUID = uid;
+    //     // var currentUID = firebase.auth().currentUser.uid;
+    //     memberFolder.child(uid).child('ingredients').child(newIngredientName).set(newIngredient);
+
+    //     $("#ingredients-search").val("");
+
+    //     return false;
+
+    // })
+
+    // $(document.body).on('click', '.deletebox', function() {
+
+    //     var ingredientToDelete = $(this).attr("id");
+
+    //     $("#" + ingredientToDelete).remove();
+
+    //     var deleteLocation = memberFolder.child(uid).child('ingredients').child(ingredientToDelete);
+
+    //     deleteLocation.remove();
+    // });
+
+    //////addded for Brandon Start
+    let added = false;
+    // var userIng = firebase.auth().currentUser.uid;
+    var userPlace = "";
+    function initialIngredientsList() {
+        memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
+            //if there is a prior search result, populate the DOM with it and add event listeners
+            let data = childSnapshot.val();
+          
+            //don't do anything if this item is already in the ingredients array
+            if (Array.prototype.indexOf.call(usedIngredientsArray, data.name) === -1 && data) {
+                //add this item to the ingredients array
+                usedIngredientsArray.push(data.name);
+                //add item to dom ingrediens list
+                let newChild = updateIngredientList(data.name, data.checked);
+                addCheckBoxListener(newChild);
+                //tell user that this is their prior search upon default load of data only
+                if (added === false && data){
+                    $('#your-ingredients').text('Your last search');
+                }
+            } else {
+                console.log('already in array');
+                return;
+            }
+        });
+    }
+    function updateIngredientList(name, check) {
         let target = $("#ingredients-list");
-        let id = childSnapshot.val().name;
-        let checked = childSnapshot.val().checked;
-        let checkStatus = (checked == true ? 'checkbox' : 'nocheckbox');
-        let icon = (checked == true ? 'fa-check-circle-o' : 'fa-circle-o');
-
+        let id = name;
+        let checkStatus = ((check === 'true') || (check == true) ? "checkbox" : "nocheckbox");
+        let icon = ((check === 'true') || (check == true) ? "fa-check-circle-o" : "fa-circle-o");
         //render new DOM element and add to DOM target node
         let newItem = $('<div>').attr('id', id).addClass('ingredient');
         newItem.html("<button id='" + id + "'><i class='fa " + icon + " ' aria-hidden='true'></i></button><span id='name'> " + id + " </span><button class='deletebox' id='" + id + "'><i class='fa fa-trash' aria-hidden='true'></i></button></div>");
         target.append(newItem);
         target.find('button#' + id).addClass(checkStatus);
-
         //update ingredient array variable accordingly
-        if (checked == 'true') {
-            usedIngredientsArray.push(childSnapshot.val().name);
-        }
+        // if (check == 'true') {
+        //     usedIngredientsArray.push(childSnapshot.val().name);
+        // }
         return id
-
-
     }
-
     function addCheckBoxListener(id) {
-        
-        let clickTarget = $('#' + id + ' > .fa');    
-
+        let clickTarget = $('#' + id + ' > .fa');
         clickTarget.on('click', function() {
-
             let checkIcon = $(this).hasClass('fa-check-circle-o');
-
             if (checkIcon) {
                 $(this).removeClass('fa-check-circle-o');
                 $(this).addClass('fa-circle-o');
@@ -638,47 +774,55 @@ console.log("here toooooo");
                 $(this).addClass('fa-check-circle-o');
                 $(this).removeClass('fa-circle-o');
             }
-
             let checkLocation = memberFolder.child(uid).child('ingredients').child(id);
-
             var checkStatus = checkLocation.child('checked');
-
             checkLocation.update({ checked: !checkIcon });
-
         });
     }
-
-
     $('#addIngredientButton').on('click', function() {
-
-        usedIngredientsArray = [];
-
+        //update text and/or ensure that list no longer says 'prior search' as now its an updated list
+        $('#your-ingredients').text('Your Ingredients');
+        //trigger added - to prevent display of 'your previous search' in the ingredients zone header
+        added = true;
+        //capture the new ingredient 
         var newIngredientName = $('#ingredients-search').val().trim();
-
-        var newIngredient = {
-            name: newIngredientName,
-            checked: 'true'
+        //prevent dulicate additions and then update the DB and DOM with the newly added ingredient
+        if (Array.prototype.indexOf.call(usedIngredientsArray, newIngredientName) === -1) {
+            //newitem will get pushed to the used ingredients array via the 'on child added' feature
+            var newIngredient = {
+                    name: newIngredientName,
+                    checked: 'true'
+                }
+                // var currentUID = uid;
+                // var currentUID = firebase.auth().currentUser.uid;
+            memberFolder.child(uid).child('ingredients').child(newIngredientName).set(newIngredient);
         }
-        // var currentUID = uid;
-        // var currentUID = firebase.auth().currentUser.uid;
-        memberFolder.child(uid).child('ingredients').child(newIngredientName).set(newIngredient);
-
+        //empty out search bar text
         $("#ingredients-search").val("");
-
         return false;
-
     })
-
+    $('#clearIngredientsButton').on('click', function(){
+        //delete all child elements from the database
+        memberFolder.child(uid).child('ingredients').remove();
+        //empty the used ingredients array
+        usedIngredientsArray = [];
+        $('#ingredients-list').empty();
+        //update text and/or ensure that list no longer says 'prior search' as now its an updated list
+        $('#your-ingredients').text('Your Ingredients');
+    });
     $(document.body).on('click', '.deletebox', function() {
-
         var ingredientToDelete = $(this).attr("id");
-
         $("#" + ingredientToDelete).remove();
-
+        //update text and/or ensure that list no longer says 'prior search' as now its an updated list
+        $('#your-ingredients').text('Your Ingredients');
+        //capture index number of item to remove from used ingredients array - there can only be one due to limitations imposed on adding to array
+        let index = Array.prototype.indexOf.call(usedIngredientsArray, ingredientToDelete);
+        usedIngredientsArray.splice(index, 1);
         var deleteLocation = memberFolder.child(uid).child('ingredients').child(ingredientToDelete);
-
         deleteLocation.remove();
     });
+
+//////addded for Brandon end
 
     $('#submitIngredientsButton').on('click', function() {
         $('.recipe-list').empty();
@@ -701,7 +845,7 @@ console.log("here toooooo");
         //         })
         //     })
 
-        var ingredientsURL = usedIngredientsArray.join("&2C");
+        var ingredientsURL = usedIngredientsArray.join("%2C");
 
         console.log(ingredientsURL);
 
@@ -714,6 +858,7 @@ console.log("here toooooo");
             data: {},
             dataType: 'json',
             success: function(data) {
+                $('.recipe-list').empty();
                 for (var i = 0; i < data.length; i++) {
                     var recipeDiv = $('<div class="recipe">');
 
@@ -832,16 +977,23 @@ console.log("here toooooo");
                 if (response.items.length !== 0 ){
 
                     for (var i = 0; i < response.items.length; i++ ){
+                        var c = $('<div>');
+                        c.addClass('expand-video');
+                        c.append('<span class="glyphicon glyphicon-resize-full expand-video-icon" aria-hidden="true"></span>');
+                        
+                        $('.video-list').append(c);
                         var b = $('<iframe>', {
                             allowScriptAccess : "always",
                             width : videoWidth,
                             height : videoHeight,
-                            id: "myytplayer"+i,
+                            id: "video"+i,
                             src : videoSrc + response.items[i].id.videoId + "?version=3&enablejsapi=1&playerapiid=ytplayer",
                             class : "new-videos",
                         });
-
-                        $('.video-list').append(b);
+                        // add video information to the span so when clicked we can expand that video
+                        c.attr('data-video', "video"+i );
+                        
+                        $('.expand-video').append(b);
 
                         var newVideo = {
                             id: response.items[i].id.videoId,
@@ -850,6 +1002,7 @@ console.log("here toooooo");
                         }
                         var currentUID = firebase.auth().currentUser.uid;
                         memberFolder.child(currentUID).child('videos').push(newVideo);
+
                     }
                 }     
 

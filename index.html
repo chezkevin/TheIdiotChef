@@ -177,7 +177,20 @@
             </div>
             <div class="row"></div>
             <div class="row">
+            <!-- added for brandon start -->
                 <div class="col-md-6" id="ingredient-zone">
+                   <h3>
+                       <span class="glyphicon glyphicon-leaf"></span>
+                       <span id="your-ingredients">Your ingredients</span>
+                   </h3>
+                   <section id="ingredients-list">
+                   </section>
+                   <button id='submitIngredientsButton' class="btn btn-success" type="button">Lets Get Cooking!</button>
+                   <button id='clearIngredientsButton' class="btn btn-warning" type="button">Clear the list</button>
+               </div>
+                <!-- added for brandon end -->
+
+        <!--         <div class="col-md-6" id="ingredient-zone">
                     <h3>
                         <span class="glyphicon glyphicon-leaf"></span>
                         Your ingredients
@@ -185,7 +198,7 @@
                     <section id="ingredients-list">
                     </section>
                     <button id='submitIngredientsButton' class="btn btn-success" type="button">Lets Get Cooking!</button>
-                </div>
+                </div> -->
                 <div class="col-md-6">
                     <div class="well map-well">
                         <p>Missing Ingredients? Click on the <strong>Map</strong> button to do a search for open grocery stores nearby.  <button class="btn btn-default btn-success" id="open-map"><i class="fa fa-map-o" aria-hidden="true"></i>   Map</button></p> 
@@ -224,6 +237,9 @@
             </div>
             
         </div> <!--End of Detailed View  Page -->
+        <div class="expand-video-page hide">
+            <div class="panel expand-video-page hide" id='expand-video-panel'></div>
+        </div>
     </div>  <!-- end of container -->
     <div class="container map-page">
         <h2 class="text-center panel" id="grocery-store">Find Your Nearest Grocery Store</h2>
