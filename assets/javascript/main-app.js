@@ -77,6 +77,7 @@ $(document).ready(function() {
         $('#email-reset').addClass('hide');
         $('.map-page').addClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
+        $('.detailed-view-page').addClass('hide');
         // hidden by setting the display to none
         $('#registration-modal').hide();
         // Elements to Hide
@@ -85,6 +86,7 @@ $(document).ready(function() {
         // displayed by setting display to block
         $('#guest').show();
         $('#register').show();
+        $('#topZone').show();
     }
 
 
@@ -323,6 +325,7 @@ console.log("here toooooo");
             $('#email-reset').removeClass('hide');
             $('#password-reset').removeClass('hide');
         }
+        $('#topZone').show();
     }
 
     // sets page layout after login 
@@ -349,6 +352,7 @@ console.log("here toooooo");
     function showHomepage(email){
         $('#show-homepage').removeClass('hide');
         $('.homepage').removeClass('hide');
+        $('#topZone').show();
         $('#userName').show();
         $('#userName').html('Logged in as: ' + email); 
     }
@@ -722,30 +726,8 @@ console.log("here toooooo");
                         data: {},
                         dataType: 'json',
                         success: function(data) {
-                                console.log(data);
-                                // for (var j = 0; j < data.extendedIngredients[].length; j++){
-                                // console.log(allIngredientsArr);
-                                var allIngredientsArr = [];
-                                console.log(data.extendedIngredients.length + "dataingred lenght")
-                                for (var j = 0; j < data.extendedIngredients.length; j ++){
-                                    var ingredient = data.extendedIngredients[i][name];
-                                    console.log(ingredient);
-                                    allIngredientsArr.push(ingredient);
-                                }
-                                // var allIngredientsArr[i] = data.extendedIngredients(i).name.slice();
-                                console.log(recipeDetailArr);
-                                // }
-                                var selecteRecipeObj = {
-                                    "recipeId" : data.id,
-                                    "creditText": data.creditText,
-                                    "allIngredients": allIngredientsArr,
-                                    "instructions": data.instructions
-                                }
-                                console.log("recipe obj" + selecteRecipeObj);
-                                recipeDetailArr.push(selecteRecipeObj);
-                                console.log("recipe arr" + recipeDetailArr);
-                                
-                              
+                            // save data to an array for use below in recipeDetails function
+                            recipeDetailArr.push(data);                               
                         },
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader("X-Mashape-Authorization", apiKey);
@@ -768,13 +750,41 @@ console.log("here toooooo");
         });
     });
 
+    function recipeDetails(recipeTitle){
+        console.log(recipeDetailArr);
+        
+        for (var i = 0; i < recipeDetailArr.length; i++ ){
+               console.log(recipeDetailArr);
+            // find the current recipe - the one the user clicked on
+            if(recipeDetailArr[i].title === recipeTitle){
+                $('#recipe-details').html('<h2>Recipe Details</h2>')
+                $('#recipe-details').append('<h3>' + recipeDetailArr[i].title + '</h3>');
+                // $('#recipe-details').append(recipeDetailArr[i].id);
+                $('#recipe-details').append('<h3><img class="selected-recipe-image" src="' + recipeDetailArr[i].image + '"</h3>');
+                
+                
+                $('#recipe-details').append('<p><u>Ingredients</u> <br></p>');
+                    $('#recipe-details').append('<ul>');
+                for (var j = 0; j < recipeDetailArr[i].extendedIngredients.length; j++){
+                    
+                    $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].name + '</li>');
+                   
+                }
+                $('#recipe-details').append('<br>' + recipeDetailArr[i].instructions + '</br>');
+                $('#recipe-details').append('<u>Credit:</u> ' + recipeDetailArr[i].creditText + '</br>');
+                $('#recipe-details').append('<u>Source:</u> <a href="' + recipeDetailArr[i].sourceUrl + '"></a>');
+            }
+        }
 
+    };
 
     $(document).on("click", ".recipe-title", function() {
         $('.detailed-view-page').removeClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
         var recipeTitle = $(this).text();
         var youTubeQ = recipeTitle;
+
+        recipeDetails(recipeTitle);
 
         youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
 
@@ -785,59 +795,37 @@ console.log("here toooooo");
     });
 
     function displayVideos(recipe, queryURL, videoWidth, videoHeight, videoSrc) {
-        console.log("recipe: " + recipe);        
+        // console.log("recipe: " + recipe);        
         $('.video-list').empty();
-        $('.video-list').append("You searched for: " + recipe + ". Click on any of the videos below for recipes!");
+        $('.video-list').append("You searched for: " + recipe + ". Click on any of the youTube videos below for recipes!");
         $.ajax({
                 url: queryURL,
                 method: 'GET'
             })
             .done(function(response) {
-            
-               for (var i = 0; i < response.items.length; i++ ){
-                    var b = $('<iframe>', {
-                        allowScriptAccess : "always",
-                        width : videoWidth,
-                        height : videoHeight,
-                        id: "myytplayer"+i,
-                        src : videoSrc + response.items[i].id.videoId + "?version=3&enablejsapi=1&playerapiid=ytplayer",
-                        class : "new-videos",
-                    });
+                if (response.items.length !== 0 ){
 
+                    for (var i = 0; i < response.items.length; i++ ){
+                        var b = $('<iframe>', {
+                            allowScriptAccess : "always",
+                            width : videoWidth,
+                            height : videoHeight,
+                            id: "myytplayer"+i,
+                            src : videoSrc + response.items[i].id.videoId + "?version=3&enablejsapi=1&playerapiid=ytplayer",
+                            class : "new-videos",
+                        });
 
-                    // var b = $('<iframe>'+ videoSrc + response.items[i].id.videoId + '</iframe>');
-                    // console.log("b" + b);
-                    $('.video-list').append(b);
-                    // b.append('<p><a href="javascript:" class="star"></a></p>');
-                    // var c = $('<div>'+ response.items[i].snippet.title +'</div>');
-                    // var d = $('<div>'+ response.items[i].snippet.description +'</div>');
-                    // console.log(response.items[i].snippet.title);
-                    // $('#video-list').append(c);
-                    // $('#video-list').append(d);
+                        $('.video-list').append(b);
 
-            
-                    // function onYouTubeIframeAPIReady() {
-                    //     var playerstring = 'myytplayer'+i;
-                    //     // var players =  ;
-                    //     var players = new YT.Player("player" + i);
-
-                    //     console.log("players" +players);
-                    // }
-
-                    
-                    // firebase.initializeApp(config);
-
-                    var newVideo = {
-                        id: response.items[i].id.videoId,
-                        title: response.items[i].snippet.title,
-                        description: response.items[i].snippet.description
+                        var newVideo = {
+                            id: response.items[i].id.videoId,
+                            title: response.items[i].snippet.title,
+                            description: response.items[i].snippet.description
+                        }
+                        var currentUID = firebase.auth().currentUser.uid;
+                        memberFolder.child(currentUID).child('videos').push(newVideo);
                     }
-                    var currentUID = firebase.auth().currentUser.uid;
-                    memberFolder.child(currentUID).child('videos').push(newVideo);
-
-                }
-
-                // console.log(response);
+                }     
 
             });
     }

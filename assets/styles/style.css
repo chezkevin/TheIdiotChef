@@ -26,6 +26,16 @@
 .star.favorited {
      background-position: 0;
 }
+#recipe-details{
+	height: 500px;
+	overflow: scroll;
+	padding: 10px;
+}
+#selected-recipe-image{
+	height: 100px;
+	width: 100px;
+
+}
 #close-map {
 	float:right ;
 	margin: auto;
