@@ -164,3 +164,10 @@ section#recipe-list {
 .footer{
 	padding: 10px;
 }
+#ingredients-list {
+	font-size: 30px;
+}
+
+.map-well {
+	font-size: 30px;
+}
