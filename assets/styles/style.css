@@ -14,6 +14,7 @@
 .map-well {
 	float: left;
 	min-height: 100px;
+	margin-top: 10px;
 }
 .star {
      text-indent: -5000px;
@@ -117,7 +118,7 @@ h2, h3, span {
 	background-color: #DDDDDD;
 	padding: 10px;
 	border-radius: 5px;
-	margin-top: 0;
+	margin-top: 10px;
 }
 
 #ingredient-zone, #video-zone, #recipe-zone{

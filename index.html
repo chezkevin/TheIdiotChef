@@ -59,26 +59,18 @@
         </div><!-- /.modal -->
         <!-- navbar -->
         <nav class="navbar navbar-default">
-        <!-- <div class="container-fluid"> -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
                 <a class="navbar-brand" href="#">
                     <span class="glyphicon glyphicon-cutlery"></span>
                     TheIdiotChef
                 </a>
             </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div id="bs-example-navbar-collapse-1">
                 <ul class="nav nav-pills">
                   <li class="login-items" id="upgrade-from-guest"><a href="#">Upgrade Login</a></li>
                   <li  class="login-items" id="password-reset"><a href="#">Reset Password</a></li>
                   <li class="login-items" id="email-reset"><a href="#">Reset Email</a></li>
                   <li class="login-items hide" id="show-homepage"><a href="#">Homepage</a></li>
-                <!--   <li class="login-items hide" id="google-maps"><a href="#">Google Maps</a></li> -->
                   <li class="active login-items hide" id="navbar-logout-button"><a href="#">Logout</a></li>
 
                 </ul>
@@ -117,10 +109,6 @@
                 </div>
             </div>
         </div>
-        <!-- </div> -->
-        <!-- body below navbar -->
-
-        <!-- end of body below Navbar -->
         <!-- Landing Page -->
         <div class="row">
             <div class="col-md-2">
@@ -132,9 +120,6 @@
                 <h3 id="description">
                     Add ingredients to the list, and The Idiot Chef will generate recipe ideas for you! Full instructions and video tutorial links are included!
                 </h3>
-                <!-- <div class="panel panel-default"> -->
-                    <!-- <div class="row text-center" id="userName"></div> -->
-                <!-- </div> -->
             </div>
             <div class="col-md-2">
             </div>
@@ -151,7 +136,7 @@
             <div class="col-xs-12 col-md-4 landing-page">
                 <div class="well login-well">
                     <div class="row initial-login" id="login-text">
-                        <p>Don't want to register - login as a guest and view our recipes and videos.</p>
+                        <p>Don't want to register? Login as a guest and view our recipes and videos.</p>
                     </div>
                     <button type="button" class="btn btn-primary initial-login" id="guest">Guest Login</button>
                  </div>
@@ -190,6 +175,7 @@
                         </div>
                 </div>
             </div>
+            <div class="row"></div>
             <div class="row">
                 <div class="col-md-6" id="ingredient-zone">
                     <h3>
@@ -200,41 +186,15 @@
                     </section>
                     <button id='submitIngredientsButton' class="btn btn-success" type="button">Lets Get Cooking!</button>
                 </div>
-                <div class="row">
-<!--                         <div class="col-md-3"></div> -->
-                         <div class="col-md-6">
-                            <div class="well map-well">
-                                <p>Missing Ingredients? Click on the <strong>Map</strong> button to do a search for open grocery stores nearby.  <button class="btn btn-default btn-success" id="open-map"><i class="fa fa-map-o" aria-hidden="true"></i>   Map</button></p> 
-                            </div>
-                        </div>
-                        <!-- <div class="col-md-3"></div> -->
+                <div class="col-md-6">
+                    <div class="well map-well">
+                        <p>Missing Ingredients? Click on the <strong>Map</strong> button to do a search for open grocery stores nearby.  <button class="btn btn-default btn-success" id="open-map"><i class="fa fa-map-o" aria-hidden="true"></i>   Map</button></p> 
                     </div>
-<!--                 <div class="col-md-3" id="recipe-zone">
-                    <h3>
-                        <span class="glyphicon glyphicon-list-alt"></span>
-                        Recipes
-                    </h3>
-                    <section class="recipe-list">
-                    </section>
                 </div>
-                <div class="col-md-6" id="video-zone">
-                    <h3>
-                        <span class="glyphicon.glyphicon-film"></span>
-                        Videos
-                    </h3>
-                    <section class="video-list">
-
-                        Click on a recipe title to view videos for that recipe!
-                            <div id="player0"></div>
-                    <div id="player1"></div>
-                    <div id="player2"></div>
-                    <div id="player3"></div>
-                    <div id="player4"></div>
-                    </section>
-                </div> -->
             </div>
         </div> <!-- End of Home Page -->
-        <div class="recipe-shortlist-page hide"><!--Recipe Shortlist Page -->
+        <!--Recipe Shortlist Page -->
+        <div class="recipe-shortlist-page hide">
             <div class="row">
                 <div class="col-md-12">
                     <button type="button" class="btn btn-success" id="back-to-search">Back To Search</button>
@@ -242,7 +202,8 @@
             </div>   
             <div id='recipe-list'></div> 
         </div> <!--End of Recipe Shortlist Page -->
-        <div class="detailed-view-page hide"> <!--Detailed View  Page -->
+        <!--Detailed View  Page -->
+        <div class="detailed-view-page hide"> 
             <div class="row">
                 <div class="col-md-4">
                      <button type="button" class="btn btn-success" id="back-recipe-shortlist">Back To Recipes</button>
@@ -263,9 +224,7 @@
             </div>
             
         </div> <!--End of Detailed View  Page -->
-
     </div>  <!-- end of container -->
-    <!-- </div> -->
     <div class="container map-page">
         <h2 class="text-center panel" id="grocery-store">Find Your Nearest Grocery Store</h2>
     </div>
@@ -308,8 +267,6 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9pSrvDTzVXj7LToGHJUatXYl0Ts5LpuA&libraries=places&callback=initMap"
     async defer></script>
      <script src="assets/javascript/main-app.js"></script>
-    
-
     
 </body>
 
