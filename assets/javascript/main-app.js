@@ -662,6 +662,7 @@ console.log("here toooooo");
         $('.recipe-list').empty();
         $('.homepage').addClass('hide'); // added by Fiona
         $('#map-page').addClass('hide'); // added by Fiona
+        $('#topZone').hide();
         $('.recipe-shortlist-page').removeClass('hide');
 
         // $('.recipe-shortlist').removeClass('hide'); // added by Fiona
