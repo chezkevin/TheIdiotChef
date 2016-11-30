@@ -169,7 +169,7 @@ $(document).ready(function() {
         );
 
         firebase.auth().currentUser.link(credential).then(function(user) {
-console.log("here toooooo");
+
             var status = 'upgrade';
             captureUserData(user, status);
             // set DOM items to display on login
@@ -451,17 +451,36 @@ console.log("here toooooo");
         $('#expand-video-panel').append(b);
         // maximize the video
         var videoId =$(this).data('video');
-        $('#expand-video-panel').append($('#'+videoId));
-
+        $('#expand-video-panel').append($('#' + videoId));
+        // empty oringinal video list - this stops any videos taht were playing
+        $('.video-list').empty();
     })
 
 $(document).on('click', '#close-expanded-video', function(){
     // hide the detailed-recipe-page
-        $('.detailed-view-page').removeClass('hide');
-        // show new page
-        $('.expand-video-page').addClass('hide');
-        $('#expand-video-panel').empty();
-        $('#close-expanded-video').remove();
+    $('.detailed-view-page').removeClass('hide');
+    // show new page
+    $('.expand-video-page').addClass('hide');
+    $('#expand-video-panel').empty();
+    $('#close-expanded-video').remove();
+    // repopulate oringinal video list from the database
+
+    var currentUID = firebase.auth().currentUser.uid;
+    memberFolder.child(currentUID).child('videos').on("value", function(snapshot) {
+        // pass object to function to paint videos on DOM
+        var objLength = Object.keys(snapshot.val()).length;
+        console.log(objLength);
+        // console.log(snapshot.key());
+
+        for (var i = 0; i < objLength; i++){
+            // var ref = snapshot.ref;
+            // Now simply find the parent and return the name.
+             // console.log(snapshot.val().i.id);
+            console.log(snapshot.val()[i].id);
+            putVideosOnDom(snapshot.val(), '100%', '100%', 'https://www.youtube.com/embed/', snapshot.val()[i].id, i);
+        }
+       
+    })
 })
 
     $('#register').on('click', function() {
@@ -975,38 +994,53 @@ $(document).on('click', '#close-expanded-video', function(){
             })
             .done(function(response) {
                 if (response.items.length !== 0 ){
-
+                    var videoArray = [];
                     for (var i = 0; i < response.items.length; i++ ){
-                        var c = $('<div>');
-                        c.addClass('expand-video');
-                        c.append('<span class="glyphicon glyphicon-resize-full expand-video-icon" aria-hidden="true"></span>');
-                        
-                        $('.video-list').append(c);
-                        var b = $('<iframe>', {
-                            allowScriptAccess : "always",
-                            width : videoWidth,
-                            height : videoHeight,
-                            id: "video"+i,
-                            src : videoSrc + response.items[i].id.videoId + "?version=3&enablejsapi=1&playerapiid=ytplayer",
-                            class : "new-videos",
-                        });
-                        // add video information to the span so when clicked we can expand that video
-                        c.attr('data-video', "video"+i );
-                        
-                        $('.expand-video').append(b);
-
+                        putVideosOnDom(response.items, videoWidth, videoHeight, videoSrc, response.items[i].id.videoId, i);
+                                     // save to videos to the database for current uid
                         var newVideo = {
                             id: response.items[i].id.videoId,
                             title: response.items[i].snippet.title,
                             description: response.items[i].snippet.description
                         }
-                        var currentUID = firebase.auth().currentUser.uid;
-                        memberFolder.child(currentUID).child('videos').push(newVideo);
-
+                        videoArray.push(newVideo);
                     }
+                    var currentUID = firebase.auth().currentUser.uid;
+                    memberFolder.child(currentUID).child('videos').set(videoArray);
+
                 }     
 
             });
+    }
+
+    function putVideosOnDom(result, videoWidth, videoHeight, videoSrc, videoId, i){
+        
+                var c = $('<div>');
+                c.addClass('expand-video');
+                var d = $('<span>');
+                d.addClass('glyphicon glyphicon-resize-full expand-video-icon');
+                d.attr('aria-hidden','true');
+                c.append(d);
+                // c.append('<span class=></span>'); 
+
+                 $('.video-list').append(c);
+
+                 var b = $('<iframe>', {
+                    allowScriptAccess : "always",
+                    width : videoWidth,
+                    height : videoHeight,
+                    id: "video"+i,
+                    src : videoSrc + videoId + "?version=3&enablejsapi=1&playerapiid=ytplayer",
+                    class : "new-videos",
+                });
+                 console.log("src" + videoSrc + videoId + "?version=3&enablejsapi=1&playerapiid=ytplayer");
+                // add video information to the span so when clicked we can expand that video
+                c.attr('data-video', "video"+i );
+                // c.attr('data-video', response.items[i].id.videoId );
+                
+                $(c).append(b);
+
+   
     }
 
 // function pauseVideoOnSlide(){
