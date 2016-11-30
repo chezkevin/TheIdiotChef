@@ -31,7 +31,7 @@
 	margin: auto;
 }
 #open-map {
-	margin: center;
+	margin-top: 11px;
 	height: 60px;
 	width: 160px;
 	float: right;
@@ -157,6 +157,7 @@ h2, h3, span {
 #description {
 	color: white;
 	font-size: 35px;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
 section.video-list,
