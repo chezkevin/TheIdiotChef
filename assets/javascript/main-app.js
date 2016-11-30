@@ -693,6 +693,8 @@ console.log("here toooooo");
             dataType: 'json',
             success: function(data) {
 
+            $('#recipe-list').empty();
+
                 for (var i = 0; i < data.length; i++) {
                     var recipeDiv = $('<div class="recipe">');
 
