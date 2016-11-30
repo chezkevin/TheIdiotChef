@@ -448,7 +448,9 @@ $(document).ready(function() {
             class: "btn btn-success"
         })
         b.html("Back to Recipe and Videos")
-        $('#expand-video-panel').append(b);
+        var c = $('<div class="row btn-append">');
+        $('.expand-video-page').append(c);
+        c.append(b);
         // maximize the video
         var videoId =$(this).data('video');
         $('#expand-video-panel').append($('#' + videoId));
