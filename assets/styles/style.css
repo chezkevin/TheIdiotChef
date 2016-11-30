@@ -31,7 +31,11 @@
 	margin: auto;
 }
 #open-map {
-	margin: center;
+	margin-top: 11px;
+	height: 60px;
+	width: 160px;
+	float: right;
+	font-size: 35px;
 }
 #userName {
 	float: right;
@@ -130,7 +134,8 @@ body {
 
 h1 {
 	font-family: 'Pacifico', cursive;
-	font-size: 40px;
+	font-size: 110px;
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
 h2, h3, span {
@@ -142,14 +147,17 @@ h2, h3, span {
 	background-color: #DDDDDD;
 	padding: 10px;
 	border-radius: 5px;
+	margin-top: 0;
 }
 
 #ingredient-zone, #video-zone, #recipe-zone{
 	min-height:100px;
 }
 
-#description, h1 {
+#description {
 	color: white;
+	font-size: 35px;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
 section.video-list,
@@ -170,4 +178,9 @@ section#recipe-list {
 
 .map-well {
 	font-size: 30px;
+}
+
+#submitIngredientsButton {
+	width: 100%;
+	margin-left: 0;
 }
