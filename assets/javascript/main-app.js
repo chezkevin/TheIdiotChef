@@ -20,6 +20,7 @@ var database = firebase.database();
 //needed for maps to access so global
 var memberFolder = database.ref('/members/');
 var player;
+var recipeDetailArr = [];
 
 
 
@@ -683,7 +684,7 @@ console.log("here toooooo");
 
         console.log(ingredientsURL);
 
-        var apiKey = "ifDlpOiJZwmshbi3KF67KyFbySC4p1OjmEEjsnd0c6P7clfaPK";
+        var apiKey = "Z1zIQCqVVdmsha9CYOvgbDikmxTgp1U9BcGjsnzmx290k1J52q";
         var foodQueryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + ingredientsURL + "&limitLicense=true&number=5&ranking=1";
 
         $.ajax({
@@ -692,7 +693,7 @@ console.log("here toooooo");
             data: {},
             dataType: 'json',
             success: function(data) {
-
+                $('#recipe-list').empty();
                 for (var i = 0; i < data.length; i++) {
                     var recipeDiv = $('<div class="recipe">');
 
@@ -723,6 +724,29 @@ console.log("here toooooo");
                         dataType: 'json',
                         success: function(data) {
                                 console.log(data);
+                                // for (var j = 0; j < data.extendedIngredients[].length; j++){
+                                // console.log(allIngredientsArr);
+                                var allIngredientsArr = [];
+                                console.log(data.extendedIngredients.length + "dataingred lenght")
+                                for (var j = 0; j < data.extendedIngredients.length; j ++){
+                                    var ingredient = data.extendedIngredients[i][name];
+                                    console.log(ingredient);
+                                    allIngredientsArr.push(ingredient);
+                                }
+                                // var allIngredientsArr[i] = data.extendedIngredients(i).name.slice();
+                                console.log(recipeDetailArr);
+                                // }
+                                var selecteRecipeObj = {
+                                    "recipeId" : data.id,
+                                    "creditText": data.creditText,
+                                    "allIngredients": allIngredientsArr,
+                                    "instructions": data.instructions
+                                }
+                                console.log("recipe obj" + selecteRecipeObj);
+                                recipeDetailArr.push(selecteRecipeObj);
+                                console.log("recipe arr" + recipeDetailArr);
+                                
+                              
                         },
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader("X-Mashape-Authorization", apiKey);
@@ -744,6 +768,7 @@ console.log("here toooooo");
 
         });
     });
+
 
 
     $(document).on("click", ".recipe-title", function() {
