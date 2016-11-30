@@ -26,37 +26,7 @@
 .star.favorited {
      background-position: 0;
 }
-#recipe-details{
-	min-height: 500px;
-	overflow: scroll;
-	padding: 10px;
-}
-#selected-recipe-image{
-	height: 80px;
-	width: 80px;
-	margin: 0 auto;
 
-}
-#close-map {
-	float:right ;
-	margin: auto;
-}
-#open-map {
-	margin-top: 11px;
-	height: 60px;
-	width: 160px;
-	float: right;
-	font-size: 35px;
-}
-#userName {
-	float: right;
-	color: blue;
-	padding-right: 80px;
-	margin: 20px;
-}
-#reg-error-message {
-	color:red;
-}
 /*.panel-default {
 	height: 50px;
 	width: 100px;
@@ -64,8 +34,8 @@
 .login-items {
 	/*float: left;*/
 	border-width: 0.5px;
-	border-style: solid;
-	border-color: lightgrey;
+	/*border-style: solid;
+	border-color: lightgrey;*/
 	margin-top: 5px;
 	float: left;
 	/*margin-bottom: 10px;*/
@@ -90,29 +60,18 @@
 	float: left;
 	margin-left: 10px;
 }
-.initial-login{
-	margin-left: 25%;
-	margin-right: 22.5%;
-	margin-top: 17.5%;
-	padding-left: 10%;
-	padding-right: 10%;
-
+.initial-login {
+    margin-top: 5%;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+.input-group {
+    padding-bottom: 3px;
 }
 .login-well {
 	min-height: 180px;
 	margin-left: 2.5%;
-	width: 30%;
 }
-/*.map-well{
-	 min-height: 200px;
-}
-#map {
-	/*height: 100%;
-	width: 100%;*/
-/*	 position: absolute; //must put this for map to be displayed
-     height: 80%;
-     width: 80%;
-}*/
 a:hover{
 	cursor: pointer;
 }
@@ -194,4 +153,56 @@ section#recipe-list {
 #submitIngredientsButton {
 	width: 100%;
 	margin-left: 0;
+}
+#navbar-login-button{
+	margin-top: 10px;
+}
+#recipe-details{
+	min-height: 500px;
+	overflow: scroll;
+	padding: 10px;
+}
+#selected-recipe-image{
+	height: 80px;
+	width: 80px;
+	margin: 0 auto;
+}
+#back-recipe-shortlist, #back-to-search {
+	margin-bottom: 10px;
+	margin-left: 0px;
+}
+#close-map {
+	float:right ;
+	margin: auto;
+}
+#open-map {
+	margin-top: 11px;
+	height: 60px;
+	width: 160px;
+	float: right;
+	font-size: 35px;
+}
+#userName {
+	float: right;
+	color: blue;
+	padding-right: 80px;
+	margin: 20px;
+}
+#reg-error-message {
+	color:red;
+}
+#guest, #register{
+	margin-top: 10%;
+}
+#login-text {
+	height: 60px;
+}
+
+@media only screen and (max-width: 980px) {
+	#login-text {
+		height: 30px;
+	}
+	#guest, #register {
+	    margin-top: 5%;
+	}
 }

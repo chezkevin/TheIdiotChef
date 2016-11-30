@@ -140,24 +140,38 @@
             </div>
         </div>
         <div class="row text-center landing-page">
-            <div class="col-xs-12 col-md-4 well login-well landing-page">
-                <button type="button" class="btn login-items initial-login" id="register"><a href="">Register</a></button>
-            </div>
-            <div class="col-xs-12 col-md-4 well login-well landing-page">
-                <button type="button" class="btn login-items initial-login" id="guest"><a href="">Guest Login</a></button>
-            </div>
-            <div class="col-xs-12 col-md-4 well login-well landing-page">
-                <div id="navbar-login-form">
-                    <label for="email-input" id="login-form-message"></label>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
+            <div class="col-xs-12 col-md-4 landing-page">
+                <div class="well login-well">
+                    <div class="row initial-login" id="login-text">
+                        <p>If you are not a member please take a minute to register.</p>
                     </div>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
+                    <button type="button" class="btn btn-primary initial-login" id="register">Register</button>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4 landing-page">
+                <div class="well login-well">
+                    <div class="row initial-login" id="login-text">
+                        <p>Don't want to register - login as a guest and view our recipes and videos.</p>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
+                    <button type="button" class="btn btn-primary initial-login" id="guest">Guest Login</button>
+                 </div>
+            </div>
+            <div class="col-xs-12 col-md-4 landing-page">
+                <div class="well login-well">
+                    <div id="navbar-login-form">
+                        <label for="email-input" id="login-form-message"></label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="email-input" type="email" class="form-control" name="email" value="" placeholder="Member Email Address">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="password-input" type="password" class="form-control" name="password" value="" placeholder="Password">
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn btn-primary" id="navbar-login-button">Login</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -171,7 +185,7 @@
                         <div class="input-group">
                             <input type="text" class="form-control" id="ingredients-search">
                             <span class="input-group-btn">
-    						<button id='addIngredientButton' class="btn btn-default" type="button">Add Ingredient</button>
+    						<button id='addIngredientButton' class="btn btn-primary" type="button">Add Ingredient</button>
     						</span>
                         </div>
                 </div>
@@ -220,11 +234,21 @@
                 </div> -->
             </div>
         </div> <!-- End of Home Page -->
-
-        <div id='recipe-list' class="recipe-shortlist-page hide"> <!--Recipe Shortlist Page -->
-
+        <div class="recipe-shortlist-page hide"><!--Recipe Shortlist Page -->
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-success" id="back-to-search">Back To Search</button>
+                </div>
+            </div>   
+            <div id='recipe-list'></div> 
         </div> <!--End of Recipe Shortlist Page -->
         <div class="detailed-view-page hide"> <!--Detailed View  Page -->
+            <div class="row">
+                <div class="col-md-4">
+                     <button type="button" class="btn btn-success" id="back-recipe-shortlist">Back To Recipes</button>
+                </div>
+                <div class="col-md-8"></div>        
+            </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="well">
@@ -237,9 +261,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <button type="button" class="btn login-items" id="back-recipe-shortlist">Back To Recipes</button>
-            </div>
+            
         </div> <!--End of Detailed View  Page -->
 
     </div>  <!-- end of container -->

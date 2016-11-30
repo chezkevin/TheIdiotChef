@@ -317,15 +317,17 @@ console.log("here toooooo");
 
     // resets homepage layout when navigating from other pages
     function resetHomepage(){ 
+        // show
         $('.homepage').removeClass('hide');
         $('.landing-page').addClass('hide');
+        $('#topZone').show();
+        // hide
         $('.recipe-shortlist-page').addClass('hide');
         $('.detailed-view-page').addClass('hide');
         if (userProfile.email !== 'guest'){
             $('#email-reset').removeClass('hide');
             $('#password-reset').removeClass('hide');
         }
-        $('#topZone').show();
     }
 
     // sets page layout after login 
@@ -350,11 +352,14 @@ console.log("here toooooo");
     }
     // displays default homepage and DOM items
     function showHomepage(email){
+        // show the following
         $('#show-homepage').removeClass('hide');
         $('.homepage').removeClass('hide');
         $('#topZone').show();
         $('#userName').show();
+        // message to display
         $('#userName').html('Logged in as: ' + email); 
+
     }
     // displays additional items for an anon guest user
     function displayGuestItems(){
@@ -374,15 +379,20 @@ console.log("here toooooo");
     }
     // resets homepage layout when navigating from other pages
     function resetHomepage(){ 
+        //show
         $('.homepage').removeClass('hide');
-        $('#show-homepage').removeClass('hide'); //added
+        $('#show-homepage').removeClass('hide'); 
+        $('#topZone').show();
+        //hide
         $('.landing-page').addClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
         $('.detailed-view-page').addClass('hide');
+        // message
         if (userProfile.email !== 'guest'){
             $('#email-reset').removeClass('hide');
             $('#password-reset').removeClass('hide');
         }
+
     }
     // modal for login error messages
     function displayErrorMessage(message){  
@@ -526,6 +536,13 @@ console.log("here toooooo");
 
         return false;
     })
+
+    $('#back-to-search').on('click', function(){
+        resetHomepage();
+
+        return false;
+    })
+    
 
 
     $('#open-map').on('click', function(){
@@ -769,8 +786,7 @@ console.log("here toooooo");
                     // if there is not unit give for ingredients - use the backup original string 
                     // as its usually one or the other
                     if (recipeDetailArr[i].extendedIngredients[j].unit === ''){
- $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].originalString +'</li>');
- 
+                        $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].originalString +'</li>');
                     } else {
                         $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].amount + '  ' + recipeDetailArr[i].extendedIngredients[j].unit + ' ' + recipeDetailArr[i].extendedIngredients[j].name + '</li>');
  
