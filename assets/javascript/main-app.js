@@ -761,18 +761,28 @@ console.log("here toooooo");
                 $('#recipe-details').append('<h3>' + recipeDetailArr[i].title + '</h3>');
                 // $('#recipe-details').append(recipeDetailArr[i].id);
                 $('#recipe-details').append('<h3><img class="selected-recipe-image" src="' + recipeDetailArr[i].image + '"</h3>');
-                
-                
+                $('#recipe-details').append('<h4>Preparation Time: '+ recipeDetailArr[i].readyInMinutes + " minutes</h4>");     
+                 $('#recipe-details').append('<h4>Servings: '+ recipeDetailArr[i].servings + "</h4>");     
                 $('#recipe-details').append('<p><u>Ingredients</u> <br></p>');
                     $('#recipe-details').append('<ul>');
                 for (var j = 0; j < recipeDetailArr[i].extendedIngredients.length; j++){
+                    // if there is not unit give for ingredients - use the backup original string 
+                    // as its usually one or the other
+                    if (recipeDetailArr[i].extendedIngredients[j].unit === ''){
+ $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].originalString +'</li>');
+ 
+                    } else {
+                        $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].amount + '  ' + recipeDetailArr[i].extendedIngredients[j].unit + ' ' + recipeDetailArr[i].extendedIngredients[j].name + '</li>');
+ 
+                    }
+
                     
-                    $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].name + '</li>');
                    
                 }
-                $('#recipe-details').append('<br>' + recipeDetailArr[i].instructions + '</br>');
+                $('#recipe-details').append('<br><u>Method</p>');
+                $('#recipe-details').append(recipeDetailArr[i].instructions + '</br>');
                 $('#recipe-details').append('<u>Credit:</u> ' + recipeDetailArr[i].creditText + '</br>');
-                $('#recipe-details').append('<u>Source:</u> <a href="' + recipeDetailArr[i].sourceUrl + '"></a>');
+                $('#recipe-details').append('<u>Source:</u> '+ recipeDetailArr[i].sourceName + ' at <a href="' + recipeDetailArr[i].sourceUrl + '">' + recipeDetailArr[i].sourceUrl + '</a>');
             }
         }
 
