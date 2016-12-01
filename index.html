@@ -281,7 +281,9 @@
     <!-- for heroku - need to add namespace --> 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAddiqSupF7BhNzmafgwWImSllcV_zGv7c&libraries=places&callback=initMap" async defer></script>
 <script>
-
+// had to move maps in here because of call back issue in heroku
+// looked all over the web and tried loads of things but this is the only
+// thing we could get to work!
 var latitude = 41.881832;
 var longitude =  -87.623177; 
 // Zoom levels
