@@ -706,9 +706,7 @@ $(document).ready(function() {
             $('.recipe-shortlist-page').removeClass('hide');
             var ingredientsRef = memberFolder.child(uid).child('ingredients');
             var ingredientsURL = usedIngredientsArray.join("%2C");
-            var FoodAPI = <%= FoodAPI %>;
-            var apiKey = FoodAPI;
-            // var apiKey = "Z1zIQCqVVdmsha9CYOvgbDikmxTgp1U9BcGjsnzmx290k1J52q";
+            var apiKey = "Z1zIQCqVVdmsha9CYOvgbDikmxTgp1U9BcGjsnzmx290k1J52q";
             var foodQueryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + ingredientsURL + "&limitLicense=true&number=5&ranking=1";
 
             $.ajax({
@@ -783,8 +781,6 @@ $(document).ready(function() {
         recipeDetails(recipeTitle);
 
         youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
-        // var YouTubeAPI = <%= serversideVariable %>;  
-        // var APIKey = YouTubeAPI;
         var APIKey = "AIzaSyCbykER0WxzBfvzQnOmj6jfDZKlO_CG0yA"
         var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ APIKey + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
 
