@@ -21,7 +21,7 @@ var currentUser;
 
 $(document).ready(function() { 
     
-    var loggedUser = null;
+    // var loggedUser = null;
     var uid = ''; //user id for tracking purposes
     var regFlag = true;
     var userProfile = {
@@ -90,7 +90,7 @@ $(document).ready(function() {
         if (userProfile.email === null){
             userProfile.email = "guest";
         }
-        console.log("status: " + status);
+        
         // add to database
         let userFolder = database.ref('/members/' + uid);
         // check what is happening and handle accordingly - new user, existing or upgrade
@@ -201,7 +201,7 @@ $(document).ready(function() {
  
         firebase.auth().createUserWithEmailAndPassword(email, pass)
             .then(user => {
-                console.log("here users");
+               
                 let status = "new";
                 captureUserData(user, status);
                  // set login items and 
@@ -247,7 +247,7 @@ $(document).ready(function() {
         let auth = firebase.auth();
         let user = firebase.auth().currentUser;
         let emailAddress = user.email;
-        console.log(emailAddress);
+        
 
         auth.sendPasswordResetEmail(emailAddress).then(function() {
           // Email sent.
@@ -307,7 +307,7 @@ $(document).ready(function() {
     }
     // displays default homepage and DOM items
     function showHomepage(email){
-        console.log("am i in here");
+       
         // show the following
         $('#show-homepage').removeClass('hide');
         $('.homepage').removeClass('hide');
@@ -388,8 +388,8 @@ $(document).ready(function() {
     // this also allows user to be logged in after registering
     firebase.auth().onAuthStateChanged(firebaseUser => {
         currentUser = firebaseUser;
-        loggedUser = firebase.auth().currentUser.uid;
-        console.log(loggedUser);
+        // loggedUser = firebase.auth().currentUser.uid;
+      
         if (firebaseUser){
             $('#navbar-logout-button').removeClass('hide');
             $('#register').hide();
@@ -435,12 +435,14 @@ $(document).ready(function() {
         $('#close-expanded-video').remove();
         $('#btn-append').remove();
         // repopulate oringinal video list from the database
-        $('.video-list').html("You searched for: " + recipe + ". Click on any of the youTube videos below for recipes!");
+        // $('.video-list').html("You searched for: " + recipe + ". Click on any of the youTube videos below for recipes!");
 
         var currentUID = firebase.auth().currentUser.uid;
         memberFolder.child(currentUID).child('videos').on("value", function(snapshot) {
             // pass object to function to paint videos on DOM
             var objLength = Object.keys(snapshot.val()).length;
+            // repopulate oringinal video list from the database
+            $('.video-list').html("Click on any of the youTube videos below for recipes!");
 
             for (var i = 0; i < objLength; i++){
                 // Now simply find the videoid and pass to display function.
@@ -821,7 +823,7 @@ $(document).ready(function() {
 
 
     function displayVideos(recipe, queryURL, videoWidth, videoHeight, videoSrc) {
-        // console.log("recipe: " + recipe);        
+                
         $('.video-list').empty();
         $('.video-list').append("You searched for: " + recipe + ". Click on any of the youTube videos below for recipes!");
         $.ajax({
@@ -903,7 +905,7 @@ function initMap(){
     var message='';
     var markersArray =[];
     var infoWindow = new google.maps.InfoWindow({map: map});
-
+    
     function findNewCenter(latitude,longitude, message){
         var pos = {
           lat: latitude,
@@ -913,6 +915,10 @@ function initMap(){
         infoWindow.setContent(message);
         map.setCenter(pos);
         centerlocation = map.getCenter();
+        // remove entries from db
+        uid = firebase.auth().currentUser.uid;
+        var storefolder = memberFolder.child(uid).child('/stores/');
+        storefolder.set(null);
         doSearchFromCurrentLocation(centerlocation);
     }
 
@@ -946,6 +952,7 @@ function initMap(){
 
         infoWindow.setPosition(pos);
         infoWindow.setContent(message);
+        map.setCenter(pos);
 
      })
 
@@ -971,7 +978,7 @@ function initMap(){
 
     }); //end addListener
 
-    var count = 0;  
+    // var count = 0;  
 
     // This is where the stores are located and marked on the map
     function doSearchFromCurrentLocation(centerlocation)   {
@@ -991,9 +998,9 @@ function initMap(){
 
             $('#map-stores > tbody').empty();
             $('#map-stores > tbody:last-child').append('<tr><th> Number </th><th> Store Name </th><th> Store Address </th><th> Open Now </th></tr>');
-            count = 0;
+            // count = 0;
             if (status == google.maps.places.PlacesServiceStatus.OK) {
-                var storeLocation = [];
+                var storeLocation = {};
                 for (var i = 0; i < results.length; i++) {
                     
                     try{
@@ -1005,7 +1012,7 @@ function initMap(){
 
                     try{
                       openNow = results[i].opening_hours.open_now;
-
+            
                     }
                     catch(e){
                       openNow='No information provided';
@@ -1013,7 +1020,7 @@ function initMap(){
 
 
 
-                    storeLocation.push({name : results[i].name, formatted_address:results[i].formatted_address,openNow: openNow, openingTime: open, position_lat: results[i].geometry.location.lat(), position_lng: results[i].geometry.location.lng()});
+                    storeLocation = {name : results[i].name, formatted_address:results[i].formatted_address,openNow: openNow, openingTime: open, position_lat: results[i].geometry.location.lat(), position_lng: results[i].geometry.location.lng()};
                     
                     var marker = new google.maps.Marker({
                         position: results[i].geometry.location,
@@ -1026,33 +1033,21 @@ function initMap(){
                    
                     marker.addListener('click', function(){
 
-                        map.setCenter(this.getPosition());
+                    map.setCenter(this.getPosition());
                         
                     })
 
-
+                    // store to database for future use
+                    $('#map-stores > tbody:last-child').append('<tr class="store-data" data-name=' + results[i].name + ' data-lat=' + results[i].geometry.location.lat() + ' data-lng=' + results[i].geometry.location.lng()+ '><td>'+ i +'</td><td>'+ results[i].name  +'</td><td>'+ results[i].formatted_address +'</td><td>'+ openNow +'</td></tr>');
+        
+                    // store to database for future use --  
                     uid = firebase.auth().currentUser.uid;
                     var storefolder = memberFolder.child(uid).child('/stores/');
-                    storefolder.set(storeLocation);
+            
+                    storefolder.push(storeLocation);
                     storefolder.onDisconnect().set(null);
-                    storeLocation = [];
+                    storeLocation = {};
 
-                    storefolder.on('child_added', function(childSnapshot){
-                        count++;  
-                        // translate returned values of true / false into open and closed
-                        if (childSnapshot.val().openNow){
-                            var open = 'Open';
-                        }
-                        else if (!childSnapshot.val().openNow){
-                            var open = 'Closed';
-                        } else{
-                            var open = childSnapshot.val().openNow;
-                        }
-                       
-                        $('#map-stores > tbody:last-child').append('<tr class="store-data" data-name=' + JSON.stringify(childSnapshot.val().name) + ' data-lat=' + childSnapshot.val().position_lat + ' data-lng=' + childSnapshot.val().position_lng+ '><td>'+ count +'</td><td>'+ childSnapshot.val().name +'</td><td>'+ childSnapshot.val().formatted_address +'</td><td>'+ open +'</td></tr>');
-        
-
-                    });  
                 }
             }
         }
