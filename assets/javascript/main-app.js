@@ -606,7 +606,7 @@ $(document).ready(function() {
                 usedIngredientsArray.push(data.name);
                 //add item to dom ingrediens list
                 let newChild = updateIngredientList(data.name, data.checked);
-                addCheckBoxListener(newChild);
+                // addCheckBoxListener(newChild);
                 //tell user that this is their prior search upon default load of data only
                 if (added === false && data){
                     $('#your-ingredients').text('Your last search');
@@ -630,22 +630,23 @@ $(document).ready(function() {
         return id
     }
 
-    function addCheckBoxListener(id) {
-        let clickTarget = $('#' + id + ' > .fa');
-        clickTarget.on('click', function() {
-            let checkIcon = $(this).hasClass('fa-check-circle-o');
-            if (checkIcon) {
-                $(this).removeClass('fa-check-circle-o');
-                $(this).addClass('fa-circle-o');
-            } else {
-                $(this).addClass('fa-check-circle-o');
-                $(this).removeClass('fa-circle-o');
-            }
-            let checkLocation = memberFolder.child(uid).child('ingredients').child(id);
-            var checkStatus = checkLocation.child('checked');
-            checkLocation.update({ checked: !checkIcon });
-        });
-    }
+    // checkbox functionality disabled TY
+    // function addCheckBoxListener(id) {
+    //     let clickTarget = $('#' + id + ' > .fa');
+    //     clickTarget.on('click', function() {
+    //         let checkIcon = $(this).hasClass('fa-check-circle-o');
+    //         if (checkIcon) {
+    //             $(this).removeClass('fa-check-circle-o');
+    //             $(this).addClass('fa-circle-o');
+    //         } else {
+    //             $(this).addClass('fa-check-circle-o');
+    //             $(this).removeClass('fa-circle-o');
+    //         }
+    //         let checkLocation = memberFolder.child(uid).child('ingredients').child(id);
+    //         var checkStatus = checkLocation.child('checked');
+    //         checkLocation.update({ checked: !checkIcon });
+    //     });
+    // }
 
     $('#addIngredientButton').on('click', function() {
         //update text and/or ensure that list no longer says 'prior search' as now its an updated list
