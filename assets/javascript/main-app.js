@@ -274,12 +274,14 @@ $(document).ready(function() {
     function resetHomepage(){ 
         // show
         $('.homepage').removeClass('hide');
-        $('.landing-page').addClass('hide');
         $('#topZone').show();
         // hide
+        $('.landing-page').addClass('hide');
+        $('.map-page').addClass('hide');
         $('.expand-video-page').addClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
         $('.detailed-view-page').addClass('hide');
+        // $('.map-page').addClass('hide');
         if (userProfile.email !== 'guest'){
             $('#email-reset').removeClass('hide');
             $('#password-reset').removeClass('hide');
@@ -305,11 +307,13 @@ $(document).ready(function() {
     }
     // displays default homepage and DOM items
     function showHomepage(email){
+        console.log("am i in here");
         // show the following
         $('#show-homepage').removeClass('hide');
         $('.homepage').removeClass('hide');
         $('#topZone').show();
         $('#userName').show();
+        $('.map-page').addClass('hide');
         // message to display
         $('#userName').html('Logged in as: ' + email); 
 
@@ -317,6 +321,7 @@ $(document).ready(function() {
     // displays additional items for an anon guest user
     function displayGuestItems(){
         // display guest upgrade button
+        // $('.homepage').removeClass('hide');
         $('#upgrade-from-guest').removeClass('hide');
         // make sure the following buttons are hidden
         $('#reset-email').addClass('hide');
@@ -338,6 +343,7 @@ $(document).ready(function() {
         $('.landing-page').addClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
         $('.detailed-view-page').addClass('hide');
+        $('.map-page').addClass('hide');
         // message
         if (userProfile.email !== 'guest'){
             $('#email-reset').removeClass('hide');
@@ -558,7 +564,7 @@ $(document).ready(function() {
     $('#open-map').on('click', function(){
         $('.map-page').removeClass('hide');
         //hide homepage and topZone
-        $('.homepage').hide();
+         $('.homepage').addClass('hide');
         $('#topZone').hide();
         return false;
     })
@@ -566,7 +572,7 @@ $(document).ready(function() {
     $('#close-map').on('click', function(){
         $('.map-page').addClass('hide');
         //hide homepage and topZone
-        $('.homepage').show();
+        $('.homepage').removeClass('hide');
         $('#topZone').show();
         return false;
     })
@@ -683,7 +689,7 @@ $(document).ready(function() {
 
         $('.recipe-list').empty();
         $('.homepage').addClass('hide'); 
-        $('#map-page').addClass('hide'); 
+        $('.map-page').addClass('hide'); 
         $('#topZone').hide();
         $('.recipe-shortlist-page').removeClass('hide');
   
