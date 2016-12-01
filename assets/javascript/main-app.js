@@ -899,7 +899,7 @@ $(document).ready(function() {
 // 15: Streets
 // 20: Buildings
 
-function initMap(){
+window.initMap = function(){
     // initialised the map and sets the default center location
     var center = new google.maps.LatLng(latitude,longitude);
     var map = new google.maps.Map(document.getElementById('map'), {
