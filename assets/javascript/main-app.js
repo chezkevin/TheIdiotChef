@@ -17,8 +17,8 @@ var memberFolder = database.ref('/members/');
 var player;
 var recipeDetailArr = [];
 var map;
-var latitude = 41.881832;
-var longitude =  -87.623177; 
+// var latitude = 41.881832;
+// var longitude =  -87.623177; 
 var currentUser;
 
 $(document).ready(function() { 
