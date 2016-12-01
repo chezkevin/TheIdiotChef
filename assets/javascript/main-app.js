@@ -688,78 +688,82 @@ $(document).ready(function() {
     });
 
     $('#submitIngredientsButton').on('click', function() {
+        // if there are no ingredients dont submit
+        if (usedIngredientsArray.length === 0 ){
+            displayErrorMessage("No ingredients entered!");
+        }
+        else {
+            $('.recipe-list').empty();
+            $('.homepage').addClass('hide'); 
+            $('.map-page').addClass('hide'); 
+            $('#topZone').hide();
+            $('.recipe-shortlist-page').removeClass('hide');
+            var ingredientsRef = memberFolder.child(uid).child('ingredients');
+            var ingredientsURL = usedIngredientsArray.join("%2C");
+            var apiKey = "Z1zIQCqVVdmsha9CYOvgbDikmxTgp1U9BcGjsnzmx290k1J52q";
+            var foodQueryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + ingredientsURL + "&limitLicense=true&number=5&ranking=1";
 
-        $('.recipe-list').empty();
-        $('.homepage').addClass('hide'); 
-        $('.map-page').addClass('hide'); 
-        $('#topZone').hide();
-        $('.recipe-shortlist-page').removeClass('hide');
-  
-        var ingredientsRef = memberFolder.child(uid).child('ingredients');
-        var ingredientsURL = usedIngredientsArray.join("%2C");
-        var apiKey = "Z1zIQCqVVdmsha9CYOvgbDikmxTgp1U9BcGjsnzmx290k1J52q";
-        var foodQueryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + ingredientsURL + "&limitLicense=true&number=5&ranking=1";
+            $.ajax({
+                url: foodQueryURL,
+                type: 'GET',
+                data: {},
+                dataType: 'json',
+                success: function(data) {
+                    $('#recipe-list').empty();
 
-        $.ajax({
-            url: foodQueryURL,
-            type: 'GET',
-            data: {},
-            dataType: 'json',
-            success: function(data) {
-                $('#recipe-list').empty();
+                    for (var i = 0; i < data.length; i++) {
+                        var recipeDiv = $('<div class="recipe">');
 
-                for (var i = 0; i < data.length; i++) {
-                    var recipeDiv = $('<div class="recipe">');
+                        var innerRecipeDiv = $('<div class="inner-recipe">');
 
-                    var innerRecipeDiv = $('<div class="inner-recipe">');
+                        var recipeName = data[i].title;
 
-                    var recipeName = data[i].title;
+                        var recipeTitle = $('<a class="recipe-title">').text(recipeName);
 
-                    var recipeTitle = $('<a class="recipe-title">').text(recipeName);
+                        var recipeUsedIngredients = data[i].usedIngredientCount;
 
-                    var recipeUsedIngredients = data[i].usedIngredientCount;
+                        var recipeUsedIngredientsList = $('<p>').text("Number of used ingredients: " + recipeUsedIngredients);
 
-                    var recipeUsedIngredientsList = $('<p>').text("Number of used ingredients: " + recipeUsedIngredients);
+                        var recipeMissingIngredients = data[i].missedIngredientCount;
 
-                    var recipeMissingIngredients = data[i].missedIngredientCount;
+                        var recipeMissingIngredientsList = $('<p>').text("Number of missing ingredients: " + recipeMissingIngredients);
 
-                    var recipeMissingIngredientsList = $('<p>').text("Number of missing ingredients: " + recipeMissingIngredients);
+                        var recipeImage = $("<img class='recipeImage'>");
+                        recipeImage.attr('src', data[i].image);
 
-                    var recipeImage = $("<img class='recipeImage'>");
-                    recipeImage.attr('src', data[i].image);
+                        var recipeID = data[i].id;
+                        var recipeQueryURL = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + recipeID + '/information?includeNutrition=false';
 
-                    var recipeID = data[i].id;
-                    var recipeQueryURL = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/' + recipeID + '/information?includeNutrition=false';
+                        $.ajax({
+                            url: recipeQueryURL,
+                            type: 'GET',
+                            data: {},
+                            dataType: 'json',
+                            success: function(data) {
+                                // save data to an array for use below in recipeDetails function
+                                recipeDetailArr.push(data);                               
+                            },
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader("X-Mashape-Authorization", apiKey);
+                            }
+                        })
 
-                    $.ajax({
-                        url: recipeQueryURL,
-                        type: 'GET',
-                        data: {},
-                        dataType: 'json',
-                        success: function(data) {
-                            // save data to an array for use below in recipeDetails function
-                            recipeDetailArr.push(data);                               
-                        },
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader("X-Mashape-Authorization", apiKey);
-                        }
-                    })
-
-                    recipeDiv.append(recipeImage);
-                    innerRecipeDiv.append(recipeTitle);
-                    innerRecipeDiv.append(recipeUsedIngredientsList);
-                    innerRecipeDiv.append(recipeMissingIngredientsList);
-                    recipeDiv.append(innerRecipeDiv);
-                    $('#recipe-list').append(recipeDiv);
+                        recipeDiv.append(recipeImage);
+                        innerRecipeDiv.append(recipeTitle);
+                        innerRecipeDiv.append(recipeUsedIngredientsList);
+                        innerRecipeDiv.append(recipeMissingIngredientsList);
+                        recipeDiv.append(innerRecipeDiv);
+                        $('#recipe-list').append(recipeDiv);
+                    }
+                    
+                },
+                error: function(err) { alert(err); },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-Mashape-Authorization", apiKey);
                 }
-                
-            },
-            error: function(err) { alert(err); },
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-Mashape-Authorization", apiKey);
-            }
 
-        });
+            });
+        }
     });
 
     $(document).on("click", ".recipe-title", function() {
