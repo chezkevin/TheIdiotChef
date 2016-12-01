@@ -776,7 +776,7 @@ $(document).ready(function() {
 
         youTubeQ = youTubeQ.trim().replace(/\s/g, '+');
 
-        var APIKey = "AIzaSyAldakVxQrbZabH9SdIO3iocly3sOA727U"
+        var APIKey = "AIzaSyCbykER0WxzBfvzQnOmj6jfDZKlO_CG0yA";
         var queryURL = 'https://www.googleapis.com/youtube/v3/search?q='+ youTubeQ +'&key='+ APIKey + '&maxfields=25&fields=items(id(kind,videoId),snippet)&part=snippet&order=rating&relevanceLanguage=en&type=video&videoDefinition=standard&videoEmbeddable=true&safeSearch=strict&regionCode=us&topicId=/m/02wbm';
 
         displayVideos(recipeTitle, queryURL, '100%', '100%', 'https://www.youtube.com/embed/');
