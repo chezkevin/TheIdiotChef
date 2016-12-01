@@ -8,6 +8,8 @@ var config = {
      
 firebase.initializeApp(config);
 
+var myApp = {};
+
 var database = firebase.database();
 // decided to use one main db folder for all members
 //needed for maps to access so global
@@ -898,8 +900,9 @@ $(document).ready(function() {
 // 10: City
 // 15: Streets
 // 20: Buildings
+initMap();
 
-window.initMap = function(){
+function initMap(){
     // initialised the map and sets the default center location
     var center = new google.maps.LatLng(latitude,longitude);
     var map = new google.maps.Map(document.getElementById('map'), {

@@ -225,7 +225,9 @@ section#recipe-list {
 	width: 800px;
 	margin-left: 15%;
 }
-
+#navbar-login-form{
+	display: block;
+}
 
 
 @media only screen and (max-width: 980px) {
