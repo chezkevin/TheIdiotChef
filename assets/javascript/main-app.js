@@ -1,9 +1,9 @@
 var config = {        
-    apiKey: "AIzaSyB86ufSLxlXh_Oj7Se_rmg5FmddSA9qYEU",
-    authDomain: "test-a0542.firebaseapp.com",
-    databaseURL: "https://test-a0542.firebaseio.com",
-    storageBucket: "test-a0542.appspot.com",
-    messagingSenderId: "655697953340"
+    apiKey: "AIzaSyD0RKhQWL_c18JkNMxPVWt-tut7z5HYrTU",
+    authDomain: "theidiotchef-149714.firebaseapp.com",
+    databaseURL: "https://theidiotchef-149714.firebaseio.com",
+    storageBucket: "theidiotchef-149714.appspot.com",
+    messagingSenderId: "1075264162883"
     };
      
 firebase.initializeApp(config);
