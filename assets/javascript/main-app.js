@@ -4,14 +4,7 @@ var config = {
     databaseURL: "https://test-a0542.firebaseio.com",
     storageBucket: "test-a0542.appspot.com",
     messagingSenderId: "655697953340"
-  
-
-        // apiKey: "AIzaSyDeASMIr2HuqX9YdWU5U9M8wZFb0Apwj80",
-        // authDomain: "test-cac0a.firebaseapp.com",
-        // databaseURL: "https://test-cac0a.firebaseio.com",
-        // storageBucket: "test-cac0a.appspot.com",
-        // messagingSenderId: "818755096086"
-      };
+    };
      
 firebase.initializeApp(config);
 
@@ -21,12 +14,6 @@ var database = firebase.database();
 var memberFolder = database.ref('/members/');
 var player;
 var recipeDetailArr = [];
-
-
-
-
-// decided to use one main db folder for all members
-// var memberFolder = database.ref('/members/');
 var map;
 var latitude = 41.881832;
 var longitude =  -87.623177; 
@@ -36,7 +23,6 @@ $(document).ready(function() {
     
     var loggedUser = null;
     var uid = ''; //user id for tracking purposes
-    
     var regFlag = true;
     var userProfile = {
         userID: uid,
@@ -109,17 +95,14 @@ $(document).ready(function() {
         let userFolder = database.ref('/members/' + uid);
         // check what is happening and handle accordingly - new user, existing or upgrade
         if ( status === 'new'){
-             // console.log("in here ***");
             userFolder.set(userProfile);
         } 
         else if (status === 'existing'){
             // userProfile.loginStatus = true;
             // add to database
-            // console.log("in here ****");
             userFolder.update({lastLogIn: userProfile.lastLogIn}
             );
         } else if (status === 'upgrade'){
-            // console.log("in here");
             userFolder.update({email: user.email}
             );
         }
@@ -127,14 +110,10 @@ $(document).ready(function() {
         // when user closes window / disconnects remove the guest user
         // Logout handled later on
         if (userProfile.email === 'guest'){
-            // let userFolder = database.ref('/members/' + uid);
             userFolder.onDisconnect().remove();
         } 
             
     }
-
-
-
     //anonymously login the user - for Guest User option
     function anonymousLogIn() {
         firebase.auth().signInAnonymously()
@@ -160,7 +139,6 @@ $(document).ready(function() {
     // capture email and password
     function upgradeLogin(){
        
-        // $('#navbar-login-form').hide();
         let email = $('#registration-email-input').val().trim();
         let password = $('#registration-password-input').val().trim();
         const credential = firebase.auth.EmailAuthProvider.credential(
@@ -238,8 +216,6 @@ $(document).ready(function() {
 
 
             })
-           
-
     }
 
     function logOut() {
@@ -248,13 +224,6 @@ $(document).ready(function() {
             .then(() => {
     
                 initialState();
-                // close the map if it is open
-                // if (mapWindow !== null){
-                //     closeMapWin();
-                // }
-                
-                
-
 
             })
             .catch(e => {
@@ -271,25 +240,7 @@ $(document).ready(function() {
 
     }
 
-    // event listener for authentication state change e.g. logout 
-    // this also allows user to be logged in after registering
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-        currentUser = firebaseUser;
-        loggedUser = firebase.auth().currentUser.uid;
-        console.log(loggedUser);
-        if (firebaseUser){
-            $('#navbar-logout-button').removeClass('hide');
-            $('#register').hide();
-            $('#navbar-login-form').hide();
-            $('#guest').hide();
-        }
-        else {
-            $('#navbar-logout-button').addClass('hide');
-            $('#register').show();
-            $('#guest').show();
-            // $('#google-maps').addClass('hide');
-        }
-    })
+    
 
     // reset password
     function resetPassword(){
@@ -350,9 +301,6 @@ $(document).ready(function() {
         $('#register').hide();
         $('#email-reset').removeClass('hide');
         $('#password-reset').removeClass('hide');
-        // recipe-shortlist-page
-        // $('.map-page').removeClass('hide');
-        // $('#google-maps').removeClass('hide');
         $('.recipe-shortlist-page').addClass('hide');
     }
     // displays default homepage and DOM items
@@ -374,8 +322,6 @@ $(document).ready(function() {
         $('#reset-email').addClass('hide');
         $('#reset-password').addClass('hide');
         $('.landing-page').addClass('hide');
-        // $('.map-page').removeClass('hide');
-         // $('#google-maps').removeClass('hide');
     }
     // displays additional items for a member  user
     function displayMemberItems(){
@@ -402,8 +348,6 @@ $(document).ready(function() {
     // modal for login error messages
     function displayErrorMessage(message){  
         // captures errors on login 
-        // let errorCode = e.code;
-        // let errorMessage = e.message;
         let displayMessage = '<p>Error: ' + message + ' Please try again.</p>';
         // display on DOM 
         $('.error-modal').show();
@@ -434,10 +378,28 @@ $(document).ready(function() {
         $('#register').show();
     }
     
+    // event listener for authentication state change e.g. logout 
+    // this also allows user to be logged in after registering
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+        currentUser = firebaseUser;
+        loggedUser = firebase.auth().currentUser.uid;
+        console.log(loggedUser);
+        if (firebaseUser){
+            $('#navbar-logout-button').removeClass('hide');
+            $('#register').hide();
+            $('#navbar-login-form').hide();
+            $('#guest').hide();
+        }
+        else {
+            $('#navbar-logout-button').addClass('hide');
+            $('#register').show();
+            $('#guest').show();
+        }
+    })
+
     // Button Actions Section
     // expand video
     $(document).on('click', '.expand-video', function(){
-        // console.log("in here");
         // hide the detailed-recipe-page
         $('.detailed-view-page').addClass('hide');
         // show new page
@@ -449,7 +411,7 @@ $(document).ready(function() {
         })
         b.html("Back to Recipe and Videos")
         var c = $('<div class="row btn-append">');
-        $('.expand-video-page').append(c);
+        $('.expand-video-page').prepend(c);
         c.append(b);
         // maximize the video
         var videoId =$(this).data('video');
@@ -458,32 +420,29 @@ $(document).ready(function() {
         $('.video-list').empty();
     })
 
-$(document).on('click', '#close-expanded-video', function(){
-    // hide the detailed-recipe-page
-    $('.detailed-view-page').removeClass('hide');
-    // show new page
-    $('.expand-video-page').addClass('hide');
-    $('#expand-video-panel').empty();
-    $('#close-expanded-video').remove();
-    // repopulate oringinal video list from the database
+    $(document).on('click', '#close-expanded-video', function(){
+        // hide the detailed-recipe-page
+        $('.detailed-view-page').removeClass('hide');
+        // show new page
+        $('.expand-video-page').addClass('hide');
+        $('#expand-video-panel').empty();
+        $('#close-expanded-video').remove();
+        $('#btn-append').remove();
+        // repopulate oringinal video list from the database
+        $('.video-list').html("You searched for: " + recipe + ". Click on any of the youTube videos below for recipes!");
 
-    var currentUID = firebase.auth().currentUser.uid;
-    memberFolder.child(currentUID).child('videos').on("value", function(snapshot) {
-        // pass object to function to paint videos on DOM
-        var objLength = Object.keys(snapshot.val()).length;
-        console.log(objLength);
-        // console.log(snapshot.key());
+        var currentUID = firebase.auth().currentUser.uid;
+        memberFolder.child(currentUID).child('videos').on("value", function(snapshot) {
+            // pass object to function to paint videos on DOM
+            var objLength = Object.keys(snapshot.val()).length;
 
-        for (var i = 0; i < objLength; i++){
-            // var ref = snapshot.ref;
-            // Now simply find the parent and return the name.
-             // console.log(snapshot.val().i.id);
-            console.log(snapshot.val()[i].id);
-            putVideosOnDom(snapshot.val(), '100%', '100%', 'https://www.youtube.com/embed/', snapshot.val()[i].id, i);
-        }
-       
+            for (var i = 0; i < objLength; i++){
+                // Now simply find the videoid and pass to display function.
+                putVideosOnDom(snapshot.val(), '100%', '100%', 'https://www.youtube.com/embed/', snapshot.val()[i].id, i);
+            }
+           
+        })
     })
-})
 
     $('#register').on('click', function() {
         regFlag = true;
@@ -588,24 +547,20 @@ $(document).on('click', '#close-expanded-video', function(){
 
     $('#show-homepage').on('click', function(){
         resetHomepage();
-
         return false;
     })
 
     $('#back-to-search').on('click', function(){
         resetHomepage();
-
         return false;
     })
     
-
-
     $('#open-map').on('click', function(){
         $('.map-page').removeClass('hide');
         //hide homepage and topZone
         $('.homepage').hide();
         $('#topZone').hide();
-
+        return false;
     })
 
     $('#close-map').on('click', function(){
@@ -613,139 +568,22 @@ $(document).on('click', '#close-expanded-video', function(){
         //hide homepage and topZone
         $('.homepage').show();
         $('#topZone').show();
+        return false;
     })
 
-    // $('#open-map').on('click', function(){
-    //     // $('.show-map').removeClass('hide');
-    //     openMapWin();
-    //     // $('#userName').show();
-    // });
 
 
-    // $('#close-map').on('click', function(){
-    //     closeMapWin();
-    //     // $('.show-map').addClass('hide');
-    // });
-
-    // if the browser is refeshed - log user out and they must reauthenticate
-    resetOnRefresh();
-
-
-
-//// This is where Recipe API is called and handled
+    //// This is where Recipe API is called and handled
     
     //various database references for food updates
     let ref = database.ref();
     // let ingredientZone = ref.child("ingredientZone");
     let userZone = ref.child('members');
     let usedIngredientsArray = [];
-    // var userIng = firebase.auth().currentUser.uid;
     var userPlace = "";
-   
-  
-    // function initialIngredientsList(){
-        
-    //     memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
-        
-    //         if (usedIngredientsArray.indexOf(childSnapshot.val().name) > -1) {
-    //             return;
-    //         } else {
-
-    //             let newChild = updateIngredientList(childSnapshot);
-
-    //             addCheckBoxListener(newChild);
-    //         }
-    //     })  
-    // }  
-        
-    
-   
-
-    // function updateIngredientList(childSnapshot) {
-
-
-    //     let target = $("#ingredients-list");
-    //     let id = childSnapshot.val().name;
-    //     let checked = childSnapshot.val().checked;
-    //     let checkStatus = (checked == true ? 'checkbox' : 'nocheckbox');
-    //     let icon = (checked == true ? 'fa-check-circle-o' : 'fa-circle-o');
-
-    //     //render new DOM element and add to DOM target node
-    //     let newItem = $('<div>').attr('id', id).addClass('ingredient');
-    //     newItem.html("<button id='" + id + "'><i class='fa " + icon + " ' aria-hidden='true'></i></button><span id='name'> " + id + " </span><button class='deletebox' id='" + id + "'><i class='fa fa-trash' aria-hidden='true'></i></button></div>");
-    //     target.append(newItem);
-    //     target.find('button#' + id).addClass(checkStatus);
-
-    //     //update ingredient array variable accordingly
-    //     if (checked == 'true') {
-    //         usedIngredientsArray.push(childSnapshot.val().name);
-    //     }
-    //     return id
-
-
-    // }
-
-    // function addCheckBoxListener(id) {
-        
-    //     let clickTarget = $('#' + id + ' > .fa');    
-
-    //     clickTarget.on('click', function() {
-
-    //         let checkIcon = $(this).hasClass('fa-check-circle-o');
-
-    //         if (checkIcon) {
-    //             $(this).removeClass('fa-check-circle-o');
-    //             $(this).addClass('fa-circle-o');
-    //         } else {
-    //             $(this).addClass('fa-check-circle-o');
-    //             $(this).removeClass('fa-circle-o');
-    //         }
-
-    //         let checkLocation = memberFolder.child(uid).child('ingredients').child(id);
-
-    //         var checkStatus = checkLocation.child('checked');
-
-    //         checkLocation.update({ checked: !checkIcon });
-
-    //     });
-    // }
-
-
-    // $('#addIngredientButton').on('click', function() {
-
-    //     usedIngredientsArray = [];
-
-    //     var newIngredientName = $('#ingredients-search').val().trim();
-
-    //     var newIngredient = {
-    //         name: newIngredientName,
-    //         checked: 'true'
-    //     }
-    //     // var currentUID = uid;
-    //     // var currentUID = firebase.auth().currentUser.uid;
-    //     memberFolder.child(uid).child('ingredients').child(newIngredientName).set(newIngredient);
-
-    //     $("#ingredients-search").val("");
-
-    //     return false;
-
-    // })
-
-    // $(document.body).on('click', '.deletebox', function() {
-
-    //     var ingredientToDelete = $(this).attr("id");
-
-    //     $("#" + ingredientToDelete).remove();
-
-    //     var deleteLocation = memberFolder.child(uid).child('ingredients').child(ingredientToDelete);
-
-    //     deleteLocation.remove();
-    // });
-
-    //////addded for Brandon Start
     let added = false;
-    // var userIng = firebase.auth().currentUser.uid;
     var userPlace = "";
+
     function initialIngredientsList() {
         memberFolder.child(uid).child('ingredients').on('child_added', function(childSnapshot) {
             //if there is a prior search result, populate the DOM with it and add event listeners
@@ -763,11 +601,11 @@ $(document).on('click', '#close-expanded-video', function(){
                     $('#your-ingredients').text('Your last search');
                 }
             } else {
-                console.log('already in array');
-                return;
+                    return;
             }
         });
     }
+
     function updateIngredientList(name, check) {
         let target = $("#ingredients-list");
         let id = name;
@@ -778,12 +616,9 @@ $(document).on('click', '#close-expanded-video', function(){
         newItem.html("<button id='" + id + "'><i class='fa " + icon + " ' aria-hidden='true'></i></button><span id='name'> " + id + " </span><button class='deletebox' id='" + id + "'><i class='fa fa-trash' aria-hidden='true'></i></button></div>");
         target.append(newItem);
         target.find('button#' + id).addClass(checkStatus);
-        //update ingredient array variable accordingly
-        // if (check == 'true') {
-        //     usedIngredientsArray.push(childSnapshot.val().name);
-        // }
         return id
     }
+
     function addCheckBoxListener(id) {
         let clickTarget = $('#' + id + ' > .fa');
         clickTarget.on('click', function() {
@@ -800,6 +635,7 @@ $(document).on('click', '#close-expanded-video', function(){
             checkLocation.update({ checked: !checkIcon });
         });
     }
+
     $('#addIngredientButton').on('click', function() {
         //update text and/or ensure that list no longer says 'prior search' as now its an updated list
         $('#your-ingredients').text('Your Ingredients');
@@ -814,14 +650,13 @@ $(document).on('click', '#close-expanded-video', function(){
                     name: newIngredientName,
                     checked: 'true'
                 }
-                // var currentUID = uid;
-                // var currentUID = firebase.auth().currentUser.uid;
             memberFolder.child(uid).child('ingredients').child(newIngredientName).set(newIngredient);
         }
         //empty out search bar text
         $("#ingredients-search").val("");
         return false;
-    })
+    });
+
     $('#clearIngredientsButton').on('click', function(){
         //delete all child elements from the database
         memberFolder.child(uid).child('ingredients').remove();
@@ -831,6 +666,7 @@ $(document).on('click', '#close-expanded-video', function(){
         //update text and/or ensure that list no longer says 'prior search' as now its an updated list
         $('#your-ingredients').text('Your Ingredients');
     });
+
     $(document.body).on('click', '.deletebox', function() {
         var ingredientToDelete = $(this).attr("id");
         $("#" + ingredientToDelete).remove();
@@ -843,33 +679,16 @@ $(document).on('click', '#close-expanded-video', function(){
         deleteLocation.remove();
     });
 
-//////addded for Brandon end
-
     $('#submitIngredientsButton').on('click', function() {
+
         $('.recipe-list').empty();
-        $('.homepage').addClass('hide'); // added by Fiona
-        $('#map-page').addClass('hide'); // added by Fiona
+        $('.homepage').addClass('hide'); 
+        $('#map-page').addClass('hide'); 
         $('#topZone').hide();
         $('.recipe-shortlist-page').removeClass('hide');
-
-        // $('.recipe-shortlist').removeClass('hide'); // added by Fiona
-      
+  
         var ingredientsRef = memberFolder.child(uid).child('ingredients');
-
-        // ingredientsRef.once('value')
-        //     .then(function(snapshot) {
-        //         snapshot.forEach(function(childSnapshot){
-        //             if (childSnapshot.val('checked') == 'false') {
-        //                 usedIngredientsArray.push(childSnapshot.val('name'));
-        //                 console.log('yay  ' + childSnapshot);
-        //             }
-        //         })
-        //     })
-
         var ingredientsURL = usedIngredientsArray.join("%2C");
-
-        console.log(ingredientsURL);
-
         var apiKey = "Z1zIQCqVVdmsha9CYOvgbDikmxTgp1U9BcGjsnzmx290k1J52q";
         var foodQueryURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients=" + ingredientsURL + "&limitLicense=true&number=5&ranking=1";
 
@@ -880,6 +699,7 @@ $(document).on('click', '#close-expanded-video', function(){
             dataType: 'json',
             success: function(data) {
                 $('#recipe-list').empty();
+
                 for (var i = 0; i < data.length; i++) {
                     var recipeDiv = $('<div class="recipe">');
 
@@ -924,6 +744,7 @@ $(document).on('click', '#close-expanded-video', function(){
                     recipeDiv.append(innerRecipeDiv);
                     $('#recipe-list').append(recipeDiv);
                 }
+                
             },
             error: function(err) { alert(err); },
             beforeSend: function(xhr) {
@@ -932,43 +753,6 @@ $(document).on('click', '#close-expanded-video', function(){
 
         });
     });
-
-    function recipeDetails(recipeTitle){
-        console.log(recipeDetailArr);
-        
-        for (var i = 0; i < recipeDetailArr.length; i++ ){
-               console.log(recipeDetailArr);
-            // find the current recipe - the one the user clicked on
-            if(recipeDetailArr[i].title === recipeTitle){
-                $('#recipe-details').html('<h2>Recipe Details</h2>')
-                $('#recipe-details').append('<h3>' + recipeDetailArr[i].title + '</h3>');
-                // $('#recipe-details').append(recipeDetailArr[i].id);
-                $('#recipe-details').append('<h3><img class="selected-recipe-image" src="' + recipeDetailArr[i].image + '"</h3>');
-                $('#recipe-details').append('<h4>Preparation Time: '+ recipeDetailArr[i].readyInMinutes + " minutes</h4>");     
-                 $('#recipe-details').append('<h4>Servings: '+ recipeDetailArr[i].servings + "</h4>");     
-                $('#recipe-details').append('<p><u>Ingredients</u> <br></p>');
-                    $('#recipe-details').append('<ul>');
-                for (var j = 0; j < recipeDetailArr[i].extendedIngredients.length; j++){
-                    // if there is not unit give for ingredients - use the backup original string 
-                    // as its usually one or the other
-                    if (recipeDetailArr[i].extendedIngredients[j].unit === ''){
-                        $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].originalString +'</li>');
-                    } else {
-                        $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].amount + '  ' + recipeDetailArr[i].extendedIngredients[j].unit + ' ' + recipeDetailArr[i].extendedIngredients[j].name + '</li>');
- 
-                    }
-
-                    
-                   
-                }
-                $('#recipe-details').append('<br><u>Method</p>');
-                $('#recipe-details').append(recipeDetailArr[i].instructions + '</br>');
-                $('#recipe-details').append('<u>Credit:</u> ' + recipeDetailArr[i].creditText + '</br>');
-                $('#recipe-details').append('<u>Source:</u> '+ recipeDetailArr[i].sourceName + ' at <a href="' + recipeDetailArr[i].sourceUrl + '">' + recipeDetailArr[i].sourceUrl + '</a>');
-            }
-        }
-
-    };
 
     $(document).on("click", ".recipe-title", function() {
         $('.detailed-view-page').removeClass('hide');
@@ -985,6 +769,50 @@ $(document).on('click', '#close-expanded-video', function(){
 
         displayVideos(recipeTitle, queryURL, '100%', '100%', 'https://www.youtube.com/embed/');
     });
+
+    // back button to recipe short from detailed page  page
+    $('#back-recipe-shortlist').on('click', function(){
+        $('.recipe-shortlist-page').removeClass('hide');
+        $('.detailed-view-page').addClass('hide');
+    
+        // remove videos - this will stop them playing
+        $('.video-list').empty();
+
+        return false;
+    });
+
+    function recipeDetails(recipeTitle){
+        
+        for (var i = 0; i < recipeDetailArr.length; i++ ){
+            // find the current recipe - the one the user clicked on
+            if(recipeDetailArr[i].title === recipeTitle){
+                $('#recipe-details').html('<h2>Recipe Details</h2>')
+                $('#recipe-details').append('<h3>' + recipeDetailArr[i].title + '</h3>');
+                $('#recipe-details').append('<h3><img class="selected-recipe-image" src="' + recipeDetailArr[i].image + '"</h3>');
+                $('#recipe-details').append('<h4>Preparation Time: '+ recipeDetailArr[i].readyInMinutes + " minutes</h4>");     
+                 $('#recipe-details').append('<h4>Servings: '+ recipeDetailArr[i].servings + "</h4>");     
+                $('#recipe-details').append('<p><u>Ingredients</u> <br></p>');
+                    $('#recipe-details').append('<ul>');
+                for (var j = 0; j < recipeDetailArr[i].extendedIngredients.length; j++){
+                    // if there is not unit give for ingredients - use the backup original string 
+                    // as its usually one or the other
+                    if (recipeDetailArr[i].extendedIngredients[j].unit === ''){
+                        $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].originalString +'</li>');
+                    } else {
+                        $('#recipe-details').append('<li>' + recipeDetailArr[i].extendedIngredients[j].amount + '  ' + recipeDetailArr[i].extendedIngredients[j].unit + ' ' + recipeDetailArr[i].extendedIngredients[j].name + '</li>');
+ 
+                    }      
+                   
+                }
+                $('#recipe-details').append('<br><u>Method</p>');
+                $('#recipe-details').append(recipeDetailArr[i].instructions + '</br>');
+                $('#recipe-details').append('<u>Credit:</u> ' + recipeDetailArr[i].creditText + '</br>');
+                $('#recipe-details').append('<u>Source:</u> '+ recipeDetailArr[i].sourceName + ' at <a href="' + recipeDetailArr[i].sourceUrl + '">' + recipeDetailArr[i].sourceUrl + '</a>');
+            }
+        }
+
+    };
+
 
     function displayVideos(recipe, queryURL, videoWidth, videoHeight, videoSrc) {
         // console.log("recipe: " + recipe);        
@@ -1010,7 +838,11 @@ $(document).on('click', '#close-expanded-video', function(){
                     var currentUID = firebase.auth().currentUser.uid;
                     memberFolder.child(currentUID).child('videos').set(videoArray);
 
-                }     
+                }  else {
+                    $('.video-list').empty();
+                    $('.video-list').append("Sorry, there are no YouTube instructional videos for this recipe.");
+       
+                }   
 
             });
     }
@@ -1023,11 +855,11 @@ $(document).on('click', '#close-expanded-video', function(){
                 d.addClass('glyphicon glyphicon-resize-full expand-video-icon');
                 d.attr('aria-hidden','true');
                 c.append(d);
-                // c.append('<span class=></span>'); 
+     
 
-                 $('.video-list').append(c);
+                $('.video-list').append(c);
 
-                 var b = $('<iframe>', {
+                var b = $('<iframe>', {
                     allowScriptAccess : "always",
                     width : videoWidth,
                     height : videoHeight,
@@ -1035,75 +867,35 @@ $(document).on('click', '#close-expanded-video', function(){
                     src : videoSrc + videoId + "?version=3&enablejsapi=1&playerapiid=ytplayer",
                     class : "new-videos",
                 });
-                 console.log("src" + videoSrc + videoId + "?version=3&enablejsapi=1&playerapiid=ytplayer");
                 // add video information to the span so when clicked we can expand that video
                 c.attr('data-video', "video"+i );
-                // c.attr('data-video', response.items[i].id.videoId );
-                
                 $(c).append(b);
 
    
     }
 
-// function pauseVideoOnSlide(){
-//   var iframe =document.getElementById('myytplayer0');
-
-//     if (iframe) {
-//         var target = iframe.contentWindow;
-//         target.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-//     }
-// }
-    
-    // back button to recipe short from detailed page  page
-    $('#back-recipe-shortlist').on('click', function(){
-        $('.recipe-shortlist-page').removeClass('hide');
-        $('.detailed-view-page').addClass('hide');
-        // stop any videos playing
-            // cant get stop video to work
-            // var slides = document.getElementsByClassName("new-videos");
-            // for(var i = 0; i < slides.length; i++)
-            // {
-            //    $('#myytplayer' + i).onload = function(){
-            //     var target = document.getElementById('myytplayer' + i).contentWindow;
-            //     target.postMessage(JSON.stringify({
-            //     "event": "command",
-            //     "func": "pauseVideo",
-            //     "args": ""}), "*");
-            //     };
-     
-            // }
-            // remove videos - this will stop them playing
-            $('.video-list').empty();
-            
-
-
-
-
-            return false;
-        })
+    // if the browser is refeshed - log user out and they must reauthenticate
+    resetOnRefresh();
 
 }) // end of document on ready
 
 
- 
+// Zoom levels
+// 1: World
+// 5: Landmass/continent
+// 10: City
+// 15: Streets
+// 20: Buildings
 
 function initMap(){
     // initialised the map and sets the default center location
     var center = new google.maps.LatLng(latitude,longitude);
     var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: latitude, lng: longitude},
-      zoom: 15  // 15 is a street level zoom
+      zoom: 13  // 15 is a street level zoom
     });
     var message='';
     var markersArray =[];
-
-    // Zoom levels
-    // 1: World
-    // 5: Landmass/continent
-    // 10: City
-    // 15: Streets
-    // 20: Buildings
-
     var infoWindow = new google.maps.InfoWindow({map: map});
 
     function findNewCenter(latitude,longitude, message){
@@ -1111,13 +903,9 @@ function initMap(){
           lat: latitude,
           lng: longitude
         };
-
         infoWindow.setPosition(pos);
         infoWindow.setContent(message);
-       
-        // infoMessage(latitude,longitude);
         map.setCenter(pos);
-        // console.log(map.getCenter());
         centerlocation = map.getCenter();
         doSearchFromCurrentLocation(centerlocation);
     }
@@ -1128,7 +916,6 @@ function initMap(){
         navigator.geolocation.getCurrentPosition(function(position) {
         message = "<strong>You are here!</strong>"
         findNewCenter(position.coords.latitude,position.coords.longitude,message);
-        
       }, function() {
         // if user does not allow location just use default
         doSearchFromCurrentLocation(center);
@@ -1143,9 +930,9 @@ function initMap(){
 
         latitude = $(this).data('lat');
         longitude = $(this).data('lng');
+        $(this).attr('style', 'background-color: darkgrey;');
         message = "<strong>" + $(this).data('name') + "</strong> is here.";
 
-        // infoMessage(latitude,longitude);
         var pos = {
           lat: latitude,
           lng: longitude
@@ -1153,17 +940,16 @@ function initMap(){
 
         infoWindow.setPosition(pos);
         infoWindow.setContent(message);
-        // map.setZoom(15);
-        // findNewCenter(latitude, longitude, message);
 
      })
 
-        function clearOverlays() {
-          for (var i = 0; i < markersArray.length; i++ ) {
-            markersArray[i].setMap(null);
-          }
-          markersArray.length = 0;
-        }
+    function clearOverlays() {
+      for (var i = 0; i < markersArray.length; i++ ) {
+        markersArray[i].setMap(null);
+      }
+      markersArray.length = 0;
+    }
+
     //Add listener - to allow user to click where they are and it will do another search
     map.addListener("click", function (event) {
         var latitude = event.latLng.lat();
@@ -1191,12 +977,9 @@ function initMap(){
             query: 'grocery'
           };
         
-        // marker.setMap(null); //clears markers
         service = new google.maps.places.PlacesService(map);
         service.textSearch(request, callback);  
   
-
- 
 
         function callback(results, status) {
 
@@ -1206,8 +989,7 @@ function initMap(){
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 var storeLocation = [];
                 for (var i = 0; i < results.length; i++) {
-                    // to view object details  console.log(results); 
-
+                    
                     try{
                       open = results[i].opening_hours.weekday_text;
                     }
@@ -1226,35 +1008,22 @@ function initMap(){
 
 
                     storeLocation.push({name : results[i].name, formatted_address:results[i].formatted_address,openNow: openNow, openingTime: open, position_lat: results[i].geometry.location.lat(), position_lng: results[i].geometry.location.lng()});
-                    console.log(storeLocation);
-                    // var marker = new google.maps.Marker();
-                    // marker.setMap(null); //clears markers
+                    
                     var marker = new google.maps.Marker({
-                    position: results[i].geometry.location,
-                    map: map,
-                    title: results[i].name + " Address: " + results[i].formatted_address,
-                    address: results[i].formatted_address
+                        position: results[i].geometry.location,
+                        map: map,
+                        title: results[i].name + " Address: " + results[i].formatted_address,
+                        address: results[i].formatted_address
                     });
 
                     markersArray.push(marker);
-                    // marker.setMap(null); //clears markers
-
+                   
                     marker.addListener('click', function(){
-                        // map.setZoom(15);
+
                         map.setCenter(this.getPosition());
-                        // $('.map-well').removeClass('hide');
+                        
                     })
 
-                    // marker.setMap(null); 
-
-
-                     // var uid = user.uid;
-                    // var loggedUser;
-                    // hardcoded UID
-                    /// UID not being passed
-                    // workaround create unique key and store date there until logout
-                    // var currentUID = firebase.auth().currentUser.uid;
-                    // uniqueKey = "dfasfsdafasfasf";
 
                     uid = firebase.auth().currentUser.uid;
                     var storefolder = memberFolder.child(uid).child('/stores/');
@@ -1263,9 +1032,8 @@ function initMap(){
                     storeLocation = [];
 
                     storefolder.on('child_added', function(childSnapshot){
-                        count++;
-                        //empty table  
-                        // console.log(childSnapshot.val()); 
+                        count++;  
+                        // translate returned values of true / false into open and closed
                         if (childSnapshot.val().openNow){
                             var open = 'Open';
                         }
@@ -1279,22 +1047,12 @@ function initMap(){
         
 
                     });  
-
-
- }
                 }
             }
         }
     }
+} // end of initmap
        
 
-
-
-
-// $('#close-map').on('click', function(){
-
-//     window.close();
-
-// })
 
 

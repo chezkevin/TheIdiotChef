@@ -242,16 +242,14 @@
         </div>
     </div>  <!-- end of container -->
     <div class="container map-page">
-        <h2 class="text-center panel" id="grocery-store">Find Your Nearest Grocery Store</h2>
+        <h2 class="text-center" id="grocery-store">Find Your Nearest Grocery Store</h2>
     </div>
     <div id="map" class="map-page"></div>
      <div class="map-page row">
+          
+            <div class="col-md-12">
 
-
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-
-                <div class="well"> 
+                <div class="well map-table-well"> 
                 <button class="btn btn-default btn-success" id="close-map">Close Map</button>
                     <div><h3>Instructions</h3></div>
                     <ol>
@@ -261,15 +259,15 @@
                         <li>The results are also in the table below - select a row to find it on the map.</li>
                         <li>Use google map navigation to zoom in and out and pan on the map.</li>
                     </ol>
-                    <div class="panel table-responsive" id="map-panel">
-                        <table class="table-striped table-bordered" id="map-stores">
+                    <div class="panel" id="map-panel">
+                        <table class="table-striped table-bordered table-responsive" id="map-stores">
                             <tbody></tbody>
                         </table>
                     </div>
                     
                 </div>
             </div>
-            <div class="col-md-2"></div>
+           
  
         </div>
     
@@ -282,7 +280,7 @@
     </footer>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9pSrvDTzVXj7LToGHJUatXYl0Ts5LpuA&libraries=places&callback=initMap"
     async defer></script>
-     <script src="assets/javascript/main-app.js"></script>
+    <script src="assets/javascript/main-app.js"></script>
     
 </body>
 

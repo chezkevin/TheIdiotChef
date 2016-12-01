@@ -1,3 +1,36 @@
+
+h1 img{
+    height: 70px;
+}
+
+body {
+	background-image: url("background.jpg");
+	background-size: 100%;
+	background-attachment: fixed;
+}
+
+h1 {
+	font-family: 'Pacifico', cursive;
+	font-size: 110px;
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+
+h2, h3, span {
+	font-family: 'Kalam', cursive;
+	color: black;
+}
+table {
+	width: 100%;
+}
+
+a:hover{
+	cursor: pointer;
+}
+
+tr:hover {
+  background-color: #ffa;
+}
+
 .checkbox {
 	display: inline;
 }
@@ -7,12 +40,19 @@
 .btn-warning{
 	margin-top: 5px;
 }
+.btn-append {
+	margin-bottom: 20px;
+}
 .error-modal {
 	display: none; 
 	z-index: 1001;
 }
 .nav{
 	float: left;
+}
+.map-table-well{
+	margin-left: 10%;
+	width: 80%;
 }
 .map-well {
 	float: left;
@@ -35,19 +75,10 @@
 .star.favorited {
      background-position: 0;
 }
-
-/*.panel-default {
-	height: 50px;
-	width: 100px;
-}*/
 .login-items {
-	/*float: left;*/
 	border-width: 0.5px;
-	/*border-style: solid;
-	border-color: lightgrey;*/
 	margin-top: 5px;
 	float: left;
-	/*margin-bottom: 10px;*/
 }
 .recipeImage {
 	max-height: 250px;
@@ -81,8 +112,17 @@
 	min-height: 180px;
 	margin-left: 2.5%;
 }
-a:hover{
-	cursor: pointer;
+.map-well {
+	font-size: 30px;
+}
+
+.selected-recipe-image {
+	max-width: 600px;
+	max-height: 600px;
+}
+
+.footer{
+	padding: 10px;
 }
 
 .footer {
@@ -100,28 +140,6 @@ a:hover{
     border-radius: 5px;
     border: 1px solid;
 }
-
-h1 img{
-    height: 70px;
-}
-
-body {
-	background-image: url("background.jpg");
-	background-size: 100%;
-	background-attachment: fixed;
-}
-
-h1 {
-	font-family: 'Pacifico', cursive;
-	font-size: 110px;
-	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
-}
-
-h2, h3, span {
-	font-family: 'Kalam', cursive;
-	color: black;
-}
-
 #ingredient-zone h3, #video-zone h3, #recipe-zone h3 {
 	background-color: #DDDDDD;
 	padding: 10px;
@@ -133,7 +151,7 @@ h2, h3, span {
 	min-height:100px;
 }
 
-#description {
+#description, #grocery-store {
 	color: white;
 	font-size: 35px;
 	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
@@ -147,15 +165,7 @@ section#recipe-list {
     border-radius: 5px;
     padding: 10px;
 }
-
-.footer{
-	padding: 10px;
-}
 #ingredients-list {
-	font-size: 30px;
-}
-
-.map-well {
 	font-size: 30px;
 }
 
@@ -213,13 +223,10 @@ section#recipe-list {
 #expand-video-panel{
 	height: 600px;
 	width: 800px;
-
+	margin-left: 15%;
 }
 
-.selected-recipe-image {
-	max-width: 600px;
-	max-height: 600px;
-}
+
 
 @media only screen and (max-width: 980px) {
 	#login-text {
