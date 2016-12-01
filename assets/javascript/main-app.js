@@ -900,7 +900,6 @@ $(document).ready(function() {
 // 10: City
 // 15: Streets
 // 20: Buildings
-initMap();
 
 function initMap(){
     // initialised the map and sets the default center location
